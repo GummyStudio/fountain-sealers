@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, override
 
 import bacommon.bs
 import babase
+import _bascenev1
 import bauiv1
 from bauiv1lib.connectivity import wait_for_connectivity
 from bauiv1lib.account.signin import show_sign_in_prompt
@@ -729,10 +730,11 @@ class ClassicAppMode(babase.AppMode):
         )
 
     def _root_ui_store_press(self) -> None:
-        from bauiv1lib.store.browser import StoreBrowserWindow
+        from delta.seam import ShopSession
+        _bascenev1.new_host_session(ShopSession)
 
-        babase.screenmessage('seam shop')
 
+    
     def _root_ui_tickets_meter_press(self) -> None:
         from bauiv1lib.resourcetypeinfo import ResourceTypeInfoWindow
 
