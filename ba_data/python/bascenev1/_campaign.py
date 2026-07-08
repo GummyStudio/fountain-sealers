@@ -110,7 +110,6 @@ def init_campaigns() -> None:
     from bascenev1lib.game.targetpractice import TargetPracticeGame
     from bascenev1lib.game.meteorshower import MeteorShowerGame
     from bascenev1lib.game.easteregghunt import EasterEggHuntGame
-    from bascenev1lib.game.ninjafight import NinjaFightGame
 
     # TODO: Campaigns should be load-on-demand; not all imported at launch
     #  like this.
@@ -386,20 +385,6 @@ def init_campaigns() -> None:
                     gametype=EasterEggHuntGame,
                     settings={'Pro Mode': True},
                     preview_texture_name='towerDPreview',
-                ),
-                Level(
-                    name='Ninja Fight',  # (unique id not seen by player)
-                    displayname='${GAME}',  # (readable name seen by player)
-                    gametype=NinjaFightGame,
-                    settings={'preset': 'regular'},
-                    preview_texture_name='courtyardPreview',
-                ),
-                Level(
-                    name='Pro Ninja Fight',
-                    displayname='Pro ${GAME}',
-                    gametype=NinjaFightGame,
-                    settings={'preset': 'pro'},
-                    preview_texture_name='courtyardPreview',
                 ),
             ],
         )

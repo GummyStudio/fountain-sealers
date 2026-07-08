@@ -18,6 +18,7 @@ def get_appearances(include_locked: bool = False) -> list[str]:
     disallowed = []
     if not include_locked:
         # Hmm yeah this'll be tough to hack...
+        pass
 
     return [
         s
@@ -100,3 +101,57 @@ def register_appearances() -> None:
     t.pickup_sounds = ['spazPickup01']
     t.fall_sounds = ['spazFall01']
     t.style = 'spaz'
+
+    # Prince of the Dark ###################################
+    t = Appearance('Ralsei')
+    t.color_texture = 'ralseiColor'
+    t.color_mask_texture = 'ralseiColorMask'
+    t.icon_texture = 'ralsIcon'
+    t.icon_mask_texture = 'ralsIconCM'
+    t.head_mesh = 'ralseiHead'
+    t.torso_mesh = 'ralseiTorso'
+    t.pelvis_mesh = 'ralseiPelvis'
+    t.upper_arm_mesh = 'ralseiUpperArm'
+    t.forearm_mesh = 'ralseiForeArm'
+    t.hand_mesh = 'ralseiHand'
+    t.upper_leg_mesh = 'ralseiUpperLeg'
+    t.lower_leg_mesh = 'ralseiLowerLeg'
+    t.toes_mesh = 'none'
+    ralsei_sounds = ['voicelines/ralsei/sound' + str(i + 1) + '' for i in range(4)]
+    ralsei_hit_sounds = ['voicelines/ralsei/hit']
+    t.jump_sounds = ralsei_sounds
+    t.attack_sounds = ralsei_sounds
+    t.impact_sounds = ralsei_hit_sounds
+    t.death_sounds = ['voicelines/ralsei/death']
+    t.pickup_sounds = ralsei_sounds
+    t.fall_sounds = ['voicelines/ralsei/fall']
+    t.style = 'bones'
+    t.default_color = (0.0, 0.7699999999999998, 0.11999999999999998)
+    t.default_highlight = (1, 0.08, 0.5)
+
+    # Prince of the Dark ###################################
+    t = Appearance('NoHatRalsei')
+    t.color_texture = 'noHatseiColor'
+    t.color_mask_texture = 'noHatseiColorMask'
+    t.icon_texture = 'noHatseiIcon'
+    t.icon_mask_texture = 'noHatseiIconCM'
+    t.head_mesh = 'noHatseiHead'
+    t.torso_mesh = 'noHatseiTorso'
+    t.pelvis_mesh = 'none'
+    t.upper_arm_mesh = 'noHatseiUpperArm'
+    t.forearm_mesh = 'noHatseiForeArm'
+    t.hand_mesh = 'noHatseiHand'
+    t.upper_leg_mesh = 'noHatseiUpperLeg'
+    t.lower_leg_mesh = 'noHatseiLowerLeg'
+    t.toes_mesh = 'none'
+    ralsei_sounds = ['voicelines/ralsei/sound' + str(i + 1) + '' for i in range(4)]
+    ralsei_hit_sounds = ['voicelines/ralsei/hit']
+    t.jump_sounds = ralsei_sounds
+    t.attack_sounds = ralsei_sounds
+    t.impact_sounds = ralsei_hit_sounds
+    t.death_sounds = ['voicelines/ralsei/death']
+    t.pickup_sounds = ralsei_sounds
+    t.fall_sounds = ['voicelines/ralsei/fall']
+    t.style = 'bones'
+    t.default_color = (0.0, 0.7699999999999998, 0.11999999999999998)
+    t.default_highlight = (1, 0.08, 0.5)

@@ -91,7 +91,6 @@ class StoreSubsystem:
 
         if babase.app.classic.store_items is None:
             from bascenev1lib.game.race import RaceGame
-            from bascenev1lib.game.ninjafight import NinjaFightGame
             from bascenev1lib.game.meteorshower import MeteorShowerGame
             from bascenev1lib.game.targetpractice import TargetPracticeGame
             from bascenev1lib.game.easteregghunt import EasterEggHuntGame
@@ -126,10 +125,6 @@ class StoreSubsystem:
                 'games.race': {
                     'gametype': RaceGame,
                     'previewTex': 'bigGPreview',
-                },
-                'games.ninja_fight': {
-                    'gametype': NinjaFightGame,
-                    'previewTex': 'courtyardPreview',
                 },
                 'games.meteor_shower': {
                     'gametype': MeteorShowerGame,
