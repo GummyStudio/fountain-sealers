@@ -15,6 +15,8 @@ from bascenev1lib.actor.bomb import Bomb, Blast
 from bascenev1lib.actor.powerupbox import PowerupBoxFactory, PowerupBox
 from bascenev1lib.actor.spazfactory import SpazFactory
 from bascenev1lib.actor.popuptext import PopupText
+from delta.actor.particals import Partical, ParticalFactory
+
 from delta.actor.damagetext import DamageText
 from bascenev1lib.gameutils import SharedObjects
 from delta.actor.rudebuster import Rudebuster
@@ -238,9 +240,28 @@ class Spaz(bs.Actor):
         self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
         
     def _tick(self):
-        # for now just pass. behavior can be changed later
-        pass
-    
+        if not self.exists():
+            return
+        if self.frozen and random.randint(0, 7) == 0:
+            for _ in range(random.randint(1, 3)):
+                Partical(
+                            position=self.node.position,
+                            texture=ParticalFactory.get().snowflake_tex, 
+                            mesh=ParticalFactory.get().snowflake_mesh,
+                            body_scale=0.5,
+                            mesh_scale=0.15,
+                            body='puck',
+                            velocity=(
+                                random.uniform(-1.0, 1.0),
+                                random.uniform(-1.4, -1.0),
+                                random.uniform(-1.0, 1.0)
+                            ),
+                            gravity_scale=-0.6,
+                            alive_for=3,
+
+                            collide_with=None
+                ).autoretain()
+                    
     
 
     @override
