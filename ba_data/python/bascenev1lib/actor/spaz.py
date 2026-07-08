@@ -15,6 +15,7 @@ from bascenev1lib.actor.bomb import Bomb, Blast
 from bascenev1lib.actor.powerupbox import PowerupBoxFactory, PowerupBox
 from bascenev1lib.actor.spazfactory import SpazFactory
 from bascenev1lib.gameutils import SharedObjects
+from delta.actor.rudebuster import Rudebuster
 
 if TYPE_CHECKING:
     from typing import Any, Sequence, Callable
@@ -228,6 +229,21 @@ class Spaz(bs.Actor):
         # Deprecated stuff.. should make these into lists.
         self.punch_callback: Callable[[Spaz], Any] | None = None
         self.pick_up_powerup_callback: Callable[[Spaz], Any] | None = None
+
+        self.rudebusters = 0
+        self.input_x = 0.0
+        self.input_y = 0.0
+        bs.timer(0.1, self._tick, repeat=True)
+        
+    def _tick(self):
+        if not self.node:
+            return
+        
+        if self.source_player:
+            self.node.move_left_right = self.input_x
+            self.node.move_up_down = self.input_y
+        
+
 
     @override
     def exists(self) -> bool:
@@ -574,7 +590,7 @@ class Spaz(bs.Actor):
         """
         if not self.node:
             return
-        self.node.move_up_down = value
+        self.input_y = value
 
     def on_move_left_right(self, value: float) -> None:
         """
@@ -585,7 +601,7 @@ class Spaz(bs.Actor):
         """
         if not self.node:
             return
-        self.node.move_left_right = value
+        self.input_x = value
 
     def on_punched(self, damage: int) -> None:
         """Called when this spaz gets punched."""
@@ -698,6 +714,10 @@ class Spaz(bs.Actor):
                 )
         else:
             self.shield_decay_timer = None
+        
+    def reset_all_counts(self):
+        self.set_land_mine_count(0)
+        self.set_rude_busters_count(0)
 
     @override
     def handlemessage(self, msg: Any) -> Any:
@@ -751,7 +771,11 @@ class Spaz(bs.Actor):
                         bs.WeakCall(self._multi_bomb_wear_off),
                     )
             elif msg.poweruptype == 'land_mines':
-                self.set_land_mine_count(min(self.land_mine_count + 3, 3))
+                self.reset_all_counts()
+                self.set_land_mine_count(3)
+            elif msg.poweruptype == 'rudebuster':
+                self.reset_all_counts()
+                self.set_rude_busters_count(2)
             elif msg.poweruptype == 'impact_bombs':
                 self.bomb_type = 'impact'
                 tex = self._get_bomb_type_tex()
@@ -1342,6 +1366,33 @@ class Spaz(bs.Actor):
         else:
             return super().handlemessage(msg)
         return None
+    
+    def impulse(self, x: float | int = 0, y: float | int = 0):
+        if not self.node:
+            return
+        v = self.node.velocity
+        x = x
+        y = y
+        if x == 0 and y == 0:
+            raise ValueError("You must specify at least X or Y for impulse.")
+        # only use x and y impulse if specified
+        if x != 0:
+            self.node.handlemessage('impulse', 
+                self.node.position[0], 
+                self.node.position[1], 
+                self.node.position[2],
+                0, 25, 0, x, 0.05, 0, 0,
+                v[0]*15*2, 0, v[2]*15*2
+            )
+        if y != 0:
+            self.node.handlemessage('impulse', 
+                self.node.position[0], 
+                self.node.position[1], 
+                self.node.position[2],
+                0, 25, 0,
+                y, 0.05, 0, 0,
+                0, 20*400, 0
+            )
 
     def drop_bomb(self) -> Bomb | None:
         """
@@ -1351,7 +1402,7 @@ class Spaz(bs.Actor):
         drop a bomb, returns None.
         """
 
-        if (self.land_mine_count <= 0 and self.bomb_count <= 0) or self.frozen:
+        if (self.land_mine_count <= 0 and self.bomb_count <= 0 and self.rudebusters <= 0) or self.frozen:
             return None
         assert self.node
         pos = self.node.position_forward
@@ -1361,6 +1412,18 @@ class Spaz(bs.Actor):
             dropping_bomb = False
             self.set_land_mine_count(self.land_mine_count - 1)
             bomb_type = 'land_mine'
+        if self.rudebusters > 0:
+            dropping_bomb = False
+            self.set_rude_busters_count(self.rudebusters - 1)
+            Rudebuster(
+                position=self.node.position,
+                source_player=self.source_player,
+                velocity=(
+                    self.input_x, 0,-self.input_y
+                )
+            ).autoretain()
+            self.node.handlemessage('celebrate', 100)
+            return None
         else:
             dropping_bomb = True
             bomb_type = self.bomb_type
@@ -1404,6 +1467,19 @@ class Spaz(bs.Actor):
                 )
             else:
                 self.node.counter_text = ''
+    
+    def set_rude_busters_count(self, count: int) -> None:
+        """Set the number of rude_busters this spaz is carrying."""
+        self.rudebusters = count
+        if self.node:
+            if self.rudebusters != 0:
+                self.node.counter_text = 'x' + str(self.rudebusters)
+                self.node.counter_texture = (
+                    PowerupBoxFactory.get().tex_land_mines
+                )
+            else:
+                self.node.counter_text = ''
+
 
     def curse_explode(self, source_player: bs.Player | None = None) -> None:
         """Explode the poor spaz spectacularly."""

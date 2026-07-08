@@ -7,6 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import bascenev1 as bs
+from delta.actor.rudebuster import RudeBusterHitMessage
 
 if TYPE_CHECKING:
     pass
@@ -37,6 +38,8 @@ class SharedObjects:
         self._death_material: bs.Material | None = None
         self._region_material: bs.Material | None = None
         self._railing_material: bs.Material | None = None
+        self._rude_buster_material: bs.Material | None = None
+        self._only_collide_with_floor_mat: bs.Material | None = None
 
     @classmethod
     def get(cls) -> SharedObjects:
@@ -144,3 +147,48 @@ class SharedObjects:
                 ),
             )
         return self._railing_material
+
+    @property
+    def rude_buster_material(self) -> bs.Material:
+        from bascenev1lib.actor.spazfactory import SpazFactory
+
+        if self._rude_buster_material is None:
+            mat = self._rude_buster_material = bs.Material()
+            mat.add_actions(
+                actions=(
+                    ('modify_part_collision', 'collide', False),
+                )
+            )
+            mat.add_actions(
+                conditions=(
+                    ('they_have_material', SpazFactory.get().spaz_material),
+                    'and',
+                    ('we_are_older_than', 300),
+                    'and',
+                    ('they_are_older_than', 300)
+                ),
+                actions=(
+                    ('modify_part_collision', 'collide', True),
+                    ('message', 'our_node', 'at_connect', RudeBusterHitMessage()),
+                ),
+            )
+        return self._rude_buster_material
+
+    @property
+    def only_collide_with_floor_mat(self):
+        if self._only_collide_with_floor_mat is None:
+            mat = self._only_collide_with_floor_mat = bs.Material()
+            mat.add_actions(
+                actions=(
+                    ('modify_part_collision', 'collide', False),
+                )
+            )
+            mat.add_actions(
+                conditions=('they_have_material', self.footing_material),
+                actions=(
+                    ('modify_part_collision', 'collide', True),
+                ),
+            )
+          
+        return self._only_collide_with_floor_mat
+    

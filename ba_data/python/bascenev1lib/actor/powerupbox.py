@@ -236,6 +236,8 @@ class PowerupBox(bs.Actor):
             tex = factory.tex_health
         elif poweruptype == 'curse':
             tex = factory.tex_curse
+        elif poweruptype == 'rudebuster':
+            tex = factory.tex_curse 
         else:
             raise ValueError('invalid poweruptype: ' + str(poweruptype))
 
