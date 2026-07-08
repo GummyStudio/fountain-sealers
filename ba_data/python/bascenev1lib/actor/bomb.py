@@ -413,7 +413,7 @@ class Blast(bs.Actor):
                         mesh_scale=0.1,
                         body='puck',
                         velocity=(
-                            random.uniform(-4.5, 4.5),
+                            random.uniform(-3.5, 3.5),
                             5,
                             random.uniform(-2.5, 2.5)
                         ),

@@ -257,7 +257,7 @@ class Spaz(bs.Actor):
                             body='puck',
                             velocity=(
                                 random.uniform(-1.0, 1.0),
-                                random.uniform(-1.4, -1.0),
+                                random.uniform(-3.4, -1.0),
                                 random.uniform(-1.0, 1.0)
                             ),
                             gravity_scale=-0.6,
