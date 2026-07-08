@@ -1,7 +1,7 @@
 # BombSquad - Fountain Sealers
 <p align="center">
     <picture>
-        <img src="https://github.com/user-attachments/assets/cb4abc2a-b4ea-4dc7-bc05-07eeff584bba">
+        <img src="https://github.com/user-attachments/assets/6e49b910-3ef0-44d4-8777-2bb00fb1c314">
     </picture>
 </p>
 <p>
