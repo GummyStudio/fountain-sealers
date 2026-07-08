@@ -1,5 +1,5 @@
 import bascenev1 as bs
-from delta.actor.particals import Partical
+from delta.actor.particals import Partical, ParticalFactory
 import random
 
 class RudeBusterHitMessage:
@@ -108,8 +108,8 @@ class Rudebuster(bs.Actor):
             for _ in range(random.randint(3, 7)):
                     Partical(
                         position=self.node.position,
-                        texture='tnt', 
-                        mesh='box',
+                        texture=ParticalFactory.get().rudebuster_tex, 
+                        mesh=ParticalFactory.get().rudebuster_mesh,
                         body_scale=0.5,
                         mesh_scale=0.25,
                         random_vel = True,

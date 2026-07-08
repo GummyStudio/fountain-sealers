@@ -1,14 +1,46 @@
 
 import bascenev1 as bs
 import random
+class ParticalFactory:
+    """A collection of media and other resources used by particals.
+
+    A single instance of this is shared between all powerups
+    and can be retrieved via Partical.get_factory().
+    """
+    _STORENAME = 'particalfact'
+
+  
+    def __init__(self) -> None:
+        """Instantiate a PowerupBoxFactory.
+
+        You shouldn't need to do this; call Powerup.get_factory()
+        to get a shared instance.
+        """
+        self.snowflake_mesh = bs.getmesh('box')
+        self.snowflake_tex = bs.gettexture('snowflake')
+        self.rudebuster_mesh = bs.getmesh('box')
+        self.rudebuster_tex = bs.gettexture('white')
+
+
+    @classmethod
+    def get(cls) -> ParticalFactory:
+        """Return a shared bs.PowerupBoxFactory object, creating if needed."""
+        activity = bs.getactivity()
+        if activity is None:
+            raise bs.ContextError('No current activity.')
+        factory = activity.customdata.get(cls._STORENAME)
+        if factory is None:
+            factory = activity.customdata[cls._STORENAME] = ParticalFactory()
+        assert isinstance(factory, ParticalFactory)
+        return factory
 
 
 class Partical(bs.Actor):
 
     def __init__(self,
                 position: tuple[float, float, float], 
-                texture: str, 
-                mesh: str,
+                texture: bs.Texture, 
+                mesh: bs.Mesh,
                 body_scale: str,
                 mesh_scale: str,
                 velocity: tuple[float, float, float] = (0, 0, 0), 
@@ -32,8 +64,8 @@ class Partical(bs.Actor):
                     random.uniform(-random_range, random_range)*1.2,
                     random.uniform(-random_range, random_range),
                 ) if random_vel else velocity),
-                'color_texture': bs.gettexture(texture),
-                'mesh': bs.getmesh(mesh),
+                'color_texture': texture,
+                'mesh': mesh,
                 'mesh_scale': mesh_scale,
                 'body': body,
                 'body_scale': body_scale,
