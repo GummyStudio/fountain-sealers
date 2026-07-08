@@ -975,11 +975,6 @@ class ClassicAppSubsystem(babase.AppSubsystem):
         ):
             return ['games.target_practice']
 
-        if game in (
-            'Challenges:Ninja Fight',
-            'Challenges:Pro Ninja Fight',
-        ):
-            return ['games.ninja_fight']
 
         if game in ('Challenges:Race', 'Challenges:Pro Race'):
             return ['games.race']

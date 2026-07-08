@@ -274,7 +274,6 @@ class PlaylistAddGameWindow(bui.MainWindow):
 
     def _on_get_more_games_press(self) -> None:
         from bauiv1lib.account.signin import show_sign_in_prompt
-        from bauiv1lib.store.browser import StoreBrowserWindow
 
         # No-op if we're not in control.
         if not self.main_window_has_control():
@@ -283,17 +282,9 @@ class PlaylistAddGameWindow(bui.MainWindow):
         plus = bui.app.plus
         assert plus is not None
 
-        if plus.get_v1_account_state() != 'signed_in':
-            show_sign_in_prompt()
-            return
-
-        self.main_window_replace(
-            StoreBrowserWindow(
-                show_tab=StoreBrowserWindow.TabID.MINIGAMES,
-                origin_widget=self._get_more_games_button,
-                minimal_toolbars=True,
-            )
-        )
+        import _bascenev1
+        from delta.seam import ShopSession
+        _bascenev1.new_host_session(ShopSession)
 
     def _add(self) -> None:
         bui.lock_all_input()  # Make sure no more commands happen.

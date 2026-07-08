@@ -1472,33 +1472,9 @@
   "tournamentsText": "Tournaments",
   "translations": {
     "characterNames": {
-      "Agent Johnson": null,
-      "B-9000": null,
-      "Bernard": null,
-      "Bones": null,
-      "Butch": null,
-      "Easter Bunny": null,
-      "Flopsy": null,
-      "Frosty": null,
-      "Gretel": null,
-      "Grumbledorf": null,
-      "Jack Morgan": null,
-      "Kronk": null,
-      "Lee": null,
-      "Lucky": null,
-      "Mel": null,
-      "Middle-Man": null,
-      "Minimus": null,
-      "Pascal": null,
-      "Pixel": null,
-      "Sammy Slam": null,
-      "Santa Claus": null,
-      "Snake Shadow": null,
       "Spaz": null,
-      "Taobao Mascot": null,
-      "Todd McBurton": null,
-      "Zoe": null,
-      "Zola": null
+      "Ralsei": null,
+      "NoHatRalsei": null 
     },
     "coopLevelNames": {
       "${GAME} Training": null,
@@ -1599,7 +1575,6 @@
       "Keep Away": null,
       "King of the Hill": null,
       "Meteor Shower": null,
-      "Ninja Fight": null,
       "Onslaught": null,
       "Race": null,
       "Runaround": null,
@@ -1985,5 +1960,8 @@
   "yesAllowText": "Yes, Allow!",
   "yourBestScoresText": "Your Best Scores",
   "yourBestTimesText": "Your Best Times",
-  "yourPrizeText": "Your prize:"
+  "yourPrizeText": "Your prize:",
+  "delta": {
+    "useVanillaText": "Use the vanilla shop..."
+  }
 }

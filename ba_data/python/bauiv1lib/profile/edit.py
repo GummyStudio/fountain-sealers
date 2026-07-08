@@ -650,17 +650,11 @@ class EditProfileWindow(
     @override
     def on_icon_picker_get_more_press(self) -> None:
         """User wants to get more icons."""
-        from bauiv1lib.store.browser import StoreBrowserWindow
 
         if not self.main_window_has_control():
             return
 
-        self.main_window_replace(
-            StoreBrowserWindow(
-                minimal_toolbars=True,
-                show_tab=StoreBrowserWindow.TabID.ICONS,
-            )
-        )
+        bui.screenmessage(bs.Lstr(resource='delta.useVanillaText'))
 
     @override
     def on_character_picker_pick(self, character: str) -> None:
@@ -678,17 +672,11 @@ class EditProfileWindow(
 
     @override
     def on_character_picker_get_more_press(self) -> None:
-        from bauiv1lib.store.browser import StoreBrowserWindow
 
         if not self.main_window_has_control():
             return
 
-        self.main_window_replace(
-            StoreBrowserWindow(
-                minimal_toolbars=True,
-                show_tab=StoreBrowserWindow.TabID.CHARACTERS,
-            )
-        )
+        bui.screenmessage(bs.Lstr(resource='delta.useVanillaText'))
 
     def _on_character_press(self) -> None:
         from bauiv1lib import characterpicker

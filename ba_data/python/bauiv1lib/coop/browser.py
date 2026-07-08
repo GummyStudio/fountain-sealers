@@ -874,8 +874,6 @@ class CoopBrowserWindow(bui.MainWindow):
         items = [
             'Challenges:Infinite Onslaught',
             'Challenges:Infinite Runaround',
-            'Challenges:Ninja Fight',
-            'Challenges:Pro Ninja Fight',
             'Challenges:Meteor Shower',
             'Challenges:Target Practice B',
             'Challenges:Target Practice',

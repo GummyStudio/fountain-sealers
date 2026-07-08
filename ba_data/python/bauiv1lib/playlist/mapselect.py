@@ -284,8 +284,6 @@ class PlaylistMapSelectWindow(bui.MainWindow):
             )
 
     def _on_store_press(self) -> None:
-        from bauiv1lib.account.signin import show_sign_in_prompt
-        from bauiv1lib.store.browser import StoreBrowserWindow
 
         # No-op if we're not in control.
         if not self.main_window_has_control():
@@ -294,20 +292,14 @@ class PlaylistMapSelectWindow(bui.MainWindow):
         plus = bui.app.plus
         assert plus is not None
 
-        if plus.get_v1_account_state() != 'signed_in':
-            show_sign_in_prompt()
-            return
+        
 
         self._selected_get_more_maps = True
+        import _bascenev1
+        from delta.seam import ShopSession
+        _bascenev1.new_host_session(ShopSession)
 
-        self.main_window_replace(
-            StoreBrowserWindow(
-                show_tab=StoreBrowserWindow.TabID.MAPS,
-                origin_widget=self._get_more_maps_button,
-                minimal_toolbars=True,
-            )
-        )
-
+        
     def _select(self, map_name: str) -> None:
 
         # no-op if our underlying widget is dead or on its way out.
