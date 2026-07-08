@@ -84,29 +84,21 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             assert self.my_name.node
             bs.animate(self.my_name.node, 'opacity', {2.3: 0, 3.0: 1.0})
 
-        # Throw in test build info.
-        self.beta_info = self.beta_info_2 = None
-        if env.variant is type(env.variant).TEST_BUILD:
-            pos = (0, 0)
-            self.beta_info = bs.NodeActor(
-                bs.newnode(
-                    'text',
-                    attrs={
-                        'v_attach': 'center',
-                        'h_align': 'center',
-                        'color': (1, 1, 1, 1),
-                        'shadow': 0.5,
-                        'flatness': 0.5,
-                        'scale': 1.2,
-                        'vr_depth': -60,
-                        'position': pos,
-                        'text': bs.Lstr(resource='testBuildText'),
-                    },
-                )
-            )
-            if not self._did_initial_transition:
-                assert self.beta_info.node
-                bs.animate(self.beta_info.node, 'opacity', {1.3: 0, 1.8: 1.0})
+        # Show modpack subtitel text.
+        pos = (-10, -120)
+        node = self.modpack_subtitle = bs.newnode(
+            'text',
+            attrs={
+                'v_attach': 'center',
+                'h_align': 'center',
+                'scale': 0.6,
+                'vr_depth': -60,
+                'position': pos,
+                'text': bs.Lstr(resource='testBuildText'),
+                'big': True,
+            },
+        )
+        bs.animate(node, 'opacity', {1.3: 0, 1.8: 1.0})
 
         mesh = bs.getmesh('thePadLevel')
         trees_mesh = bs.getmesh('trees')
@@ -229,17 +221,9 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             custom_texture = self._get_custom_logo_tex_name()
             if custom_texture != self._custom_logo_tex_name:
                 self._custom_logo_tex_name = custom_texture
-                self._logo_node.texture = bs.gettexture(
-                    custom_texture if custom_texture is not None else 'logo'
-                )
-                self._logo_node.mesh_opaque = (
-                    None if custom_texture is not None else bs.getmesh('logo')
-                )
-                self._logo_node.mesh_transparent = (
-                    None
-                    if custom_texture is not None
-                    else bs.getmesh('logoTransparent')
-                )
+                self._logo_node.texture = 'logo'
+                self._logo_node.mesh_opaque = None
+                self._logo_node.mesh_transparent = None
 
         # If language has changed, recreate our logo text/graphics.
         lang = app.lang.language
@@ -257,177 +241,104 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 base_delay = 0.0
                 delay = base_delay
                 delay_inc = 0.02
-
-            # We draw higher in kiosk mode (make sure to test this
-            # when making adjustments) for now we're hard-coded for
-            # a few languages.. should maybe look into generalizing this?..
-            if (
-                app.locale.current_locale.resolved
-                is LocaleResolved.CHINESE_SIMPLIFIED
-            ):
-                base_x = -270.0
-                x = base_x - 20.0
-                spacing = 85.0 * base_scale
-                y_extra = 0.0
-                self._make_logo(
-                    x - 110 + 50,
-                    113 + y + 1.2 * y_extra,
-                    0.34 * base_scale,
-                    delay=base_delay + 0.1,
-                    custom_texture='chTitleChar1',
-                    jitter_scale=2.0,
-                    vr_depth_offset=-30,
+            base_x = -170
+            x = base_x - 20
+            spacing = 55 * base_scale
+            y_extra = 0
+            xv1 = x
+            delay1 = delay
+            for shadow in (True, False):
+                x = xv1
+                delay = delay1
+                self._make_word(
+                    'B',
+                    x - 50,
+                    y - 23 + 0.8 * y_extra,
+                    scale=1.3 * base_scale,
+                    delay=delay,
+                    vr_depth_offset=3,
+                    shadow=shadow,
                 )
                 x += spacing
                 delay += delay_inc
-                self._make_logo(
-                    x - 10 + 50,
-                    110 + y + 1.2 * y_extra,
-                    0.31 * base_scale,
-                    delay=base_delay + 0.15,
-                    custom_texture='chTitleChar2',
-                    jitter_scale=2.0,
-                    vr_depth_offset=-30,
+                self._make_word(
+                    'm',
+                    x,
+                    y + y_extra,
+                    delay=delay,
+                    scale=base_scale,
+                    shadow=shadow,
                 )
-                x += 2.0 * spacing
+                x += spacing * 1.25
                 delay += delay_inc
-                self._make_logo(
-                    x + 180 - 140,
-                    110 + y + 1.2 * y_extra,
-                    0.3 * base_scale,
-                    delay=base_delay + 0.25,
-                    custom_texture='chTitleChar3',
-                    jitter_scale=2.0,
-                    vr_depth_offset=-30,
+                self._make_word(
+                    'b',
+                    x,
+                    y + y_extra - 10,
+                    delay=delay,
+                    scale=1.1 * base_scale,
+                    vr_depth_offset=5,
+                    shadow=shadow,
+                )
+                x += spacing * 0.85
+                delay += delay_inc
+                self._make_word(
+                    'S',
+                    x,
+                    y - 25 + 0.8 * y_extra,
+                    scale=1.35 * base_scale,
+                    delay=delay,
+                    vr_depth_offset=14,
+                    shadow=shadow,
                 )
                 x += spacing
                 delay += delay_inc
-                self._make_logo(
-                    x + 241 - 120,
-                    110 + y + 1.2 * y_extra,
-                    0.31 * base_scale,
-                    delay=base_delay + 0.3,
-                    custom_texture='chTitleChar4',
-                    jitter_scale=2.0,
-                    vr_depth_offset=-30,
+                self._make_word(
+                    'q',
+                    x,
+                    y + y_extra,
+                    delay=delay,
+                    scale=base_scale,
+                    shadow=shadow,
                 )
-                x += spacing
+                x += spacing * 0.9
                 delay += delay_inc
-                self._make_logo(
-                    x + 300 - 90,
-                    105 + y + 1.2 * y_extra,
-                    0.34 * base_scale,
-                    delay=base_delay + 0.35,
-                    custom_texture='chTitleChar5',
-                    jitter_scale=2.0,
-                    vr_depth_offset=-30,
+                self._make_word(
+                    'u',
+                    x,
+                    y + y_extra,
+                    delay=delay,
+                    scale=base_scale,
+                    vr_depth_offset=7,
+                    shadow=shadow,
                 )
-                self._make_logo(
-                    base_x + 155,
-                    146 + y + 1.2 * y_extra,
-                    0.28 * base_scale,
-                    delay=base_delay + 0.2,
-                    rotate=-7,
+                x += spacing * 0.9
+                delay += delay_inc
+                self._make_word(
+                    'a',
+                    x,
+                    y + y_extra,
+                    delay=delay,
+                    scale=base_scale,
+                    shadow=shadow,
                 )
-            else:
-                base_x = -170
-                x = base_x - 20
-                spacing = 55 * base_scale
-                y_extra = 0
-                xv1 = x
-                delay1 = delay
-                for shadow in (True, False):
-                    x = xv1
-                    delay = delay1
-                    self._make_word(
-                        'B',
-                        x - 50,
-                        y - 23 + 0.8 * y_extra,
-                        scale=1.3 * base_scale,
-                        delay=delay,
-                        vr_depth_offset=3,
-                        shadow=shadow,
-                    )
-                    x += spacing
-                    delay += delay_inc
-                    self._make_word(
-                        'm',
-                        x,
-                        y + y_extra,
-                        delay=delay,
-                        scale=base_scale,
-                        shadow=shadow,
-                    )
-                    x += spacing * 1.25
-                    delay += delay_inc
-                    self._make_word(
-                        'b',
-                        x,
-                        y + y_extra - 10,
-                        delay=delay,
-                        scale=1.1 * base_scale,
-                        vr_depth_offset=5,
-                        shadow=shadow,
-                    )
-                    x += spacing * 0.85
-                    delay += delay_inc
-                    self._make_word(
-                        'S',
-                        x,
-                        y - 25 + 0.8 * y_extra,
-                        scale=1.35 * base_scale,
-                        delay=delay,
-                        vr_depth_offset=14,
-                        shadow=shadow,
-                    )
-                    x += spacing
-                    delay += delay_inc
-                    self._make_word(
-                        'q',
-                        x,
-                        y + y_extra,
-                        delay=delay,
-                        scale=base_scale,
-                        shadow=shadow,
-                    )
-                    x += spacing * 0.9
-                    delay += delay_inc
-                    self._make_word(
-                        'u',
-                        x,
-                        y + y_extra,
-                        delay=delay,
-                        scale=base_scale,
-                        vr_depth_offset=7,
-                        shadow=shadow,
-                    )
-                    x += spacing * 0.9
-                    delay += delay_inc
-                    self._make_word(
-                        'a',
-                        x,
-                        y + y_extra,
-                        delay=delay,
-                        scale=base_scale,
-                        shadow=shadow,
-                    )
-                    x += spacing * 0.64
-                    delay += delay_inc
-                    self._make_word(
-                        'd',
-                        x,
-                        y + y_extra - 10,
-                        delay=delay,
-                        scale=1.1 * base_scale,
-                        vr_depth_offset=6,
-                        shadow=shadow,
-                    )
-                self._make_logo(
-                    base_x - 28,
-                    125 + y + 1.2 * y_extra,
-                    0.32 * base_scale,
-                    delay=base_delay,
+                x += spacing * 0.64
+                delay += delay_inc
+                self._make_word(
+                    'd',
+                    x,
+                    y + y_extra - 10,
+                    delay=delay,
+                    scale=1.1 * base_scale,
+                    vr_depth_offset=6,
+                    shadow=shadow,
                 )
+            self._make_logo(
+                base_x - 28,
+                125 + y + 1.2 * y_extra,
+                0.30 * base_scale,
+                delay=base_delay,
+            )
 
     def _make_word(
         self,
@@ -573,20 +484,10 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         if custom_texture is None:
             custom_texture = self._get_custom_logo_tex_name()
         self._custom_logo_tex_name = custom_texture
-        ltex = bs.gettexture(
-            custom_texture if custom_texture is not None else 'logo'
-        )
-        mopaque = None if custom_texture is not None else bs.getmesh('logo')
-        mtrans = (
-            None
-            if custom_texture is not None
-            else bs.getmesh('logoTransparent')
-        )
+        ltex = bs.gettexture('logo')
         logo_attrs = {
             'position': (x, y),
             'texture': ltex,
-            'mesh_opaque': mopaque,
-            'mesh_transparent': mtrans,
             'vr_depth': -10 + vr_depth_offset,
             'rotate': rotate,
             'attach': 'center',
