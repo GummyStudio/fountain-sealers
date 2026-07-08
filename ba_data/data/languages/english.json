@@ -885,7 +885,7 @@
     "powerupHealthDescriptionText": "Restores you to full health.\nYou'd never have guessed.",
     "powerupHealthNameText": "Med-Pack",
     "powerupIceBombsDescriptionText": "Weaker than normal bombs\nbut leave your enemies frozen\nand particularly brittle.",
-    "powerupIceBombsNameText": "Ice-Bombs",
+    "powerupIceBombsNameText": "Ice Shock Bombs",
     "powerupImpactBombsDescriptionText": "Slightly weaker than regular\nbombs, but they explode on impact.",
     "powerupImpactBombsNameText": "Trigger-Bombs",
     "powerupLandMinesDescriptionText": "These come in packs of 3;\nUseful for base defense or\nstopping speedy enemies.",
@@ -1235,7 +1235,7 @@
     "cant_resolve_host": "Can't resolve host.",
     "capturing": "Capturing…",
     "connected": "Connected.",
-    "description": "Use your phone or tablet as a controller with BombSquad.\nUp to 8 devices can connect at once for epic local multiplayer madness on a single TV or tablet.",
+    "description": "Use your phone or tablet as a controller with Fountain Sealers.\nUp to 8 devices can connect at once for epic local multiplayer madness on a single TV or tablet.",
     "disconnected": "Disconnected by server.",
     "dpad_fixed": "fixed",
     "dpad_floating": "floating",
@@ -1251,10 +1251,10 @@
     "reset": "Reset to default",
     "run1": "Run 1",
     "run2": "Run 2",
-    "searching": "Searching for BombSquad games…",
+    "searching": "Searching for Fountain Sealers games…",
     "searching_caption": "Tap on the name of a game to join it.\nMake sure you are on the same wifi network as the game.",
     "start": "Start",
-    "version_mismatch": "Version mismatch.\nMake sure BombSquad and BombSquad Remote\nare the latest versions and try again."
+    "version_mismatch": "Version mismatch.\nMake sure Fountain Sealers and BombSquad Remote\nare the latest versions and try again."
   },
   "removeInGameAdsText": "Unlock \"${PRO}\" in the store to remove in-game ads.",
   "removeInGameAdsTokenPurchaseText": "LIMITED TIME OFFER: Purchase ANY token pack to remove in-game ads.",
@@ -1444,8 +1444,8 @@
   "timeSuffixMinutesText": "${COUNT}m",
   "timeSuffixSecondsText": "${COUNT}s",
   "tipText": "Tip",
-  "titleText": "BombSquad",
-  "titleVRText": "BombSquad VR",
+  "titleText": "Fountain Sealers",
+  "titleVRText": "Fountain Sealers VR",
   "tokens": {
     "getTokensText": "Get Tokens",
     "notEnoughTokensText": "Not enough tokens!",
@@ -1474,7 +1474,9 @@
     "characterNames": {
       "Spaz": null,
       "Ralsei": null,
-      "NoHatRalsei": null 
+      "NoHatRalsei": null,
+      "Kris": null,
+      "Susie": null
     },
     "coopLevelNames": {
       "${GAME} Training": null,
@@ -1812,7 +1814,7 @@
       "Don't spin for too long; you'll become dizzy and fall.": null,
       "Hold any button to run.  (Trigger buttons work well if you have them)": null,
       "Hold down any button to run. You'll get places faster\nbut won't turn very well, so watch out for cliffs.": null,
-      "Ice bombs are not very powerful, but they freeze\nwhoever they hit, leaving them vulnerable to shattering.": null,
+      "Ice Shock bombs are not very powerful, but they freeze\nwhoever they hit, leaving them vulnerable to shattering.": null,
       "If someone picks you up, punch them and they'll let go.\nThis works in real life too.": null,
       "If you are short on controllers, install the '${REMOTE_APP_NAME}' app\non your mobile devices to use them as controllers.": null,
       "If you get a sticky-bomb stuck to you, jump around and spin in circles. You might\nshake the bomb off, or if nothing else your last moments will be entertaining.": null,
@@ -1962,6 +1964,7 @@
   "yourBestTimesText": "Your Best Times",
   "yourPrizeText": "Your prize:",
   "delta": {
-    "useVanillaText": "Use the vanilla shop..."
+    "useVanillaText": "Use the vanilla shop...",
+    "frozenText": "Frozen"
   }
 }

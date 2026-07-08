@@ -13,7 +13,7 @@ from typing import TYPE_CHECKING, override
 import bascenev1 as bs
 
 from bascenev1lib.gameutils import SharedObjects
-from delta.actor.particals import Partical
+from delta.actor.particals import Partical, ParticalFactory
 
 if TYPE_CHECKING:
     from typing import Any, Sequence, Callable
@@ -388,8 +388,9 @@ class Blast(bs.Actor):
             for _ in range(random.randint(3, 7)):
                     Partical(
                         position=self.node.position,
-                        texture='white', 
-                        mesh='box',
+                        texture=ParticalFactory.get().snowflake_tex, 
+                        mesh=ParticalFactory.get().snowflake_mesh,
+                    
                         body_scale=0.5,
                         mesh_scale=0.15,
                         body='landMine',
@@ -406,8 +407,8 @@ class Blast(bs.Actor):
             for _ in range(random.randint(6, 9)):
                     Partical(
                         position=self.node.position,
-                        texture='white', 
-                        mesh='box',
+                        texture=ParticalFactory.get().snowflake_tex, 
+                        mesh=ParticalFactory.get().snowflake_mesh,
                         body_scale=0.5,
                         mesh_scale=0.1,
                         body='puck',
