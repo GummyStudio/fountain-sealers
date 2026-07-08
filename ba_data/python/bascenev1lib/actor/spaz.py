@@ -14,6 +14,8 @@ import bascenev1 as bs
 from bascenev1lib.actor.bomb import Bomb, Blast
 from bascenev1lib.actor.powerupbox import PowerupBoxFactory, PowerupBox
 from bascenev1lib.actor.spazfactory import SpazFactory
+from bascenev1lib.actor.popuptext import PopupText
+from delta.actor.damagetext import DamageText
 from bascenev1lib.gameutils import SharedObjects
 from delta.actor.rudebuster import Rudebuster
 
@@ -906,6 +908,7 @@ class Spaz(bs.Actor):
             if self.shield:
                 return None
             if not self.frozen:
+                DamageText(position=self.node.position, text='Frozen', color=(0, 0.8, 1)).autoretain()
                 self.frozen = True
                 self.node.frozen = True
                 bs.timer(

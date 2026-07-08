@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, override
 import bascenev1 as bs
 
 from bascenev1lib.gameutils import SharedObjects
+from delta.actor.particals import Partical
 
 if TYPE_CHECKING:
     from typing import Any, Sequence, Callable
@@ -384,6 +385,44 @@ class Blast(bs.Actor):
         )
         if self.blast_type == 'ice':
             explosion.color = (0, 0.05, 0.4)
+            for _ in range(random.randint(3, 7)):
+                    Partical(
+                        position=self.node.position,
+                        texture='white', 
+                        mesh='box',
+                        body_scale=0.5,
+                        mesh_scale=0.15,
+                        body='landMine',
+                        velocity=(
+                            random.uniform(-2.5, 2.5),
+                            4,
+                            random.uniform(-2.5, 2.5)
+                        ),
+                        gravity_scale=0.85,
+
+                        collide_with="floor"
+                    ).autoretain()
+                    
+            for _ in range(random.randint(6, 9)):
+                    Partical(
+                        position=self.node.position,
+                        texture='white', 
+                        mesh='box',
+                        body_scale=0.5,
+                        mesh_scale=0.1,
+                        body='puck',
+                        velocity=(
+                            random.uniform(-4.5, 4.5),
+                            5,
+                            random.uniform(-2.5, 2.5)
+                        ),
+                        gravity_scale=0.4,
+                        alive_for=10.0,
+
+                        collide_with=None
+                    ).autoretain()
+                    
+
 
         bs.timer(1.0, explosion.delete)
 

@@ -105,15 +105,7 @@ class Rudebuster(bs.Actor):
                 ),
             )
             self.handlemessage(bs.DieMessage())
-
-        elif isinstance(msg, bs.DieMessage):
-            if not self.exists():
-                return
-            if msg.immediate:
-                self.node.delete()
-            else:
-                self.node.velocity = (0, 0, 0)
-                for _ in range(random.randint(3, 7)):
+            for _ in range(random.randint(3, 7)):
                     Partical(
                         position=self.node.position,
                         texture='tnt', 
@@ -125,6 +117,15 @@ class Rudebuster(bs.Actor):
                         body='landMine',
                         gravity_scale=1.0,
                     ).autoretain()
+
+        elif isinstance(msg, bs.DieMessage):
+            if not self.exists():
+                return
+            if msg.immediate:
+                self.node.delete()
+            else:
+                self.node.velocity = (0, 0, 0)
+                
                 bs.animate(
                     self.node,
                     'mesh_scale',
