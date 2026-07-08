@@ -23,7 +23,7 @@ class ParticalFactory:
 
 
     @classmethod
-    def get(cls) -> ParticalFactory:
+    def get(cls):
         """Return a shared bs.PowerupBoxFactory object, creating if needed."""
         activity = bs.getactivity()
         if activity is None:
