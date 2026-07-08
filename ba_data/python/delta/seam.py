@@ -16,6 +16,8 @@ class ShopUI(bui.MainWindow):
                 ),
                 origin_widget=None, transition=None
                 )
+        self.exists = True
+        self.did_clean_up = False
         self.menu_container = None
         self.empty_texture = bui.gettexture('empty')
 
@@ -29,13 +31,13 @@ class ShopUI(bui.MainWindow):
             'talk': [bui.gettexture('seam/seam_talk1'), bui.gettexture('seam/seam_talk2'), bui.gettexture('seam/seam_talk3')]
         }
         self.animation_frame = 0
-        self.animate_type = 0
+        self.animate_type = 'idle'
         self.animation_frames_past = 0
         bgscale=3.5
         
         bui.imagewidget(
             parent=self._root_widget,
-            position=(-500, 228), 
+            position=(-500, 268), 
             size=(512 * bgscale, 128 * bgscale),
             texture=bui.gettexture('seam/seam_shop'),
         )
@@ -60,7 +62,6 @@ class ShopUI(bui.MainWindow):
         )
         self.talk_sound = bui.getsound('talksounds/default')
         self.dialouge_mode = 'seperate' # seperate, merged or reversed, changing how dialouge is rendered
-        self.animate_seam('laugh')
         self.next_frame()
 
 
@@ -80,13 +81,16 @@ class ShopUI(bui.MainWindow):
     
         self.show_main_menu()
         self._tick()
-        self.say(
-            '* YO HIT THE SPLITS!', expression='suprised'
-        )
+        
         
         
     
     def _tick(self):
+        if not self.exists:
+            if not self.did_clean_up:
+                self.did_clean_up = True
+                bui.textwidget(edit=self.dark_dollars, text='')
+            return
         if self.dialouge_mode == 'merged':
             bui.textwidget(edit=self.dark_dollars, text='')
 
@@ -97,6 +101,15 @@ class ShopUI(bui.MainWindow):
         bs.apptimer(0.1, self._tick)
     
     def show_main_menu(self):
+        intro = [
+            ('* Hee hee... Welcome, travellers.', 'talk'),
+            ( '* YO HIT THE SPLITS!', 'suprised'),
+            ( '* Don\'t like the prices? Then get out.', 'laugh'),
+        ]
+        say = random.choice(intro)
+        self.say(
+           say[0], expression=say[1]
+        )
         self.split()
         if self.menu_container is not None:
             self.menu_container.delete()
@@ -117,8 +130,15 @@ class ShopUI(bui.MainWindow):
                          label='TALK', on_activate_call=self.show_talk_menu, texture=self.empty_texture)
         bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, -30), 
                          label='EXIT', on_activate_call=self.leave, texture=self.empty_texture)
-    
+    def show_buy_menu(self):
+        self.split_reverse()
+        if self.menu_container is not None:
+            self.menu_container.delete()
+        self.say("* What do you like to buy?", expression='talk')
     def show_talk_menu(self):
+        self.say(
+            '* Don\'t have anything better to do.', expression='talk'
+        )
         self.split()
         if self.menu_container is not None:
             self.menu_container.delete()
@@ -134,40 +154,90 @@ class ShopUI(bui.MainWindow):
         
         
         bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, 110), 
-                         label='About yourself', on_activate_call=bs.Call(self.talk, 'about'), texture=self.empty_texture)
-        bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, 90), 
-                         label='How to earn money', on_activate_call=bs.Call(self.talk, 'howtoearn'), texture=self.empty_texture)
-        bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, 0), 
-                         label='dik', on_activate_call=self.leave, texture=self.empty_texture)
-        bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, -30), 
+                         label='About\nyourself', on_activate_call=bs.Call(self.talk, 'about'), texture=self.empty_texture)
+        bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, 38), 
+                         label='Earn\nMoney', on_activate_call=bs.Call(self.talk, 'howtoearn'), texture=self.empty_texture)
+        bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, -28), 
+                         label='Anything', on_activate_call=bs.Call(self.talk, 'anything'), texture=self.empty_texture)
+        bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, -60), 
                          label='BACK', on_activate_call=self.show_main_menu, texture=self.empty_texture)
+        
     def talk(self, topic: str):
         self.merge()
         if self.menu_container is not None:
             self.menu_container.delete()
             
         if topic == 'about':
-            self.say((
-                "* The name's Seam. Pronounced \"Shawm.\"{pause:2.0}\n"
-                "* And this is my little Seap. Ha ha ha ha...{pause:2.0}\n"
-                "* Over the years, I've collected odds and ends.{pause:2.0}\n"
-                "* 'Course, I've no attachment to any of it. It's just a hobby of mine.{pause:2.0}\n"
-                "* Around here, you learn to find ways to pass the time... ... or go mad like everyone else.{pause:2.0}\n"
-                ), 
-                expression='talk'
-            )
-        if topic == 'howtoearn':
             self.say(
-                '* I am Seam, the one and only.{pause:1.0} I am the shopkeeper of this fine establishment.{pause:1.0}', 
-                expression='talk'
+                "* The name's Seam. Pronounced \"Shawm.\"{pause:1.0}\n", 
+                expression='talk',
+                on_complete=lambda: (
+                    self.say(
+                        "* And this is my little Seap. Ha ha ha ha...{pause:1.0}\n",
+                        expression='laugh',
+                        on_complete=lambda: (
+                            self.say(
+                                "* Over the years, I've collected odds and ends.{pause:1.0}\n",
+                                expression='talk',
+                                on_complete=lambda: (
+                                    self.say(
+                                        "* 'Course, I've no attachment to any of it. It's just a hobby of mine.{pause:1.0}\n",
+                                        expression='talk',
+                                        on_complete=lambda: (
+                                            self.say(
+                                                "* Around here, you learn to find ways to pass the time... ... or go mad like everyone else.{pause:2.0}\n",
+                                                expression='laugh',
+                                                on_complete=self.show_talk_menu
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        elif topic == 'howtoearn':
+            self.say(
+                '* How to earn cash you say?{pause:1.0}\n* Well...{pause:1.0}\n', 
+                expression='talk',
+                 on_complete=lambda: (
+                    self.say((
+                        "* You can play with your friends with the realm of the unknown.{pause:1.0}\n"
+                        "* Doing tricks, defeating them or generally just playing can get you\n  some dollars!{pause:1.0}\n"
+                        
+                        ),
+                        expression='talk',
+                        on_complete=lambda: (
+                            self.say(
+                                "* Or well, what do I know. Ha ha ha...{pause:2.0}\n",
+                                expression='laugh',
+                                on_complete=self.show_talk_menu
+                            )
+                        )
+                    )
+                 )
+            )
+        elif topic == 'anything':
+            options = [
+                "* Do you ever look at a pile of scrap and see a masterpiece?{pause:1.0}\n* No?{pause:1.0}\n* Well, that's quite alright. Not everyone is cursed with my particular brand of vision.",
+                "* You seem to be searching for something, traveler.{pause:1.0}\n* Just remember: the most valuable items aren't always the ones with a price tag attached.",
+                "* Honestly, most days are exactly the same as the last.{pause:1.0}\n* But every now and then, someone interesting walks through that door.{pause:1.0}\n* ...I suppose you're one of them."
+            ]
+            
+            self.say(
+                random.choice(options) + "{pause:1.0}\n", 
+                expression='talk',
+                on_complete=self.show_talk_menu
             )
 
     def leave(self):
+        self.exists = False
         if self.menu_container is not None:
             self.menu_container.delete()
         self.merge()
         self.say(
-            '* Goodbye stranger.{pause:1.0}', 
+            '* Take your time... Ain\'t like it\'s better spent.{pause:1.5}', 
             expression='talk',
             on_complete=babase.app.classic.return_to_main_menu_session_gracefully
         )
@@ -187,6 +257,8 @@ class ShopUI(bui.MainWindow):
         bui.imagewidget(edit=self.split_dialouge, opacity=0.0)
 
     def animate_seam(self, animation_type: str):
+        if not self.exists:
+            return
         if animation_type in self.seam_sprites:
             self.animate_type = animation_type
             self.animation_frame = 0
@@ -227,7 +299,7 @@ class ShopUI(bui.MainWindow):
                     full_text += char
                     
                     bs.apptimer(current_delay, lambda s=full_text:self.advance(s))
-                    current_delay += 0.025
+                    current_delay += 0.02
         
         bs.apptimer(current_delay, lambda: self.animate_seam('idle'))
         if on_complete:
@@ -235,24 +307,27 @@ class ShopUI(bui.MainWindow):
     
     
     def next_frame(self):
-        if self.animate_type in self.seam_sprites:
-            self.animation_frames_past += 1
-            if self.animate_type == 'idle':
-                
-                if (not self.animation_frames_past % 30 == 0) and (self.animation_frame == 0):
-                    bs.apptimer(0.2, self.next_frame)
-                    return
+        try:
+            if self.animate_type in self.seam_sprites:
+                self.animation_frames_past += 1
+                if self.animate_type == 'idle':
                     
-                
+                    if (not self.animation_frames_past % 10 == 0) and (self.animation_frame == 0):
+                        bs.apptimer(0.2, self.next_frame)
+                        return
+                        
+                    
 
-                
-            frames = self.seam_sprites[self.animate_type]
-            self.animation_frame = (self.animation_frame + 1) % len(frames)
-            bui.imagewidget(edit=self.seam, texture=frames[self.animation_frame])
-            bs.apptimer(0.2, self.next_frame)
-        else:
-            print('dawg.')
-        
+                    
+                frames = self.seam_sprites[self.animate_type]
+                self.animation_frame = (self.animation_frame + 1) % len(frames)
+                bui.imagewidget(edit=self.seam, texture=frames[self.animation_frame])
+                bs.apptimer(0.2, self.next_frame)
+            else:
+                print('dawg.')
+        except:
+            pass
+            
      
 class ShopSession(bs.Session):
     def __init__(self):
