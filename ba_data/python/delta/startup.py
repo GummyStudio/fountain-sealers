@@ -31,9 +31,20 @@ class Startup:
         
         config.apply_and_commit()
 
-        self.store = {}
+        self.store = {
+            'Roaring Knight': {
+                'config': 'OWNED_roaringknight',
+                'description':  (
+                        "* That Black Knight everyone was talking about.",
+                        'suprised'
+                    ),
+                'cost': 5000,
+            }
+        }
         self.stats = {
-            'frozen': 'STATS_freezed'
+            'dd': 'dark_dollars',
+            'frozen': 'STATS_freezed',
+
         }
 
     @property
@@ -41,11 +52,11 @@ class Startup:
         return bui.app.config.get('delta', {})
     
     def increase_statistic(self, stat: str, by: int = 1):
-        if self.stats.get(stat, None):
-            return
-        else:
+        try:
             self.gameconfig[self.stats[stat]] += by
-        bui.app.config.apply_and_commit()
+            bui.app.config.apply_and_commit()
+        except:
+            pass
     
     
     
