@@ -45,6 +45,7 @@ class Startup:
             return
         else:
             self.gameconfig[self.stats[stat]] += by
+        bui.app.config.apply_and_commit()
     
     
     
