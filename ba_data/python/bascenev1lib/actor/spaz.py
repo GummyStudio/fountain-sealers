@@ -238,6 +238,10 @@ class Spaz(bs.Actor):
         self.input_x = 0.0
         self.input_y = 0.0
         self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
+
+        # sound effects
+        
+        self._utheal_sfx = bs.getsound('utHeal')
         
     def _tick(self):
         if not self.exists():
