@@ -40,7 +40,7 @@ class Startup:
     def gameconfig(self) -> dict:
         return bui.app.config.get('delta', {})
     
-    def increase_statistic(self, stat: str, by: int):
+    def increase_statistic(self, stat: str, by: int = 1):
         if self.stats.get(stat, None):
             return
         else:

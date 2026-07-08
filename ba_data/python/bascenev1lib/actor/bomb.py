@@ -731,7 +731,7 @@ class Blast(bs.Actor):
                 )
             )
             if self.blast_type == 'ice':
-                BombFactory.get().freeze_sound.play(10, position=nodepos)
+                BombFactory.get().freeze_sound.play(1, position=nodepos)
                 node.handlemessage(bs.FreezeMessage())
 
         else:
