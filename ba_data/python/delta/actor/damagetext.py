@@ -1,7 +1,7 @@
 import bascenev1 as bs
 
 class DamageText(bs.Actor):
-    def __init__(self, position: tuple, text: str, color: tuple = (1, 1, 1)):
+    def __init__(self, position: tuple, text: str, color: tuple = (1, 1, 1), scl=1.0):
         super().__init__()
         self.node = bs.newnode(
             'text',
@@ -11,21 +11,32 @@ class DamageText(bs.Actor):
                 'color': color,
                 'h_align': 'center',
                 'v_align': 'center',
-                'scale': 1.5,
                 'shadow': 1.0,
                 'flatness': 1.0,
+                'in_world': True,
+                'scale': 0.02*scl
             }
         )
         
        
-        bs.animate(self.node, 'scale', {0: 0.5, 0.1: 2.0, 0.2: 1.5})
+ 
+        start_y = position[1]
+        bs.animate_array(self.node, 'position', 3, {
+            0: (position[0], start_y, position[2]),
+            0.11: (position[0], start_y + 0.51, position[2]),
+            0.351: (position[0]+0.6, start_y + 0.5, position[2]) ,
+            0.451: (position[0]+0.6, start_y, position[2]) ,
+            0.6: (position[0]+0.6, start_y+0.1, position[2]),
+            0.7: (position[0]+0.6, start_y, position[2]),
+            0.8: (position[0]+0.6, start_y+0.1, position[2]),
+            0.9: (position[0]+0.6, start_y, position[2]),
+        })
         
-        # Fade out
-        bs.animate(self.node, 'opacity', {0.4: 1.0, 0.6: 0.0})
+        bs.animate(self.node, 'opacity', {1.5: 1.0, 2.0: 0.0})
         
         # kill ourself
         self._die_timer = bs.Timer(
-            0.7, bs.WeakCall(self.handlemessage, bs.DieMessage())
+            2.0, bs.WeakCall(self.handlemessage, bs.DieMessage())
         )
 
     def handlemessage(self, msg):
