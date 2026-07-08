@@ -163,9 +163,9 @@ class SharedObjects:
                 conditions=(
                     ('they_have_material', SpazFactory.get().spaz_material),
                     'and',
-                    ('we_are_older_than', 300),
+                    ('we_are_older_than', 15),
                     'and',
-                    ('they_are_older_than', 300)
+                    ('they_are_older_than', 15)
                 ),
                 actions=(
                     ('modify_part_collision', 'collide', True),

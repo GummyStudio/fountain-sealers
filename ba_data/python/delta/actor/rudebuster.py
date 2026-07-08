@@ -52,14 +52,14 @@ class Rudebuster(bs.Actor):
             -5,
             self.node.velocity[2]
         )
-        bs.timer(0.421, self.arg2)
+        bs.timer(0.121, self.arg2)
     def arg2(self):
         self.node.velocity = (
             self.node.velocity[0],
             5,
             self.node.velocity[2]
         )
-        bs.timer(0.421, self.arg3)
+        bs.timer(0.121, self.arg3)
         
     def arg3(self):
         self.node.velocity = (
