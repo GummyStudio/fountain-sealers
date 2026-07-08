@@ -11,7 +11,13 @@ class Startup:
         cfg = {
             'firstLaunch': True,
             'dark_dollars': 0,
-         
+
+
+            # stats
+            'STATS_freezed': 0,
+
+            # characters
+            'OWNED_roaringknight': False
         }
 
         if 'delta' not in config or not isinstance(config['delta'], dict):
@@ -22,10 +28,24 @@ class Startup:
             for key, value in cfg.items():
                 user_delta.setdefault(key, value)
 
-        # Save changes to the disk
+        
         config.apply_and_commit()
+
+        self.store = {}
+        self.stats = {
+            'frozen': 'STATS_freezed'
+        }
 
     @property
     def gameconfig(self) -> dict:
         return bui.app.config.get('delta', {})
+    
+    def increase_statistic(self, stat: str, by: int = 1):
+        if self.stats.get(stat, None):
+            return
+        else:
+            self.gameconfig[self.stats[stat]] += by
+        bui.app.config.apply_and_commit()
+    
+    
     

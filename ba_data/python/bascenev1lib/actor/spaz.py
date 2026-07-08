@@ -240,7 +240,8 @@ class Spaz(bs.Actor):
     def _tick(self):
         # for now just pass. behavior can be changed later
         pass
-
+    
+    
 
     @override
     def exists(self) -> bool:
@@ -906,6 +907,7 @@ class Spaz(bs.Actor):
                 return None
             if not self.frozen:
                 DamageText(position=self.node.position, text='Frozen', color=(0, 0.1, 1), scl=0.6).autoretain()
+                bs.app.classic.startup.increase_statistic('frozen')
                 self.frozen = True
                 self.node.frozen = True
                 bs.timer(
