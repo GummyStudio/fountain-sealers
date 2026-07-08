@@ -233,16 +233,11 @@ class Spaz(bs.Actor):
         self.rudebusters = 0
         self.input_x = 0.0
         self.input_y = 0.0
-        bs.timer(0.1, self._tick, repeat=True)
+        self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
         
     def _tick(self):
-        if not self.node:
-            return
-        
-        if self.source_player:
-            self.node.move_left_right = self.input_x
-            self.node.move_up_down = self.input_y
-        
+        # for now just pass. behavior can be changed later
+        pass
 
 
     @override
@@ -591,6 +586,7 @@ class Spaz(bs.Actor):
         if not self.node:
             return
         self.input_y = value
+        self.node.move_up_down = value
 
     def on_move_left_right(self, value: float) -> None:
         """
@@ -602,6 +598,7 @@ class Spaz(bs.Actor):
         if not self.node:
             return
         self.input_x = value
+        self.node.move_left_right = value
 
     def on_punched(self, damage: int) -> None:
         """Called when this spaz gets punched."""
