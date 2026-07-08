@@ -281,10 +281,7 @@ class PlaylistAddGameWindow(bui.MainWindow):
 
         plus = bui.app.plus
         assert plus is not None
-
-        import _bascenev1
-        from delta.seam import ShopSession
-        _bascenev1.new_host_session(ShopSession)
+        bui
 
     def _add(self) -> None:
         bui.lock_all_input()  # Make sure no more commands happen.

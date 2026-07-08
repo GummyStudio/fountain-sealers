@@ -17,6 +17,7 @@ class Partical(bs.Actor):
                 body: str = 'landMine',
                 alive_for: float = 3.0,
                 gravity_scale: int = 1.0,
+                collide_with: str = "floor"# or nothing
         ):
         super().__init__()
         from bascenev1lib.gameutils import SharedObjects
@@ -38,7 +39,8 @@ class Partical(bs.Actor):
                 'body_scale': body_scale,
                 'shadow_size': 0.44,
                 'gravity_scale': gravity_scale,
-                'materials': [SharedObjects.get().only_collide_with_floor_mat]
+                'materials': [SharedObjects.get().only_collide_with_floor_mat] if
+                    collide_with == 'floor' else [SharedObjects.get().no_collide_mat]
             }
         )
         bs.timer(alive_for, bs.Call(self.handlemessage, bs.DieMessage()))
