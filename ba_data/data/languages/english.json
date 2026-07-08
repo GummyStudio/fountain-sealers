@@ -1474,7 +1474,9 @@
     "characterNames": {
       "Spaz": null,
       "Ralsei": null,
-      "NoHatRalsei": null 
+      "NoHatRalsei": null,
+      "Kris": null,
+      "Susie": null
     },
     "coopLevelNames": {
       "${GAME} Training": null,
@@ -1962,6 +1964,7 @@
   "yourBestTimesText": "Your Best Times",
   "yourPrizeText": "Your prize:",
   "delta": {
-    "useVanillaText": "Use the vanilla shop..."
+    "useVanillaText": "Use the vanilla shop...",
+    "frozenText": "Frozen"
   }
 }

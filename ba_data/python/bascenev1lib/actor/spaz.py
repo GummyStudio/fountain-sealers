@@ -927,7 +927,9 @@ class Spaz(bs.Actor):
             if self.shield:
                 return None
             if not self.frozen:
-                DamageText(position=self.node.position, text='Frozen', color=(0, 0.1, 1), scl=0.6).autoretain()
+                DamageText(position=self.node.position, text=bs.Lstr(
+                    resource='delta.frozenText'
+                ), color=(0, 0.1, 1), scl=0.6).autoretain()
                 bs.app.classic.startup.increase_statistic('frozen')
                 self.frozen = True
                 self.node.frozen = True
