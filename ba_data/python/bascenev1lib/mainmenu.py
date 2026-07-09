@@ -85,7 +85,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             bs.animate(self.my_name.node, 'opacity', {2.3: 0, 3.0: 1.0})
 
         # Show modpack subtitel text.
-        pos = (-10, -120)
+        pos = (0, -120)
         node = self.modpack_subtitle = bs.newnode(
             'text',
             attrs={
@@ -94,23 +94,23 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 'scale': 0.6,
                 'vr_depth': -60,
                 'position': pos,
-                'text': bs.Lstr(resource='testBuildText'),
+                'text': bs.Lstr(resource='menuSubtitleText'),
                 'big': True,
             },
         )
         bs.animate(node, 'opacity', {1.3: 0, 1.8: 1.0})
 
-        mesh = bs.getmesh('thePadLevel')
-        trees_mesh = bs.getmesh('trees')
-        bottom_mesh = bs.getmesh('thePadLevelBottom')
-        color_texture = bs.gettexture('thePadLevelColor')
-        trees_texture = bs.gettexture('treesColor')
+        # mesh = bs.getmesh('thePadLevel')
+        # trees_mesh = bs.getmesh('trees')
+        # bottom_mesh = bs.getmesh('thePadLevelBottom')
+        # color_texture = bs.gettexture('thePadLevelColor')
+        # trees_texture = bs.gettexture('treesColor')
         bgtex = bs.gettexture('menuBG')
         bgmesh = bs.getmesh('thePadBG')
 
-        # Load these last since most platforms don't use them.
-        vr_bottom_fill_mesh = bs.getmesh('thePadVRFillBottom')
-        vr_top_fill_mesh = bs.getmesh('thePadVRFillTop')
+        # # Load these last since most platforms don't use them.
+        # vr_bottom_fill_mesh = bs.getmesh('thePadVRFillBottom')
+        # vr_top_fill_mesh = bs.getmesh('thePadVRFillTop')
 
         gnode = self.globalsnode
         gnode.camera_mode = 'follow'
@@ -121,63 +121,63 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         gnode.vignette_outer = (0.45, 0.55, 0.54)
         gnode.vignette_inner = (0.99, 0.98, 0.98)
 
-        self.bottom = bs.NodeActor(
-            bs.newnode(
-                'terrain',
-                attrs={
-                    'mesh': bottom_mesh,
-                    'lighting': False,
-                    'reflection': 'soft',
-                    'reflection_scale': [0.45],
-                    'color_texture': color_texture,
-                },
-            )
-        )
-        self.vr_bottom_fill = bs.NodeActor(
-            bs.newnode(
-                'terrain',
-                attrs={
-                    'mesh': vr_bottom_fill_mesh,
-                    'lighting': False,
-                    'vr_only': True,
-                    'color_texture': color_texture,
-                },
-            )
-        )
-        self.vr_top_fill = bs.NodeActor(
-            bs.newnode(
-                'terrain',
-                attrs={
-                    'mesh': vr_top_fill_mesh,
-                    'vr_only': True,
-                    'lighting': False,
-                    'color_texture': bgtex,
-                },
-            )
-        )
-        self.terrain = bs.NodeActor(
-            bs.newnode(
-                'terrain',
-                attrs={
-                    'mesh': mesh,
-                    'color_texture': color_texture,
-                    'reflection': 'soft',
-                    'reflection_scale': [0.3],
-                },
-            )
-        )
-        self.trees = bs.NodeActor(
-            bs.newnode(
-                'terrain',
-                attrs={
-                    'mesh': trees_mesh,
-                    'lighting': False,
-                    'reflection': 'char',
-                    'reflection_scale': [0.1],
-                    'color_texture': trees_texture,
-                },
-            )
-        )
+        # self.bottom = bs.NodeActor(
+            # bs.newnode(
+                # 'terrain',
+                # attrs={
+                    # 'mesh': bottom_mesh,
+                    # 'lighting': False,
+                    # 'reflection': 'soft',
+                    # 'reflection_scale': [0.45],
+                    # 'color_texture': color_texture,
+                # },
+            # )
+        # )
+        # self.vr_bottom_fill = bs.NodeActor(
+            # bs.newnode(
+                # 'terrain',
+                # attrs={
+                    # 'mesh': vr_bottom_fill_mesh,
+                    # 'lighting': False,
+                    # 'vr_only': True,
+                    # 'color_texture': color_texture,
+                # },
+            # )
+        # )
+        # self.vr_top_fill = bs.NodeActor(
+            # bs.newnode(
+                # 'terrain',
+                # attrs={
+                    # 'mesh': vr_top_fill_mesh,
+                    # 'vr_only': True,
+                    # 'lighting': False,
+                    # 'color_texture': bgtex,
+                # },
+            # )
+        # )
+        # self.terrain = bs.NodeActor(
+            # bs.newnode(
+                # 'terrain',
+                # attrs={
+                    # 'mesh': mesh,
+                    # 'color_texture': color_texture,
+                    # 'reflection': 'soft',
+                    # 'reflection_scale': [0.3],
+                # },
+            # )
+        # )
+        # self.trees = bs.NodeActor(
+            # bs.newnode(
+                # 'terrain',
+                # attrs={
+                    # 'mesh': trees_mesh,
+                    # 'lighting': False,
+                    # 'reflection': 'char',
+                    # 'reflection_scale': [0.1],
+                    # 'color_texture': trees_texture,
+                # },
+            # )
+        # )
         self.bgterrain = bs.NodeActor(
             bs.newnode(
                 'terrain',

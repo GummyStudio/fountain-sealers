@@ -42,7 +42,7 @@ class Background(bs.Actor):
                     'texture': bs.gettexture('bg'),
                     'tilt_translate': -0.3,
                     'has_alpha_channel': False,
-                    'color': (1, 1, 1),
+                    'color': (0.6, 0.6, 0.6),
                 },
             )
             if not start_faded:
@@ -53,9 +53,9 @@ class Background(bs.Actor):
                     loop=False,
                 )
             if show_logo:
-                logo_texture = bs.gettexture('logo')
-                logo_mesh = bs.getmesh('logo')
-                logo_mesh_transparent = bs.getmesh('logoTransparent')
+                logo_texture = bs.gettexture('delta_rune')
+                logo_mesh = None
+                logo_mesh_transparent = None
                 self.logo = bs.newnode(
                     'image',
                     owner=self.node,
@@ -65,7 +65,7 @@ class Background(bs.Actor):
                         'mesh_transparent': logo_mesh_transparent,
                         'scale': (0.7, 0.7),
                         'vr_depth': -250,
-                        'color': (0.15, 0.15, 0.15),
+                        'color': (0.4, 0.4, 0.4),
                         'position': (0, 0),
                         'tilt_translate': -0.05,
                         'absolute_scale': False,

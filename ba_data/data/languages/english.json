@@ -1412,15 +1412,6 @@
     "winterSpecialText": "Winter Special",
     "youOwnThisText": "- you own this -"
   },
-  "storeDescriptionText": "8 Player Party Game Madness!\n\nBlow up your friends (or the computer) in a tournament of explosive mini-games such as Capture-the-Flag, Bomber-Hockey, and Epic-Slow-Motion-Death-Match!\n\nSimple controls and extensive controller support make it easy for up to 8 people to get in on the action; you can even use your mobile devices as controllers via the free ‘BombSquad Remote’ app!\n\nBombs Away!\n\nCheck out www.froemling.net/bombsquad for more info.\n",
-  "storeDescriptions": {
-    "blowUpYourFriendsText": "Blow up your friends.",
-    "competeInMiniGamesText": "Compete in mini-games ranging from racing to flying.",
-    "customize2Text": "Customize characters, mini-games, and even the soundtrack.",
-    "customizeText": "Customize characters and create your own mini-game playlists.",
-    "sportsMoreFunText": "Sports are more fun with explosives.",
-    "teamUpAgainstComputerText": "Team up against the computer."
-  },
   "storeText": "Store",
   "submitText": "Submit",
   "submittingPromoCodeText": "Submitting Code...",
@@ -1430,7 +1421,7 @@
   "telnetAccessGrantedText": "Telnet access enabled.",
   "telnetAccessText": "Telnet access detected; allow?",
   "testBuildErrorText": "This test build is no longer active; please check for a new version.",
-  "testBuildText": "FOUNTAIN SEALERS",
+  "menuSubtitleText": "FOUNTAIN SEALERS",
   "testBuildValidateErrorText": "Unable to validate test build. (no net connection?)",
   "testBuildValidatedText": "Test Build Validated; Enjoy!",
   "thankYouText": "Thank you for your support! Enjoy the game!!",
@@ -1474,7 +1465,7 @@
     "characterNames": {
       "Spaz": null,
       "Ralsei": null,
-      "NoHatRalsei": null,
+      "NoHatRalsei": "Ralsei (hatless)",
       "Kris": null,
       "Susie": null
     },
