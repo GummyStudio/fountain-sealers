@@ -16,7 +16,7 @@ class ParticalFactory:
         You shouldn't need to do this; call Powerup.get_factory()
         to get a shared instance.
         """
-        self.snowflake_mesh = bs.getmesh('box')
+        self.snowflake_mesh = bs.getmesh('snowflake')
         self.snowflake_tex = bs.gettexture('snowflake')
         self.rudebuster_mesh = bs.getmesh('box')
         self.rudebuster_tex = bs.gettexture('white')
