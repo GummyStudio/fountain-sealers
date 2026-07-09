@@ -1100,7 +1100,7 @@ class Bomb(bs.Actor):
             if self.bomb_type in ['snowgrave']: 
                 # bombs that do smth else when blown up
                 if self.bomb_type == 'snowgrave':
-                    Snowgrave(self.node.position)
+                    Snowgrave(self.node.position, source_player=self._source_player)
             else:
                 blast = Blast(
                     position=self.node.position,
