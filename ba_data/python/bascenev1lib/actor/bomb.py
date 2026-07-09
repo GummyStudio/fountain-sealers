@@ -164,6 +164,7 @@ class BombFactory:
         self.land_mine_tex = bs.gettexture('landMine')
         self.land_mine_lit_tex = bs.gettexture('landMineLit')
         self.tnt_tex = bs.gettexture('tnt')
+        self.mew_mew_tex = bs.gettexture('white')
 
         self.hiss_sound = bs.getsound('hiss')
         self.debris_fall_sound = bs.getsound('debrisFall')
@@ -780,6 +781,7 @@ class Bomb(bs.Actor):
             'normal',
             'sticky',
             'tnt',
+            'mewmew'
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -926,6 +928,9 @@ class Bomb(bs.Actor):
                 tex = factory.ice_tex
             elif self.bomb_type == 'sticky':
                 tex = factory.sticky_tex
+            elif self.bomb_type == 'mewmew':
+                tex = factory.mew_mew_tex
+                fuse_time = 1.5
             else:
                 tex = factory.regular_tex
             self.node = bs.newnode(

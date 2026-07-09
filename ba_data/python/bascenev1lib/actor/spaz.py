@@ -841,6 +841,26 @@ class Spaz(bs.Actor):
                         POWERUP_WEAR_OFF_TIME / 1000.0,
                         bs.WeakCall(self._bomb_wear_off),
                     )
+            elif msg.poweruptype == 'mewmew':
+                self.bomb_type = 'mewmew'
+                tex = self._get_bomb_type_tex()
+                self._flash_billboard(tex)
+                if self.powerups_expire:
+                    self.node.mini_billboard_2_texture = tex
+                    t_ms = int(bs.time() * 1000.0)
+                    assert isinstance(t_ms, int)
+                    self.node.mini_billboard_2_start_time = t_ms
+                    self.node.mini_billboard_2_end_time = (
+                        t_ms + POWERUP_WEAR_OFF_TIME
+                    )
+                    self._bomb_wear_off_flash_timer = bs.Timer(
+                        (POWERUP_WEAR_OFF_TIME - 2000) / 1000.0,
+                        bs.WeakCall(self._bomb_wear_off_flash),
+                    )
+                    self._bomb_wear_off_timer = bs.Timer(
+                        POWERUP_WEAR_OFF_TIME / 1000.0,
+                        bs.WeakCall(self._bomb_wear_off),
+                    )
             elif msg.poweruptype == 'punch':
                 tex = PowerupBoxFactory.get().tex_punch
                 self._flash_billboard(tex)
@@ -1624,7 +1644,8 @@ class Spaz(bs.Actor):
             return factory.tex_ice_bombs
         if self.bomb_type == 'impact':
             return factory.tex_impact_bombs
-        raise ValueError('invalid bomb type')
+        else:
+            return factory.tex_bomb
 
     def _flash_billboard(self, tex: bs.Texture) -> None:
         assert self.node
