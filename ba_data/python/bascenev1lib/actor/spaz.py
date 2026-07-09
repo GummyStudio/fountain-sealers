@@ -31,10 +31,10 @@ BASE_PUNCH_POWER_SCALE = 1.2
 BASE_PUNCH_COOLDOWN = 400
 
 GLOVE_COOLDOWNS = {
-    1: 130,
-    2: 230,
-    3: 300,
-    4: 360,
+    0: 130,
+    1: 230,
+    2: 300,
+    3: 360,
 }
 
 
@@ -213,7 +213,7 @@ class Spaz(bs.Actor):
         self._pickup_cooldown = 0
         self._bomb_cooldown = 0
         self._has_boxing_gloves = False
-        self._tough_punches = 1
+        self._tough_punches = 0
         self._tough_glove_weak_sfx = bs.getsound('tough_glove_weak')
         self._tough_glove_strong_sfx = bs.getsound('tough_glove_strong')
         if self.default_boxing_gloves:
@@ -696,7 +696,7 @@ class Spaz(bs.Actor):
         else:
             factory = SpazFactory.get()
             self._punch_power_scale = 1.35
-            default_cooldown = GLOVE_COOLDOWNS.get(1)
+            default_cooldown = GLOVE_COOLDOWNS.get(0)
             self._punch_cooldown = GLOVE_COOLDOWNS.get(
                 self._tough_punches, 
                 default_cooldown
@@ -1372,7 +1372,7 @@ class Spaz(bs.Actor):
                                 1.5, position=self.node.position
                             )
                         else:
-                            self._tough_punches = 1
+                            self._tough_punches = 0
                             self._tough_glove_strong_sfx.play(
                                 1.5, position=self.node.position,
                             )
