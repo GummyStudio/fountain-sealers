@@ -214,8 +214,7 @@ class Spaz(bs.Actor):
         self._bomb_cooldown = 0
         self._has_boxing_gloves = False
         self._tough_punches = 0
-        self._tough_glove_weak_sfx = bs.getsound('tough_glove_weak')
-        self._tough_glove_strong_sfx = bs.getsound('tough_glove_strong')
+       
         if self.default_boxing_gloves:
             self.equip_boxing_gloves()
         self.last_punch_time_ms = -9999
@@ -1368,12 +1367,12 @@ class Spaz(bs.Actor):
                                 self._punch_cooldown = GLOVE_COOLDOWNS.get(num)
                         mag *= (self._tough_punches * 0.7)
                         if self._tough_punches < 4:
-                            self._tough_glove_weak_sfx.play(
+                            ParticalFactory.get()._tough_glove_weak_sfx.play(
                                 1.5, position=self.node.position
                             )
                         else:
                             self._tough_punches = 0
-                            self._tough_glove_strong_sfx.play(
+                            ParticalFactory.get()._tough_glove_strong_sfx.play(
                                 1.5, position=self.node.position,
                             )
 
