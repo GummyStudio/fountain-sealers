@@ -1521,6 +1521,7 @@ class Spaz(bs.Actor):
             ).autoretain()
             self.node.handlemessage('celebrate', 100)
             return None
+       
         else:
             dropping_bomb = True
             bomb_type = self.bomb_type
@@ -1540,7 +1541,54 @@ class Spaz(bs.Actor):
             bomb.node.add_death_action(
                 bs.WeakCall(self.handlemessage, BombDiedMessage())
             )
-        self._pick_up(bomb.node)
+        
+        if self.bomb_type == 'mewmew':
+            def throw():
+                if not self.is_alive():
+                    return
+                self.node.bomb_pressed=False
+                self.node.bomb_pressed=True
+                self.node.bomb_pressed=False
+                
+        
+                random.choice([ParticalFactory.get().pink_throw1_sfx,
+                ParticalFactory.get().pink_throw2_sfx]).play()
+            def spawn():
+                if not self.is_alive():
+                    return
+                
+                pos = self.node.position_forward
+                vel = self.node.velocity
+
+                
+                bomb=Bomb(
+                    position=(pos[0], pos[1] - 0.0, pos[2]),
+                    velocity=(vel[0], vel[1], vel[2]),
+                    bomb_type=bomb_type,
+                    blast_radius=self.blast_radius,
+                    source_player=self.source_player,
+                    owner=self.node,
+                ).autoretain()
+                self._pick_up(bomb.node)
+                bs.timer(0.12, throw)
+
+            self._pick_up(bomb.node)
+            bs.timer(0.1, throw)
+            bs.timer(0.21, spawn)
+            bs.timer(0.38, spawn)
+            bs.timer(0.59, spawn)
+            bs.timer(0.73, lambda:(
+                self.node.handlemessage('celebrate_r', 1000),
+                ParticalFactory.get().pink_short_laugh_sfx.play()
+    
+            )
+                     
+                     )
+            
+
+
+        else:
+            self._pick_up(bomb.node)
 
         for clb in self._dropped_bomb_callbacks:
             clb(self, bomb)
