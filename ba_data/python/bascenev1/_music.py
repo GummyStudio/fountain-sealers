@@ -22,6 +22,7 @@ class MusicType(Enum):
     """
 
     MENU = 'Menu'
+    MENU2 = 'Menu2'
     VICTORY = 'Victory'
     CHAR_SELECT = 'CharSelect'
     RUN_AWAY = 'RunAway'

@@ -38,6 +38,7 @@ class AssetSoundtrackEntry:
 # What gets played by default for our different music types:
 ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
     MusicType.MENU: AssetSoundtrackEntry('menuMusic'),
+    MusicType.MENU2: AssetSoundtrackEntry('menuMusic2'),
     MusicType.VICTORY: AssetSoundtrackEntry(
         'victoryMusic', volume=1.2, loop=False
     ),

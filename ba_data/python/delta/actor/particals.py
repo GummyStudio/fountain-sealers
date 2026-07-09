@@ -1,6 +1,14 @@
-
+"""Factory for particles and etc."""
 import bascenev1 as bs
 import random
+from dataclasses import dataclass
+
+@dataclass
+class SnowgraveTouchedMessage:
+    """A message informing a snowgrave
+    that a node has touched its region."""
+    state: bool
+
 class ParticalFactory:
     """A collection of media and other resources used by particals.
 
@@ -13,9 +21,9 @@ class ParticalFactory:
 
   
     def __init__(self) -> None:
-        """Instantiate a PowerupBoxFactory.
+        """Instantiate a ParticalFactory
 
-        You shouldn't need to do this; call Powerup.get_factory()
+        You shouldn't need to do this; call ParticalFactory.get()
         to get a shared instance.
         """
         self.snowflake_mesh = bs.getmesh('snowflake')
@@ -32,6 +40,28 @@ class ParticalFactory:
 
         self._tough_glove_weak_sfx = bs.getsound('tough_glove_weak')
         self._tough_glove_strong_sfx = bs.getsound('tough_glove_strong')
+        self._snowgrave_mat: bs.Material | None = None
+    
+    # NOTE TO GUMMY: put fucking materials in fucking factory
+    # before i kill you because fun fact actually too many materials
+    # will eventually cause players to get kicked so kys
+    @property
+    def snowgrave_mat(self) -> bs.Material:
+        """A material that gives a SnowgraveTouchedMessage
+        upon being touched."""
+        from bascenev1lib.gameutils import SharedObjects
+        if not self._snowgrave_mat:
+            mat = self._snowgrave_mat = bs.Material()
+            mat.add_actions(
+                conditions=('they_have_material', SharedObjects.get().object_material),
+                actions=(
+                    ('modify_part_collision', 'collide', True),
+                    ('modify_part_collision', 'physical', False),
+                    ('message', 'our_node', 'at_connect', SnowgraveTouchedMessage(True)),
+                    ('message', 'our_node', 'at_disconnect', SnowgraveTouchedMessage(False)),
+                ),
+            )
+        return self._snowgrave_mat
 
 
     @classmethod
@@ -48,7 +78,6 @@ class ParticalFactory:
 
 
 class Partical(bs.Actor):
-
     def __init__(self,
                 position: tuple[float, float, float], 
                 texture: bs.Texture, 

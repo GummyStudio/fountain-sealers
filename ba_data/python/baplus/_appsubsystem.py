@@ -43,9 +43,7 @@ class PlusAppSubsystem(AppSubsystem):
         """:meta private:"""
         _baplus.on_app_loading()
         self.accounts.on_app_loading()
-        from bombsquda.startup import Startup
-        Startup()
-
+        
     @staticmethod
     def add_v1_account_transaction(
         transaction: dict, callback: Callable | None = None

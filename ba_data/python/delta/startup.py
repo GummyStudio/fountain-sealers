@@ -1,12 +1,25 @@
 import bauiv1 as bui
 import copy
+import ctypes
+import babase as ba
+
+def rename_window(text: str):
+    try:
+        user32 = ctypes.windll.user32
+    except:
+        user32 = None
+    hwnd = ba.app.window_hwnd
+    if not hwnd:
+        return False
+    user32.SetWindowTextW(hwnd, text)
+    return True
+    
 class Startup:
     def __init__(self):
-        
         self.game_header = 'Chapter 1'
-       
 
         config = bui.app.config
+
 
         cfg = {
             'firstLaunch': True,
@@ -44,8 +57,20 @@ class Startup:
         self.stats = {
             'dd': 'dark_dollars',
             'frozen': 'STATS_freezed',
-
-        }
+        }        
+        try:
+            user32 = ctypes.windll.user32
+        except:
+            user32 = None
+        title = 'BombSquad'
+        if user32:
+            hwnd = user32.FindWindowW(None, title)
+        else:
+            hwnd = None
+        ba.app.window_hwnd = hwnd
+        # for now, we just wanna rename the window for aesthetic
+        rename_window('BombSquad: Fountain Sealers')
+        
 
     @property
     def gameconfig(self) -> dict:

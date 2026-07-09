@@ -581,9 +581,13 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
 
         def _start_menu_music() -> None:
             assert bs.app.classic is not None
-            bs.setmusic(bs.MusicType.MENU)
+            musics = [
+                bs.MusicType.MENU,
+                bs.MusicType.MENU2,
+            ]
+            bs.setmusic(random.choice(musics))
 
-        bui.apptimer(0.5, _start_menu_music)
+        bui.apptimer(0.2, _start_menu_music)
 
     def _update_attract_mode(self) -> None:
         if bui.app.classic is None:

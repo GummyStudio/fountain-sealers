@@ -176,9 +176,9 @@ class BombFactory:
         self.explode_sounds = (
             bs.getsound('explosion01'),
             bs.getsound('explosion02'),
-            bs.getsound('explosion03'),
-            bs.getsound('explosion04'),
-            bs.getsound('explosion05'),
+            # bs.getsound('explosion03'),
+            # bs.getsound('explosion04'),
+            # bs.getsound('explosion05'),
         )
 
         self.freeze_sound = bs.getsound('freeze')
@@ -1100,7 +1100,10 @@ class Bomb(bs.Actor):
             if self.bomb_type in ['snowgrave']: 
                 # bombs that do smth else when blown up
                 if self.bomb_type == 'snowgrave':
-                    Snowgrave(self.node.position, source_player=self._source_player)
+                    Snowgrave(
+                        position=self.node.position, 
+                        source_player=self._source_player
+                    ).autoretain()
             else:
                 blast = Blast(
                     position=self.node.position,
