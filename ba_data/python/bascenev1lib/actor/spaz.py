@@ -30,6 +30,13 @@ POWERUP_WEAR_OFF_TIME = 20000
 BASE_PUNCH_POWER_SCALE = 1.2
 BASE_PUNCH_COOLDOWN = 400
 
+GLOVE_COOLDOWNS = {
+    1: 130,
+    2: 230,
+    3: 300,
+    4: 360,
+}
+
 
 class PickupMessage:
     """We wanna pick something up."""
@@ -202,10 +209,13 @@ class Spaz(bs.Actor):
             self._punch_cooldown = BASE_PUNCH_COOLDOWN
         else:
             self._punch_cooldown = factory.punch_cooldown
-        self._jump_cooldown = 250
+        self._jump_cooldown = 140
         self._pickup_cooldown = 0
         self._bomb_cooldown = 0
         self._has_boxing_gloves = False
+        self._tough_punches = 1
+        self._tough_glove_weak_sfx = bs.getsound('tough_glove_weak')
+        self._tough_glove_strong_sfx = bs.getsound('tough_glove_strong')
         if self.default_boxing_gloves:
             self.equip_boxing_gloves()
         self.last_punch_time_ms = -9999
@@ -685,8 +695,12 @@ class Spaz(bs.Actor):
             self._punch_cooldown = 300
         else:
             factory = SpazFactory.get()
-            self._punch_power_scale = factory.punch_power_scale_gloves
-            self._punch_cooldown = factory.punch_cooldown_gloves
+            self._punch_power_scale = 1.35
+            default_cooldown = GLOVE_COOLDOWNS.get(1)
+            self._punch_cooldown = GLOVE_COOLDOWNS.get(
+                self._tough_punches, 
+                default_cooldown
+            )
 
     def equip_shields(self, decay: bool = False) -> None:
         """
@@ -775,6 +789,27 @@ class Spaz(bs.Actor):
                 return True
             if self.pick_up_powerup_callback is not None:
                 self.pick_up_powerup_callback(self)
+            if msg.poweruptype == 'punch':
+                tex = PowerupBoxFactory.get().tex_punch
+                self._flash_billboard(tex)
+                self.equip_boxing_gloves()
+                if self.powerups_expire and not self.default_boxing_gloves:
+                    self.node.boxing_gloves_flashing = False
+                    self.node.mini_billboard_3_texture = tex
+                    t_ms = int(bs.time() * 1000.0)
+                    assert isinstance(t_ms, int)
+                    self.node.mini_billboard_3_start_time = t_ms
+                    self.node.mini_billboard_3_end_time = (
+                        t_ms + POWERUP_WEAR_OFF_TIME
+                    )
+                    self._boxing_gloves_wear_off_flash_timer = bs.Timer(
+                        (POWERUP_WEAR_OFF_TIME - 2000) / 1000.0,
+                        bs.WeakCall(self._gloves_wear_off_flash),
+                    )
+                    self._boxing_gloves_wear_off_timer = bs.Timer(
+                        POWERUP_WEAR_OFF_TIME / 1000.0,
+                        bs.WeakCall(self._gloves_wear_off),
+                    )
             if msg.poweruptype == 'triple_bombs':
                 tex = PowerupBoxFactory.get().tex_bomb
                 self._flash_billboard(tex)
@@ -860,27 +895,6 @@ class Spaz(bs.Actor):
                     self._bomb_wear_off_timer = bs.Timer(
                         POWERUP_WEAR_OFF_TIME / 1000.0,
                         bs.WeakCall(self._bomb_wear_off),
-                    )
-            elif msg.poweruptype == 'punch':
-                tex = PowerupBoxFactory.get().tex_punch
-                self._flash_billboard(tex)
-                self.equip_boxing_gloves()
-                if self.powerups_expire and not self.default_boxing_gloves:
-                    self.node.boxing_gloves_flashing = False
-                    self.node.mini_billboard_3_texture = tex
-                    t_ms = int(bs.time() * 1000.0)
-                    assert isinstance(t_ms, int)
-                    self.node.mini_billboard_3_start_time = t_ms
-                    self.node.mini_billboard_3_end_time = (
-                        t_ms + POWERUP_WEAR_OFF_TIME
-                    )
-                    self._boxing_gloves_wear_off_flash_timer = bs.Timer(
-                        (POWERUP_WEAR_OFF_TIME - 2000) / 1000.0,
-                        bs.WeakCall(self._gloves_wear_off_flash),
-                    )
-                    self._boxing_gloves_wear_off_timer = bs.Timer(
-                        POWERUP_WEAR_OFF_TIME / 1000.0,
-                        bs.WeakCall(self._gloves_wear_off),
                     )
             elif msg.poweruptype == 'shield':
                 factory = SpazFactory.get()
@@ -1141,21 +1155,17 @@ class Spaz(bs.Actor):
                         msg.force_direction,
                     )
 
-                # Let's always add in a super-punch sound with boxing
-                # gloves just to differentiate them.
-                if msg.hit_subtype == 'super_punch':
-                    SpazFactory.get().punch_sound_stronger.play(
-                        1.0,
-                        position=self.node.position,
-                    )
-                if damage >= 500:
-                    sounds = SpazFactory.get().punch_sound_strong
-                    sound = sounds[random.randrange(len(sounds))]
-                elif damage >= 100:
-                    sound = SpazFactory.get().punch_sound
-                else:
-                    sound = SpazFactory.get().punch_sound_weak
-                sound.play(1.0, position=self.node.position)
+                # We don't do sounds if the spaz has gloves;
+                # we want them to handle that.
+                if msg.hit_subtype != 'super_punch':
+                    if damage >= 500:
+                        sounds = SpazFactory.get().punch_sound_strong
+                        sound = sounds[random.randrange(len(sounds))]
+                    elif damage >= 100:
+                        sound = SpazFactory.get().punch_sound
+                    else:
+                        sound = SpazFactory.get().punch_sound_weak
+                    sound.play(1.0, position=self.node.position)
 
                 # Throw up some chunks.
                 assert msg.force_direction is not None
@@ -1345,13 +1355,34 @@ class Spaz(bs.Actor):
                 ppos = self.node.punch_position
                 punchdir = self.node.punch_velocity
                 vel = self.node.punch_momentum_linear
+                mag = punch_power * punch_momentum_angular * 110.0
+                
+                # if we have the tough gloves, per every punch 
+                # till 4 we do small to high damage/cooldown
+                if self._has_boxing_gloves:
+                    if node and node.getnodetype() == 'spaz':
+                        self._tough_punches += 1
+                        # change cooldown too
+                        for num in list(GLOVE_COOLDOWNS.keys()):
+                            if self._tough_punches >= num:
+                                self._punch_cooldown = GLOVE_COOLDOWNS.get(num)
+                        mag *= (self._tough_punches * 0.7)
+                        if self._tough_punches < 4:
+                            self._tough_glove_weak_sfx.play(
+                                1.5, position=self.node.position
+                            )
+                        else:
+                            self._tough_punches = 1
+                            self._tough_glove_strong_sfx.play(
+                                1.5, position=self.node.position,
+                            )
 
                 self._punched_nodes.add(node)
                 node.handlemessage(
                     bs.HitMessage(
                         pos=ppos,
                         velocity=vel,
-                        magnitude=punch_power * punch_momentum_angular * 110.0,
+                        magnitude=mag,
                         velocity_magnitude=punch_power * 40,
                         radius=0,
                         srcnode=self.node,
@@ -1365,6 +1396,10 @@ class Spaz(bs.Actor):
                         ),
                     )
                 )
+                
+                
+                        
+                
 
                 # Also apply opposite to ourself for the first punch only.
                 # This is given as a constant force so that it is more
