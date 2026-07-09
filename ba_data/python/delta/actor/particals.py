@@ -23,6 +23,8 @@ class ParticalFactory:
         self.rudebuster_mesh = bs.getmesh('box')
         self.rudebuster_tex = bs.gettexture('white')
 
+        self.snowgrave_sfx = bs.getsound('snd_snowgrave')
+
         self.pink_bomb_explode_sfx = bs.getsound('pinkBoom')
         self.pink_short_laugh_sfx = bs.getsound('snd_pink_laugh_short')
         self.pink_throw1_sfx = bs.getsound('snd_pink_throw')
@@ -51,12 +53,13 @@ class Partical(bs.Actor):
                 position: tuple[float, float, float], 
                 texture: bs.Texture, 
                 mesh: bs.Mesh,
-                body_scale: int,
+                
                 mesh_scale: int,
                 velocity: tuple[float, float, float] = (0, 0, 0), 
                 random_vel: bool = False,
                 random_range: float = 1.5,
                 body: str = 'landMine',
+                body_scale: int = 1.0,
                 alive_for: float = 3.0,
                 gravity_scale: int = 1.0,
                 collide_with: str = "floor"# or nothing

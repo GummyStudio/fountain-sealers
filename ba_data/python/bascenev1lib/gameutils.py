@@ -41,6 +41,7 @@ class SharedObjects:
         self._rude_buster_material: bs.Material | None = None
         self._only_collide_with_floor_mat: bs.Material | None = None
         self._no_collide_mat: bs.Material | None = None
+        self._collision: bs.Material | None = None
 
     @classmethod
     def get(cls) -> SharedObjects:
@@ -207,5 +208,15 @@ class SharedObjects:
             
            
         return self._no_collide_mat
+    
+    @property
+    def collision(self):
+        if self._collision is None:
+            mat = self._collision = bs.Material()
+            mat.add_actions(
+            actions=(('modify_part_collision', 'collide', True)))
         
+           
+        return self._collision
+    
     

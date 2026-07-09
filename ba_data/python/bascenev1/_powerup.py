@@ -47,8 +47,8 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
 
     if True:
         return (
-            ('punch', 1),
-            ('punch', 1),
+            ('snowgrave', 1),
+            ('snowgrave', 1),
            
         )
     return (

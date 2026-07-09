@@ -14,6 +14,7 @@ import bascenev1 as bs
 
 from bascenev1lib.gameutils import SharedObjects
 from delta.actor.particals import Partical, ParticalFactory
+from delta.actor.snowgrave import Snowgrave
 
 if TYPE_CHECKING:
     from typing import Any, Sequence, Callable
@@ -165,6 +166,8 @@ class BombFactory:
         self.land_mine_lit_tex = bs.gettexture('landMineLit')
         self.tnt_tex = bs.gettexture('tnt')
         self.mew_mew_tex = bs.gettexture('white')
+
+        self.snowgrave_mesh = bs.getmesh('box')
 
         self.hiss_sound = bs.getsound('hiss')
         self.debris_fall_sound = bs.getsound('debrisFall')
@@ -786,7 +789,8 @@ class Bomb(bs.Actor):
             'normal',
             'sticky',
             'tnt',
-            'mewmew'
+            'mewmew',
+            'snowgrave',
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -810,6 +814,8 @@ class Bomb(bs.Actor):
             self.blast_radius *= 1.45
         elif self.bomb_type == 'mewmew':
             self.blast_radius *= 1.3
+        elif self.bomb_type == 'snowgrave':
+            self.blast_radius *= 0.0
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []
 
@@ -844,7 +850,7 @@ class Bomb(bs.Actor):
         else:
             materials = (factory.bomb_material, shared.object_material)
 
-        if self.bomb_type == 'impact':
+        if self.bomb_type in ['impact', 'snowgrave']:
             materials = materials + (factory.impact_blast_material,)
         elif self.bomb_type == 'land_mine':
             materials = materials + (factory.land_mine_no_explode_material,)
@@ -868,6 +874,28 @@ class Bomb(bs.Actor):
                     'body_scale': self.scale,
                     'shadow_size': 0.44,
                     'color_texture': factory.land_mine_tex,
+                    'reflection': 'powerup',
+                    'reflection_scale': [1.0],
+                    'materials': materials,
+                },
+            )
+        
+        if self.bomb_type == 'snowgrave':
+            fuse_time = None
+            self.scale = 0.5
+            self.node = bs.newnode(
+                'prop',
+                delegate=self,
+                attrs={
+                    'position': position,
+                    'velocity': velocity,
+                    'mesh': factory.snowgrave_mesh,
+                    'light_mesh': factory.snowgrave_mesh,
+                    'body': 'box',
+                    'mesh_scale': self.scale,
+                    'body_scale': self.scale,
+                    'shadow_size': 0.44,
+                    'color_texture': factory.mew_mew_tex,
                     'reflection': 'powerup',
                     'reflection_scale': [1.0],
                     'materials': materials,
@@ -970,7 +998,7 @@ class Bomb(bs.Actor):
             bs.animate(self.node, 'fuse_length', {0.0: 1.0, fuse_time: 0.0})
 
         # Light the fuse!!!
-        if self.bomb_type not in ('land_mine', 'tnt'):
+        if self.bomb_type not in ('land_mine', 'tnt', 'snowgrave'):
             assert fuse_time is not None
             bs.timer(
                 fuse_time, bs.WeakCall(self.handlemessage, ExplodeMessage())
@@ -1017,11 +1045,11 @@ class Bomb(bs.Actor):
         # throwing/etc.)
         node_delegate = node.getdelegate(object)
         if node:
-            if self.bomb_type == 'impact' and (
+            if self.bomb_type in ['impact', 'snowgrave'] and (
                 node is self.owner
                 or (
                     isinstance(node_delegate, Bomb)
-                    and node_delegate.bomb_type == 'impact'
+                    and node_delegate.bomb_type in ['impact', 'snowgrave']
                     and node_delegate.owner is self.owner
                 )
             ):
@@ -1069,15 +1097,20 @@ class Bomb(bs.Actor):
             return
         self._exploded = True
         if self.node:
-            blast = Blast(
-                position=self.node.position,
-                velocity=self.node.velocity,
-                blast_radius=self.blast_radius,
-                blast_type=self.bomb_type,
-                source_player=bs.existing(self._source_player),
-                hit_type=self.hit_type,
-                hit_subtype=self.hit_subtype,
-            ).autoretain()
+            if self.bomb_type in ['snowgrave']: 
+                # bombs that do smth else when blown up
+                if self.bomb_type == 'snowgrave':
+                    Snowgrave(self.node.position)
+            else:
+                blast = Blast(
+                    position=self.node.position,
+                    velocity=self.node.velocity,
+                    blast_radius=self.blast_radius,
+                    blast_type=self.bomb_type,
+                    source_player=bs.existing(self._source_player),
+                    hit_type=self.hit_type,
+                    hit_subtype=self.hit_subtype,
+                ).autoretain()
             for callback in self._explode_callbacks:
                 callback(self, blast)
 

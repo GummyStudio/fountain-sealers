@@ -244,6 +244,7 @@ class Spaz(bs.Actor):
         self.pick_up_powerup_callback: Callable[[Spaz], Any] | None = None
 
         self.rudebusters = 0
+        self.snowgraves = 0
         self.input_x = 0.0
         self.input_y = 0.0
         self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
@@ -756,6 +757,7 @@ class Spaz(bs.Actor):
     def reset_all_counts(self):
         self.set_land_mine_count(0)
         self.set_rude_busters_count(0)
+        self.set_snowgraves_count(0)
 
     @override
     def handlemessage(self, msg: Any) -> Any:
@@ -835,6 +837,9 @@ class Spaz(bs.Actor):
             elif msg.poweruptype == 'rudebuster':
                 self.reset_all_counts()
                 self.set_rude_busters_count(2)
+            elif msg.poweruptype == 'snowgrave':
+                self.reset_all_counts()
+                self.set_snowgraves_count(1)
             elif msg.poweruptype == 'impact_bombs':
                 self.bomb_type = 'impact'
                 tex = self._get_bomb_type_tex()
@@ -1463,32 +1468,7 @@ class Spaz(bs.Actor):
             return super().handlemessage(msg)
         return None
     
-    def impulse(self, x: float | int = 0, y: float | int = 0):
-        if not self.node:
-            return
-        v = self.node.velocity
-        x = x
-        y = y
-        if x == 0 and y == 0:
-            raise ValueError("You must specify at least X or Y for impulse.")
-        # only use x and y impulse if specified
-        if x != 0:
-            self.node.handlemessage('impulse', 
-                self.node.position[0], 
-                self.node.position[1], 
-                self.node.position[2],
-                0, 25, 0, x, 0.05, 0, 0,
-                v[0]*15*2, 0, v[2]*15*2
-            )
-        if y != 0:
-            self.node.handlemessage('impulse', 
-                self.node.position[0], 
-                self.node.position[1], 
-                self.node.position[2],
-                0, 25, 0,
-                y, 0.05, 0, 0,
-                0, 20*400, 0
-            )
+    
 
     def drop_bomb(self) -> Bomb | None:
         """
@@ -1498,7 +1478,12 @@ class Spaz(bs.Actor):
         drop a bomb, returns None.
         """
 
-        if (self.land_mine_count <= 0 and self.bomb_count <= 0 and self.rudebusters <= 0) or self.frozen:
+        if (
+            self.land_mine_count <= 0 and 
+            self.bomb_count <= 0 and 
+            self.rudebusters <= 0 and
+            self.snowgraves <= 0
+        ) or self.frozen:
             return None
         assert self.node
         pos = self.node.position_forward
@@ -1520,6 +1505,10 @@ class Spaz(bs.Actor):
             ).autoretain()
             self.node.handlemessage('celebrate', 100)
             return None
+        if self.snowgraves > 0:
+            dropping_bomb = False
+            self.set_snowgraves_count(self.snowgraves - 1)
+            bomb_type = 'snowgrave'
        
         else:
             dropping_bomb = True
@@ -1613,11 +1602,23 @@ class Spaz(bs.Actor):
                 self.node.counter_text = ''
     
     def set_rude_busters_count(self, count: int) -> None:
-        """Set the number of rude_busters this spaz is carrying."""
+        """Set the number of rude busters this spaz is carrying."""
         self.rudebusters = count
         if self.node:
             if self.rudebusters != 0:
                 self.node.counter_text = 'x' + str(self.rudebusters)
+                self.node.counter_texture = (
+                    PowerupBoxFactory.get().tex_land_mines
+                )
+            else:
+                self.node.counter_text = ''
+    
+    def set_snowgraves_count(self, count: int) -> None:
+        """Set the number of snowgraves this spaz is carrying."""
+        self.snowgraves = count
+        if self.node:
+            if self.snowgraves != 0:
+                self.node.counter_text = 'x' + str(self.snowgraves)
                 self.node.counter_texture = (
                     PowerupBoxFactory.get().tex_land_mines
                 )
