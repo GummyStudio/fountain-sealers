@@ -157,13 +157,13 @@ class SurveyUI(bui.MainWindow):
                                 f"\"{babase.app.classic.startup.gameconfig['SurveyChoices']['vessel_name']}.\""
                                  "{pause:2.0}"
                                  ),
-                                "EXECELLENT.{pause:0.5}\n{pause:0.5}TRULY, TRULY, EXCELLENT.{pause:2}",
-                                "I WOULD ASK FOR YOUR NAME.\n{pause:0.5}BUT I ALREADY KNOW.{pause:2}",
+                                "EXCELLENT.{pause:0.5}\n{pause:0.5}TRULY, TRULY EXCELLENT.{pause:2}",
+                                "YOUR NAME IS UNNECESSARY,\n{pause:0.3}AS I WAS ALREADY TOLD.{pause:2}",
                                 "NOW.{pause:0.5}",
                                 "THANK YOU\n{pause:0.5}FOR YOUR TIME.{pause:2}",
                                 "YOUR ANSWERS.\n{pause:0.5}YOUR WONDERFUL CREATION.{pause:2}",
-                                "YOU WILL NOW BE DROPPED\n{pause:0.5}INTO A WORLD OF CHAOS, AND FUN.{pause:2}",
-                                "ENJOY YOURSELF.\n{pause:1.0}AND GOODBYE.{pause:2.0}",
+                                "WILL NOW BE PUT\n{pause:0.5}TO GOOD USE.{pause:2}",
+                                "ENJOY YOURSELF\n{pause:1.0}AND FAREWELL.{pause:2.0}",
                             ],
                         on_complete=self.end
                         )
