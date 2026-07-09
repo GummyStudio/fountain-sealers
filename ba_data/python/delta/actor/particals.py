@@ -4,6 +4,8 @@ import random
 class ParticalFactory:
     """A collection of media and other resources used by particals.
 
+    Also, just general assets used by the modpack
+
     A single instance of this is shared between all powerups
     and can be retrieved via Partical.get_factory().
     """
@@ -20,6 +22,11 @@ class ParticalFactory:
         self.snowflake_tex = bs.gettexture('snowflake')
         self.rudebuster_mesh = bs.getmesh('box')
         self.rudebuster_tex = bs.gettexture('white')
+
+        self.pink_bomb_explode_sfx = bs.getsound('pinkBoom')
+        self.pink_short_laugh_sfx = bs.getsound('snd_pink_laugh_short')
+        self.pink_throw1_sfx = bs.getsound('snd_pink_throw')
+        self.pink_throw2_sfx = bs.getsound('snd_pink_throw2')
 
 
     @classmethod

@@ -681,7 +681,10 @@ class Blast(bs.Actor):
             factory.hiss_sound.play(position=light.position)
 
         lpos = light.position
-        factory.random_explode_sound().play(position=lpos)
+        if self.blast_type == 'mewmew':
+            ParticalFactory.get().pink_bomb_explode_sfx.play()
+        else:
+            factory.random_explode_sound().play(position=lpos)
         factory.debris_fall_sound.play(position=lpos)
 
         bs.camerashake(intensity=5.0 if self.blast_type == 'tnt' else 1.0)
@@ -720,6 +723,8 @@ class Blast(bs.Actor):
                 mag *= 2.5
             elif self.blast_type == 'tnt':
                 mag *= 2.0
+            elif self.blast_type == 'mewmew':
+                mag *= 0.75
 
             node.handlemessage(
                 bs.HitMessage(
@@ -803,6 +808,8 @@ class Bomb(bs.Actor):
             self.blast_radius *= 0.7
         elif self.bomb_type == 'tnt':
             self.blast_radius *= 1.45
+        elif self.bomb_type == 'mewmew':
+            self.blast_radius *= 1.3
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []
 
@@ -931,6 +938,8 @@ class Bomb(bs.Actor):
             elif self.bomb_type == 'mewmew':
                 tex = factory.mew_mew_tex
                 fuse_time = 1.5
+                self.scale *= 0.8
+                
             else:
                 tex = factory.regular_tex
             self.node = bs.newnode(
@@ -940,6 +949,7 @@ class Bomb(bs.Actor):
                     'position': position,
                     'velocity': velocity,
                     'mesh': mesh,
+                    'mesh_scale': self.scale,
                     'body_scale': self.scale,
                     'shadow_size': 0.3,
                     'color_texture': tex,
