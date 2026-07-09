@@ -890,7 +890,7 @@ class Spaz(bs.Actor):
                         bs.WeakCall(self._bomb_wear_off),
                     )
             elif msg.poweruptype == 'health':
-                self._utheal_sfx.play()
+                self._utheal_sfx.play(volume=1.2, position=self.node.position)
                 if self._cursed:
                     self._cursed = False
 
