@@ -513,7 +513,7 @@ class LeagueRankWindow(bui.MainWindow):
             parent=w_parent,
             position=(self._xoffs + h2 - 60, v2 + 10),
             size=(200, 60),
-            icon=bui.gettexture('logo'),
+            icon=bui.gettexture('mono_logo'),
             icon_color=(0.3, 0, 0.3),
             label=bui.Lstr(resource='league.upToDateBonusText'),
             autoselect=True,

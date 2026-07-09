@@ -205,17 +205,22 @@ def filter_playlist(
                     entry['settings'][setting.name] = setting.default
 
             goodlist.append(entry)
-
+        
+        # Comment these out for now; they're annoying and lag the game.
+        # Plus, this modpack is REALLLY not vanilla, so we aren't expecting
+        # vanilla maps.
         except babase.MapNotFoundError:
-            logging.warning(
-                'Map \'%s\' not found while scanning playlist \'%s\'.',
-                entry['settings']['map'],
-                name,
-            )
+            # logging.warning(
+                # 'Map \'%s\' not found while scanning playlist \'%s\'.',
+                # entry['settings']['map'],
+                # name,
+            # )
+            pass
         except ImportError as exc:
-            logging.warning(
-                'Import failed while scanning playlist \'%s\': %s', name, exc
-            )
+            # logging.warning(
+                # 'Import failed while scanning playlist \'%s\': %s', name, exc
+            # )
+            pass
         except Exception:
             logging.exception('Error in filter_playlist.')
 

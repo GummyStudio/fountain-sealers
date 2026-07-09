@@ -45,11 +45,9 @@ class PowerupAcceptMessage:
 def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
     """Standard set of powerups."""
 
-    if True:
+    if False:
         return (
             ('snowgrave', 1),
-            ('snowgrave', 1),
-           
         )
     return (
         ('triple_bombs', 3),

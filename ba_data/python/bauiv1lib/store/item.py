@@ -237,7 +237,7 @@ def instantiate_store_item_display(
             draw_controller=btn,
             color=(0.3, 0.0, 0.3),
             opacity=0.3,
-            texture=bui.gettexture('logo'),
+            texture=bui.gettexture('mono_logo'),
         )
         txt = bui.Lstr(resource='store.bombSquadProNewDescriptionText')
 
