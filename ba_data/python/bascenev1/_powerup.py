@@ -61,4 +61,5 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
         ('curse', 1),
         ('rudebuster', 2),
         ('mewmew', 3),
+        ('snowgrave', 1),
     )
