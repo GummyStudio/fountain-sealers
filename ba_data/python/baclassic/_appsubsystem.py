@@ -943,50 +943,7 @@ class ClassicAppSubsystem(babase.AppSubsystem):
         """Return which purchase (if any) is required for a game."""
         # pylint: disable=too-many-return-statements
 
-        if game in (
-            'Challenges:Infinite Runaround',
-            'Challenges:Tournament Infinite Runaround',
-        ):
-            # Special case: Pro used to unlock this.
-            return (
-                []
-                if self.accounts.have_pro()
-                else ['upgrades.infinite_runaround']
-            )
-        if game in (
-            'Challenges:Infinite Onslaught',
-            'Challenges:Tournament Infinite Onslaught',
-        ):
-            # Special case: Pro used to unlock this.
-            return (
-                []
-                if self.accounts.have_pro()
-                else ['upgrades.infinite_onslaught']
-            )
-        if game in (
-            'Challenges:Meteor Shower',
-            'Challenges:Epic Meteor Shower',
-        ):
-            return ['games.meteor_shower']
-
-        if game in (
-            'Challenges:Target Practice',
-            'Challenges:Target Practice B',
-        ):
-            return ['games.target_practice']
-
-
-        if game in ('Challenges:Race', 'Challenges:Pro Race'):
-            return ['games.race']
-
-        if game in ('Challenges:Lake Frigid Race',):
-            return ['games.race', 'maps.lake_frigid']
-
-        if game in (
-            'Challenges:Easter Egg Hunt',
-            'Challenges:Pro Easter Egg Hunt',
-        ):
-            return ['games.easter_egg_hunt']
+       
 
         return []
 

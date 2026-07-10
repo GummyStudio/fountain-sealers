@@ -121,7 +121,7 @@ class StoreSubsystem:
                 'characters.bunny': {'character': 'Easter Bunny'},
                 'merch': {},
                 'pro': {},
-                'maps.lake_frigid': {'map_type': maps.LakeFrigid},
+              
                 'games.race': {
                     'gametype': RaceGame,
                     'previewTex': 'bigGPreview',
@@ -305,7 +305,7 @@ class StoreSubsystem:
             classic.store_layout = {
                 'characters': [{'items': []}],
                 'extras': [{'items': ['pro']}],
-                'maps': [{'items': ['maps.lake_frigid']}],
+                'maps': [{'items': []}],
                 'minigames': [],
                 'icons': [
                     {
