@@ -47,6 +47,8 @@ class Rudebuster(bs.Actor):
         self.arg()
     
     def arg(self):
+        if not self.exists():
+            return
         self.node.velocity = (
             self.node.velocity[0],
             -5,
@@ -54,6 +56,8 @@ class Rudebuster(bs.Actor):
         )
         bs.timer(0.121, self.arg2)
     def arg2(self):
+        if not self.exists():
+            return
         self.node.velocity = (
             self.node.velocity[0],
             5,
@@ -62,6 +66,8 @@ class Rudebuster(bs.Actor):
         bs.timer(0.121, self.arg3)
         
     def arg3(self):
+        if not self.exists():
+            return
         self.node.velocity = (
             self.node.velocity[0],
             0,
@@ -85,7 +91,7 @@ class Rudebuster(bs.Actor):
             punch_momentum_angular = (
                 1.0
             )
-            punch_power = 0.25
+            punch_power = 0.45
             ppos = self.node.position
             punchdir = self.node.velocity
             vel = self.node.velocity

@@ -101,26 +101,7 @@ class AchievementSubsystem:
 
     def award_local_achievement(self, achname: str) -> None:
         """For non-game-based achievements such as controller-connection."""
-        plus = babase.app.plus
-        if plus is None:
-            logging.warning('achievements require plus feature-set')
-            return
-        try:
-            ach = self.get_achievement(achname)
-            if not ach.complete:
-                # Report new achievements to the game-service.
-                plus.report_achievement(achname)
-
-                # And to our account.
-                plus.add_v1_account_transaction(
-                    {'type': 'ACHIEVEMENT', 'name': achname}
-                )
-
-                # Now attempt to show a banner.
-                self.display_achievement_banner(achname)
-
-        except Exception:
-            logging.exception('Error in award_local_achievement.')
+        pass
 
     def display_achievement_banner(self, achname: str) -> None:
         """Display a completion banner for an achievement.

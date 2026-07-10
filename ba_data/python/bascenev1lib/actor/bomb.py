@@ -813,7 +813,7 @@ class Bomb(bs.Actor):
         elif self.bomb_type == 'tnt':
             self.blast_radius *= 1.45
         elif self.bomb_type == 'mewmew':
-            self.blast_radius *= 1.3
+            self.blast_radius *= 0.8
         elif self.bomb_type == 'snowgrave':
             self.blast_radius *= 0.0
 

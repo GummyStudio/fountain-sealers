@@ -156,7 +156,7 @@ class Snowgrave(bs.Actor):
         )
         self.nodes: list[bs.Node] = []
         self.spaz_specific_hits = {}
-        self.spaz_touch_cooldown = bs.time()
+        self.spaz_touch_cooldown = {}
         bs.timer(1, self.make)
         self.tick_timer = bs.Timer(0.01, self.handle_nodes_inside, repeat=True)
 
@@ -169,15 +169,20 @@ class Snowgrave(bs.Actor):
             # node doesn't exist, die
             if not node:
                 self.nodes.remove(node)
-                return
+                continue
             delegate = node.getdelegate(bs.Actor)
             if isinstance(delegate, Spaz):
-                # cooldown
-                if not (self.spaz_touch_cooldown - bs.time() < 0):
-                    return
-                self.spaz_touch_cooldown = bs.time() + 0.1
-                
                 actor_id = id(delegate)
+                # cooldown
+                if actor_id not in self.spaz_touch_cooldown:
+                    self.spaz_touch_cooldown[actor_id] = 0
+
+         
+                if not (self.spaz_touch_cooldown[actor_id] - bs.time() < 0):
+                    continue
+                self.spaz_touch_cooldown[actor_id] = bs.time() + 0.1
+                
+                
 
                 # keep hitting it
                 delegate.handlemessage(bs.HitMessage(
@@ -191,10 +196,10 @@ class Snowgrave(bs.Actor):
                 self.spaz_specific_hits[actor_id] += 1
 
                 # if this spaz got hit 15 times, freeze it
-                if self.spaz_specific_hits[actor_id] > 15 and not delegate.snowgraved:
+                if self.spaz_specific_hits[actor_id] > 15 and not delegate.snowgraved or not delegate.is_alive():
                     # Ice em
                     delegate.handlemessage(bs.FreezeMessage())
-                    if delegate.frozen and delegate.is_alive():
+                    if delegate.frozen:
                         # Okay, you're gonna die
                         delegate.snowgraved = True
                         DamageText(
