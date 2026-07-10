@@ -221,12 +221,15 @@ class Actor:
             raise babase.ActivityNotFoundError()
         return activity
     # universal impusle
-    def impulse(self, x: float | int = 0, y: float | int = 0):
+    def impulse(self, x: float | int = 0, y: float | int = 0, direction: tuple[float, float, float] = None):
         # some actors dont have velocity or a position so yeah
         try:
             if not self.node:
                 return
-            v = self.node.velocity
+            if direction:
+                v = direction
+            else:
+                v = self.node.velocity
             x = x
             y = y
             if x == 0 and y == 0:

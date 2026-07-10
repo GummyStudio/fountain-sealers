@@ -28,6 +28,7 @@ class Startup:
 
             # stats
             'STATS_freezed': 0,
+            'STATS_fatalities': 0,
 
             # characters
             'OWNED_roaringknight': False
@@ -57,6 +58,7 @@ class Startup:
         self.stats = {
             'dd': 'dark_dollars',
             'frozen': 'STATS_freezed',
+            'fatal': 'STATS_fatalities',
         }        
         try:
             user32 = ctypes.windll.user32

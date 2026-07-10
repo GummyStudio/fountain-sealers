@@ -85,9 +85,7 @@ class SnowgraveCrystal:
             character=self.spazdata['char'],
             can_accept_powerups=False,
         ).autoretain()
-        # name him
-        spaz.node.name = self.spazdata['name']
-        spaz.node.name_color = self.spazdata['clr']
+        
         # tp
         spaz.handlemessage(bs.StandMessage(self.spazdata['pos']))
         # rip out his vocal cords (only ones we'll reasonably hear)

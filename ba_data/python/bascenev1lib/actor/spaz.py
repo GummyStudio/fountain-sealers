@@ -999,7 +999,7 @@ class Spaz(bs.Actor):
             if self.shield:
                 return None
             if not self.frozen:
-                DamageText(position=self.node.position, text=bs.Lstr(
+                DamageText(position=self.last_saved_position, text=bs.Lstr(
                     resource='delta.frozenText'
                 ), color=(0, 0.1, 1), scl=0.6).autoretain()
                 bs.app.classic.startup.increase_statistic('frozen')
@@ -1643,6 +1643,33 @@ class Spaz(bs.Actor):
                 )
             else:
                 self.node.counter_text = ''
+    
+    def fatal_death(self):
+        # import bascenev1 as bs; bs.getactivity().players[0].actor.fatal_death()
+        if not self.node:
+            return
+        
+        self.node.death_sounds = []
+        
+        self.handlemessage(bs.DieMessage())
+        DamageText(
+            position=self.last_saved_position,
+            text=bs.Lstr(resource='delta.fatalText'),
+            color=(1, 0, 0),
+            scl=0.8
+        ).autoretain()
+      
+
+        self.impulse(
+            x=1655, y=325, direction=(1, 0.5, 0)
+        )
+        ParticalFactory.get().fatal_death_sound.play(2)
+        bs.timer(0.1, bs.Call(self.shatter, True))
+        self.node.color_mask_texture = bs.gettexture('white')
+        self.node.color = (1, 0, 0)
+        self.node.highlight = (1, 0, 0)
+        bs.app.classic.startup.increase_statistic('fatal')
+
 
 
     def curse_explode(self, source_player: bs.Player | None = None) -> None:

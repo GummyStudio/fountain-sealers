@@ -1956,6 +1956,7 @@
   "yourPrizeText": "Your prize:",
   "delta": {
     "useVanillaText": "Use the vanilla shop...",
-    "frozenText": "Frozen"
+    "frozenText": "Frozen",
+    "fatalText": "Fatal"
   }
 }

@@ -38,6 +38,7 @@ class ParticalFactory:
         self.snowgrave_mesh = bs.getmesh('box')
        
         self.ominous_sound = bs.getsound('ominous')
+        self.fatal_death_sound = bs.getsound('fatal_death')
 
         self.pink_bomb_explode_sfx = bs.getsound('pinkBoom')
         self.pink_short_laugh_sfx = bs.getsound('snd_pink_laugh_short')
