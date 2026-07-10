@@ -156,7 +156,7 @@ def register_appearances() -> None:
     t.default_color = (0.0, 0.7699999999999998, 0.11999999999999998)
     t.default_highlight = (1, 0.08, 0.5)
     
-    # The Knight #####################################
+    # The Human #####################################
     t = Appearance('Kris')
     t.color_texture = 'krisColor'
     t.color_mask_texture = 'krisColorMask'
@@ -215,3 +215,34 @@ def register_appearances() -> None:
     t.style = 'agent'
     t.default_color = (0.9725490196078431, 0.5137254901960784, 0.8431372549019608)
     t.default_highlight = (0.5333333333333333, 0.09019607843137255, 0.41568627450980394)
+    
+    # The Knight of Darkness
+    t = Appearance('Roaring Knight')
+    t.color_texture = 'knightColor'
+    t.color_mask_texture = 'knightColorMask'
+    t.icon_texture = 'knightIcon'
+    t.earthportrait = 'earthbound/knightbound'
+    t.EBlose = 'earthbound/knightbound_lose'
+    t.EBwin = 'earthbound/knightbound_win'
+    t.icon_mask_texture = 'knightIconCM'
+    t.head_mesh = 'knightHead'
+    t.torso_mesh = 'knightTorso'
+    t.pelvis_mesh = 'knightPelvis'
+    t.upper_arm_mesh = 'knightUpperArm'
+    t.forearm_mesh = 'knightForeArm'
+    t.hand_mesh = 'knightHand'
+    t.upper_leg_mesh = 'knightUpperLeg'
+    t.lower_leg_mesh = 'knightLowerLeg'
+    t.toes_mesh = 'knightToes'
+    knightsounds = ['voicelines/knight/sound' + str(i + 1) + '' for i in range(4)]
+    t.jump_sounds = knightsounds
+    t.attack_sounds = knightsounds
+    t.impact_sounds = ['voicelines/knight/hurt' + str(i + 1) + '' for i in range(2)]
+    t.death_sounds = ['voicelines/knight/death']
+    t.pickup_sounds = knightsounds
+    t.victory_sounds = ['voicelines/knight/win']
+    t.gloat_sounds = ['voicelines/knight/gloat']
+    t.fall_sounds = ['voicelines/knight/fall']
+    t.style = 'agent'
+    t.default_color = (0.0, 0.0, 0.0)
+    t.default_highlight = (1, 1, 1)
