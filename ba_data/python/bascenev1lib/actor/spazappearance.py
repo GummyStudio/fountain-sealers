@@ -216,7 +216,7 @@ def register_appearances() -> None:
     t.default_color = (0.9725490196078431, 0.5137254901960784, 0.8431372549019608)
     t.default_highlight = (0.5333333333333333, 0.09019607843137255, 0.41568627450980394)
     
-    # The Knight of Darkness
+    # The Knight of Darkness #####################################
     t = Appearance('Roaring Knight')
     t.color_texture = 'knightColor'
     t.color_mask_texture = 'knightColorMask'
