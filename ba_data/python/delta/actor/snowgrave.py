@@ -13,16 +13,116 @@ class SnowgraveCrystal:
 
     also it'll break eventually and reveal the frozen spaz
     
+    also DONT make this an actor all the classes already have a diemessage and obb messge
     """
-    def __init__(self, position, character, color, highlight):
+    def __init__(self, position, character, color, highlight, name):
         # Ok spawn a partical and when it dies we do cool thing
+
+        lifespan = 10
+        # i got lazy ok
+        self.spazdata = {
+            'pos': position,
+            'char': character,
+            'clr': color,
+            'high': highlight,
+            'name': name
+        }
+        velocity = (
+                    random.uniform(-1.8, 1.8),
+                    5,
+                    random.uniform(-1.8, 1.8)
+            )
+
+        ParticalFactory.get().snowgrave_crystal_spawn_sfx.play()
         self.partical=Partical(
-            position=position,
-            texture=ParticalFactory.get()
+            position=(
+                position[0],
+                position[1] + 1, # brodie spawned IN THE FLOOOR
+                position[2]
+            ),
+            texture=ParticalFactory.get().snowgrave_tex,
+            mesh=ParticalFactory.get().snowgrave_mesh,
+            mesh_scale=1.0,
+            body='puck',
+            velocity=velocity,
+            gravity_scale=0.0,
+            alive_for=lifespan+1.0,
+            collide_with='floor'
+        ).autoretain()
+        
+
+        t_peak = lifespan * 0.1
+        t_start_descend = lifespan * 0.18
+        t_stop = lifespan*0.2219921929138
+
+        bs.animate_array(self.partical.node, 'velocity', 3, {
+            0: velocity,               
+            t_peak: (velocity[0]*0.5, 0.2, velocity[2]*0.5),               
+            t_start_descend: (velocity[0]*0.2, -1.4, velocity[2]*0.2),     
+            t_stop: (0, -0.2, 0)                
+        })
+
+        
+
+
+
+        
+        bs.timer(lifespan, self._break)
+
+
+    def _break(self):
+        from bascenev1lib.actor.spaz import Spaz
+        # uhh the partical fell out of bounds lol
+        if not self.partical.exists():
+            return
+        self.spazdata['pos'] = self.partical.node.position
+        self.partical.handlemessage(bs.DieMessage(True))
+        # Spawn in an identical lookin' spaz freeze and break immedieatley eykr
+        ParticalFactory.get().snowgrave_crystal_break_sfx.play()
+        spaz=Spaz(
+            color=self.spazdata['clr'],
+            highlight=self.spazdata['high'],
+            character=self.spazdata['char'],
+            can_accept_powerups=False,
+        ).autoretain()
+        # name him
+        spaz.node.name = self.spazdata['name']
+        spaz.node.name_color = self.spazdata['clr']
+        # tp
+        spaz.handlemessage(bs.StandMessage(self.spazdata['pos']))
+        # rip out his vocal cords (only ones we'll reasonably hear)
+        spaz.impact_sounds=[]
+        spaz.death_sounds=[]
+        spaz.fall_sounds=[]
+        # kill him
+        spaz.handlemessage(bs.DieMessage())
+        # freeze, and add attributes so the original snowgrave thing doesnt kill this guy again lol
+        spaz.frozen = True
+        spaz.snowgraved = True
+        spaz.node.frozen = True
+
+        # throw him
+        spaz.impulse(y=185, x=25)
+
+        # anddd shatter!
+        spaz.node.shattered = 1
+
+        # Finally get some more particals and were done
+        bs.emitfx(
+            position=self.spazdata['pos'],
+            count=9,
+            spread=0.23,
+            velocity=(
+                0, 
+                5, 
+                0
+            ),
+            chunk_type='ice',
+            scale=3.2,
         )
 
-    def kill(self):
-        self.partical = None
+
+
 
         
 
@@ -104,12 +204,14 @@ class Snowgrave(bs.Actor):
                             text=str(random.randint(988, 1199)),
                             color=(1,1,1)
                         ).autoretain()
+                        ParticalFactory.get().ominous_sound.play()
                         # Delete their node but save their data
                         SnowgraveCrystal(
                             delegate.last_saved_position,
                             delegate.character,
                             delegate.color,
-                            delegate.highlight
+                            delegate.highlight,
+                            delegate.name,
                         )
                         # soo what ever activity knows they died,
                         #  and we were the last to hit em

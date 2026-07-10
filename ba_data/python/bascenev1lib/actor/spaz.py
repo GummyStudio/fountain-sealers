@@ -254,6 +254,12 @@ class Spaz(bs.Actor):
         self.snowgraved = False
         self.last_saved_position = (0, 0, 0)
 
+        # try to get a name
+        try:
+            self.name = self.source_player.getname(False, False)
+        except:
+            self.name = ''
+
         # sound effects
         
         self._utheal_sfx = bs.getsound('utHeal')

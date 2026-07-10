@@ -32,9 +32,12 @@ class ParticalFactory:
         self.rudebuster_tex = bs.gettexture('white')
 
         self.snowgrave_sfx = bs.getsound('snd_snowgrave')
-        self.snowgrave_tex = bs.gettexture('pinkBoom')
+        self.snowgrave_crystal_spawn_sfx = bs.getsound('snowgraveCreate')
+        self.snowgrave_crystal_break_sfx = bs.getsound('snowgraveBreak')
+        self.snowgrave_tex = bs.gettexture('white')
         self.snowgrave_mesh = bs.getmesh('box')
        
+        self.ominous_sound = bs.getsound('ominous')
 
         self.pink_bomb_explode_sfx = bs.getsound('pinkBoom')
         self.pink_short_laugh_sfx = bs.getsound('snd_pink_laugh_short')
