@@ -167,6 +167,10 @@ class BombFactory:
         self.tnt_tex = bs.gettexture('tnt')
         self.mew_mew_tex = bs.gettexture('white')
 
+        self.jevil_bomb_tex = bs.gettexture('black')
+        self.jevil_bomb_flash_tex = bs.gettexture('white')
+        self.jevil_bomb_arm_sfx = bs.getsound('snd_bombfall')
+
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
 
@@ -731,6 +735,8 @@ class Blast(bs.Actor):
                 mag *= 0.75
             elif self.blast_type == 'gigabomb':
                 mag *= 1.3
+            elif self.blast_type == 'spades':
+                mag *= 0.85
 
 
             node.handlemessage(
@@ -796,6 +802,7 @@ class Bomb(bs.Actor):
             'mewmew',
             'snowgrave',
             'gigabomb',
+            'spades',
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -823,6 +830,8 @@ class Bomb(bs.Actor):
             self.blast_radius *= 0.0
         elif self.bomb_type == 'gigabomb':
             self.blast_radius *= 1.5
+        elif self.bomb_type == 'spades':
+            self.blast_radius *= 0.50
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []
 
@@ -928,6 +937,29 @@ class Bomb(bs.Actor):
                     'materials': materials,
                 },
             )
+            
+        elif self.bomb_type == 'spades':
+            fuse_time = None
+            self.scale = 0.8
+
+            self.node = bs.newnode(
+                'prop',
+                delegate=self,
+                attrs={
+                    'position': position,
+                    'velocity': velocity,
+                    'mesh': factory.tnt_mesh,
+                    'light_mesh': factory.tnt_mesh,
+                    'body': 'crate',
+                    'mesh_scale': self.scale,
+                    'body_scale': self.scale,
+                    'shadow_size': 0.5,
+                    'color_texture': factory.jevil_bomb_tex,
+                    'reflection': 'soft',
+                    'reflection_scale': [0.23],
+                    'materials': materials,
+                },
+            )
 
         elif self.bomb_type == 'impact':
             fuse_time = 20.0
@@ -1010,7 +1042,7 @@ class Bomb(bs.Actor):
             bs.animate(self.node, 'fuse_length', {0.0: 1.0, fuse_time: 0.0})
 
         # Light the fuse!!!
-        if self.bomb_type not in ('land_mine', 'tnt', 'snowgrave'):
+        if self.bomb_type not in ('land_mine', 'tnt', 'snowgrave', 'spades'):
             assert fuse_time is not None
             bs.timer(
                 fuse_time, bs.WeakCall(self.handlemessage, ExplodeMessage())
@@ -1073,7 +1105,11 @@ class Bomb(bs.Actor):
             self.arm_timer = bs.Timer(
                 1.25, bs.WeakCall(self.handlemessage, ArmMessage())
             )
-
+        elif self.bomb_type == 'spades':
+            self.arm_timer = bs.Timer(
+                1.0, bs.WeakCall(self.handlemessage, ArmMessage())
+            )
+        
         # Once we've thrown a sticky bomb we can stick to it.
         elif self.bomb_type == 'sticky':
 
@@ -1171,6 +1207,27 @@ class Bomb(bs.Actor):
                     self._add_material, factory.land_mine_blast_material
                 ),
             )
+            factory.activate_sound.play(0.5, position=self.node.position)
+
+        elif self.bomb_type == 'spades':
+            intex = (factory.jevil_bomb_flash_tex, factory.jevil_bomb_tex)
+            factory.jevil_bomb_arm_sfx.play()
+            bs.timer(0.1, factory.jevil_bomb_arm_sfx.play)
+            bs.timer(0.2, factory.jevil_bomb_arm_sfx.play)
+            self.texture_sequence = bs.newnode(
+                'texture_sequence',
+                owner=self.node,
+                attrs={'rate': 30, 'input_textures': intex},
+            )
+            bs.timer(0.2, self.texture_sequence.delete)
+            
+            bs.timer(
+                0.2, bs.WeakCall(self.handlemessage, ExplodeMessage())
+            )
+            
+
+
+           
         elif self.bomb_type == 'impact':
             intex = (
                 factory.impact_lit_tex,
@@ -1188,15 +1245,16 @@ class Bomb(bs.Actor):
                     self._add_material, factory.land_mine_blast_material
                 ),
             )
+            factory.activate_sound.play(0.5, position=self.node.position)
+
         else:
             raise RuntimeError(
-                'arm() should only be called on land-mines or impact bombs'
+                'arm() should only be called on armable bombs.'
             )
         self.texture_sequence.connectattr(
             'output_texture', self.node, 'color_texture'
         )
-        factory.activate_sound.play(0.5, position=self.node.position)
-
+        
     def _handle_hit(self, msg: bs.HitMessage) -> None:
         ispunched = msg.srcnode and msg.srcnode.getnodetype() == 'spaz'
 
