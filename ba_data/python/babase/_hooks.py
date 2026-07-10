@@ -209,20 +209,10 @@ def language_test_toggle() -> None:
 
 
 def award_in_control_achievement() -> None:
-    if _babase.app.classic is not None:
-        _babase.app.classic.ach.award_local_achievement('In Control')
-    else:
-        logging.warning('award_in_control_achievement is no-op without classic')
-
+    pass
 
 def award_dual_wielding_achievement() -> None:
-    if _babase.app.classic is not None:
-        _babase.app.classic.ach.award_local_achievement('Dual Wielding')
-    else:
-        logging.warning(
-            'award_dual_wielding_achievement is no-op without classic'
-        )
-
+    pass
 
 def play_gong_sound() -> None:
     if _babase.app.env.gui:
@@ -230,8 +220,7 @@ def play_gong_sound() -> None:
 
 
 def launch_coop_game(name: str) -> None:
-    assert _babase.app.classic is not None
-    _babase.app.classic.launch_coop_game(name)
+    pass
 
 
 def purchases_restored_message() -> None:

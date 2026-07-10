@@ -167,7 +167,8 @@ class BombFactory:
         self.tnt_tex = bs.gettexture('tnt')
         self.mew_mew_tex = bs.gettexture('white')
 
-        self.snowgrave_mesh = bs.getmesh('box')
+        self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
+        self.snowgrave_tex = bs.gettexture('snowgrave')
 
         self.hiss_sound = bs.getsound('hiss')
         self.debris_fall_sound = bs.getsound('debrisFall')
@@ -728,6 +729,9 @@ class Blast(bs.Actor):
                 mag *= 2.0
             elif self.blast_type == 'mewmew':
                 mag *= 0.75
+            elif self.blast_type == 'gigabomb':
+                mag *= 0.8
+
 
             node.handlemessage(
                 bs.HitMessage(
@@ -791,6 +795,7 @@ class Bomb(bs.Actor):
             'tnt',
             'mewmew',
             'snowgrave',
+            'gigabomb',
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -816,6 +821,8 @@ class Bomb(bs.Actor):
             self.blast_radius *= 0.8
         elif self.bomb_type == 'snowgrave':
             self.blast_radius *= 0.0
+        elif self.bomb_type == 'gigabomb':
+            self.blast_radius *= 1.5
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []
 
@@ -895,7 +902,7 @@ class Bomb(bs.Actor):
                     'mesh_scale': self.scale,
                     'body_scale': self.scale,
                     'shadow_size': 0.44,
-                    'color_texture': factory.mew_mew_tex,
+                    'color_texture': factory.snowgrave_tex,
                     'reflection': 'powerup',
                     'reflection_scale': [1.0],
                     'materials': materials,
@@ -959,6 +966,7 @@ class Bomb(bs.Actor):
                 mesh = factory.bomb_mesh
                 rtype = 'sharper'
                 rscale = 1.8
+            
             if self.bomb_type == 'ice':
                 tex = factory.ice_tex
             elif self.bomb_type == 'sticky':
@@ -967,6 +975,10 @@ class Bomb(bs.Actor):
                 tex = factory.mew_mew_tex
                 fuse_time = 1.5
                 self.scale *= 0.8
+            elif self.bomb_type == 'gigabomb':
+                fuse_time = 4.5
+                self.scale *= 1.5
+                tex = factory.mew_mew_tex
                 
             else:
                 tex = factory.regular_tex

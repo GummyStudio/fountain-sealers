@@ -245,7 +245,7 @@ class Spaz(bs.Actor):
         # Deprecated stuff.. should make these into lists.
         self.punch_callback: Callable[[Spaz], Any] | None = None
         self.pick_up_powerup_callback: Callable[[Spaz], Any] | None = None
-
+        self.was_fataled = False
         self.rudebusters = 0
         self.snowgraves = 0
         self.input_x = 0.0
@@ -771,10 +771,7 @@ class Spaz(bs.Actor):
         else:
             self.shield_decay_timer = None
         
-    def reset_all_counts(self):
-        self.set_land_mine_count(0)
-        self.set_rude_busters_count(0)
-        self.set_snowgraves_count(0)
+    
 
     @override
     def handlemessage(self, msg: Any) -> Any:
@@ -857,6 +854,9 @@ class Spaz(bs.Actor):
             elif msg.poweruptype == 'snowgrave':
                 self.reset_all_counts()
                 self.set_snowgraves_count(1)
+            elif msg.poweruptype == 'gigabomb':
+                self.reset_all_counts()
+                self.set_giga_bomb_count(1)
             elif msg.poweruptype == 'impact_bombs':
                 self.bomb_type = 'impact'
                 tex = self._get_bomb_type_tex()
@@ -1501,7 +1501,8 @@ class Spaz(bs.Actor):
             self.land_mine_count <= 0 and 
             self.bomb_count <= 0 and 
             self.rudebusters <= 0 and
-            self.snowgraves <= 0
+            self.snowgraves <= 0 and
+            self.gigabombs <= 0 
         ) or self.frozen:
             return None
         assert self.node
@@ -1512,7 +1513,7 @@ class Spaz(bs.Actor):
             dropping_bomb = False
             self.set_land_mine_count(self.land_mine_count - 1)
             bomb_type = 'land_mine'
-        if self.rudebusters > 0:
+        elif self.rudebusters > 0:
             dropping_bomb = False
             self.set_rude_busters_count(self.rudebusters - 1)
             Rudebuster(
@@ -1524,10 +1525,14 @@ class Spaz(bs.Actor):
             ).autoretain()
             self.node.handlemessage('celebrate', 100)
             return None
-        if self.snowgraves > 0:
+        elif self.snowgraves > 0:
             dropping_bomb = False
             self.set_snowgraves_count(self.snowgraves - 1)
             bomb_type = 'snowgrave'
+        elif self.gigabombs > 0:
+            dropping_bomb = False
+            self.set_giga_bomb_count(self.gigabombs - 1)
+            bomb_type = 'gigabomb'
        
         else:
             dropping_bomb = True
@@ -1643,11 +1648,34 @@ class Spaz(bs.Actor):
                 )
             else:
                 self.node.counter_text = ''
+
+    def set_giga_bomb_count(self, count: int) -> None:
+        """Set the number of giga bomb this spaz is carrying."""
+        self.gigabombs = count
+        if self.node:
+            if self.gigabombs != 0:
+                self.node.counter_text = 'x' + str(self.gigabombs)
+                self.node.counter_texture = (
+                    PowerupBoxFactory.get().tex_mewbombs
+                )
+            else:
+                self.node.counter_text = ''
+    
+    
+    def reset_all_counts(self):
+        self.set_land_mine_count(0)
+        self.set_rude_busters_count(0)
+        self.set_snowgraves_count(0)
+        self.set_giga_bomb_count(0)
     
     def fatal_death(self):
         # import bascenev1 as bs; bs.getactivity().players[0].actor.fatal_death()
         if not self.node:
             return
+        if self.was_fataled:
+            return
+        
+        self.was_fataled = True
         
         self.node.death_sounds = []
         

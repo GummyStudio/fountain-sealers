@@ -34,8 +34,8 @@ class ParticalFactory:
         self.snowgrave_sfx = bs.getsound('snd_snowgrave')
         self.snowgrave_crystal_spawn_sfx = bs.getsound('snowgraveCreate')
         self.snowgrave_crystal_break_sfx = bs.getsound('snowgraveBreak')
-        self.snowgrave_tex = bs.gettexture('white')
-        self.snowgrave_mesh = bs.getmesh('box')
+        self.snowgrave_tex = bs.gettexture('snowgrave')
+        self.snowgrave_mesh = bs.getmesh('snowgraved_player')
        
         self.ominous_sound = bs.getsound('ominous')
         self.fatal_death_sound = bs.getsound('fatal_death')

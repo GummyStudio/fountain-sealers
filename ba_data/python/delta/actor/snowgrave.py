@@ -49,6 +49,8 @@ class SnowgraveCrystal:
             alive_for=lifespan+1.0,
             collide_with='floor'
         ).autoretain()
+        self.partical.node.reflection = 'powerup'
+        self.partical.node.reflection_scale = [1.0]
         
 
         t_peak = lifespan * 0.1
@@ -57,9 +59,9 @@ class SnowgraveCrystal:
 
         bs.animate_array(self.partical.node, 'velocity', 3, {
             0: velocity,               
-            t_peak: (velocity[0]*0.5, 0.2, velocity[2]*0.5),               
-            t_start_descend: (velocity[0]*0.2, -1.4, velocity[2]*0.2),     
-            t_stop: (0, -0.2, 0)                
+            t_peak: (velocity[0]*0.8, 0.2, velocity[2]*0.8),               
+            t_start_descend: (velocity[0]*0.5, -1.4, velocity[2]*0.5),     
+            t_stop: (velocity[0]*0.1, -0.2, velocity[2]*0.1)                
         })
 
         
@@ -295,7 +297,7 @@ class Snowgrave(bs.Actor):
     def emit(self):
         bs.emitfx(
             position=self.position,
-            count=10,
+            count=2,
             spread=0.025,
             velocity=(
                 0, 
@@ -307,7 +309,7 @@ class Snowgrave(bs.Actor):
         )
         bs.emitfx(
             position=self.position,
-            count=4,
+            count=1,
             spread=0.09,
             velocity=(
                 random.uniform(-0.2, 0.2), 

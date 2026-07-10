@@ -196,6 +196,8 @@ class PowerupBox(bs.Actor):
             tex = factory.tex_mewbombs 
         elif poweruptype == 'snowgrave':
             tex = factory.tex_ice_bombs 
+        elif poweruptype == 'gigabomb':
+            tex = factory.tex_mewbombs 
         else:
             raise ValueError('invalid poweruptype: ' + str(poweruptype))
 
