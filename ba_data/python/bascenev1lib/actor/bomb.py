@@ -730,7 +730,7 @@ class Blast(bs.Actor):
             elif self.blast_type == 'mewmew':
                 mag *= 0.75
             elif self.blast_type == 'gigabomb':
-                mag *= 0.8
+                mag *= 1.3
 
 
             node.handlemessage(

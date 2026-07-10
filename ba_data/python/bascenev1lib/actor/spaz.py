@@ -248,6 +248,7 @@ class Spaz(bs.Actor):
         self.was_fataled = False
         self.rudebusters = 0
         self.snowgraves = 0
+        self.gigabombs = 0
         self.input_x = 0.0
         self.input_y = 0.0
         self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
