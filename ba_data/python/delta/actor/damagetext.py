@@ -30,6 +30,8 @@ class DamageText(bs.Actor):
             0.7: (position[0]+0.6, start_y, position[2]),
             0.8: (position[0]+0.6, start_y+0.1, position[2]),
             0.9: (position[0]+0.6, start_y, position[2]),
+            1.5: (position[0]+0.6, start_y, position[2]),
+            2.0: (position[0]+0.6, start_y+2.0, position[2]),
         })
         
         bs.animate(self.node, 'opacity', {1.5: 1.0, 2.0: 0.0})

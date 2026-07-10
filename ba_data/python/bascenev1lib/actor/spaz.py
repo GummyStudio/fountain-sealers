@@ -99,6 +99,9 @@ class Spaz(bs.Actor):
         activity = self.activity
 
         factory = SpazFactory.get()
+        self.character = character
+        self.color = color
+        self.highlight = highlight
 
         # We need to behave slightly different in the tutorial.
         self._demo_mode = demo_mode
@@ -249,6 +252,7 @@ class Spaz(bs.Actor):
         self.input_y = 0.0
         self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
         self.snowgraved = False
+        self.last_saved_position = (0, 0, 0)
 
         # sound effects
         
@@ -257,6 +261,12 @@ class Spaz(bs.Actor):
     def _tick(self):
         if not self.exists():
             return
+        
+        # GUMMY:
+        # The last saved position of this spaz before its node was deleted, 
+        # try using this more rather than self.node.position cause ive been through that
+        try: self.last_saved_position = self.node.position
+        except: pass
         if self.frozen and random.randint(0, 7) == 0:
             for _ in range(random.randint(1, 3)):
                 Partical(
@@ -998,9 +1008,10 @@ class Spaz(bs.Actor):
                     self.shatter()
 
         elif isinstance(msg, bs.ThawMessage):
-            if self.frozen and not self.shattered and self.node:
+            if self.frozen and not self.shattered and self.node and not self.snowgraved:
                 self.frozen = False
                 self.node.frozen = False
+                
 
         elif isinstance(msg, bs.HitMessage):
             if not self.node:
@@ -1293,14 +1304,15 @@ class Spaz(bs.Actor):
             wasdead = self._dead
             self._dead = True
             self.hitpoints = 0
+            if self.play_big_death_sound:
+                SpazFactory.get().single_player_death_sound.play()
             if msg.immediate:
                 if self.node:
                     self.node.delete()
             elif self.node:
                 if not wasdead:
                     self.node.hurt = 1.0
-                    if self.play_big_death_sound:
-                        SpazFactory.get().single_player_death_sound.play()
+                    
                     self.node.dead = True
                     bs.timer(2.0, self.node.delete)
 
@@ -1609,7 +1621,7 @@ class Spaz(bs.Actor):
             if self.rudebusters != 0:
                 self.node.counter_text = 'x' + str(self.rudebusters)
                 self.node.counter_texture = (
-                    PowerupBoxFactory.get().tex_land_mines
+                    PowerupBoxFactory.get().tex_rudebuster
                 )
             else:
                 self.node.counter_text = ''

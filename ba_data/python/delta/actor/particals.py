@@ -32,6 +32,9 @@ class ParticalFactory:
         self.rudebuster_tex = bs.gettexture('white')
 
         self.snowgrave_sfx = bs.getsound('snd_snowgrave')
+        self.snowgrave_tex = bs.gettexture('pinkBoom')
+        self.snowgrave_mesh = bs.getmesh('box')
+       
 
         self.pink_bomb_explode_sfx = bs.getsound('pinkBoom')
         self.pink_short_laugh_sfx = bs.getsound('snd_pink_laugh_short')
@@ -45,6 +48,8 @@ class ParticalFactory:
     # NOTE TO GUMMY: put fucking materials in fucking factory
     # before i kill you because fun fact actually too many materials
     # will eventually cause players to get kicked so kys
+
+    # ok :((
     @property
     def snowgrave_mat(self) -> bs.Material:
         """A material that gives a SnowgraveTouchedMessage

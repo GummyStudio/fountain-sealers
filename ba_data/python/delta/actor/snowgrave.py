@@ -7,9 +7,25 @@ from delta.actor.particals import Partical, ParticalFactory, SnowgraveTouchedMes
 from delta.actor.damagetext import DamageText
 from bascenev1lib.gameutils import SharedObjects
 
-class SnowgraveProp(bs.Actor):
-    def __init__(self, position, meshes):
-        super().__init__()
+class SnowgraveCrystal:
+    """
+    basically a snowgrave thingy like what friend chicken was in 
+
+    also it'll break eventually and reveal the frozen spaz
+    
+    """
+    def __init__(self, position, character, color, highlight):
+        # Ok spawn a partical and when it dies we do cool thing
+        self.partical=Partical(
+            position=position,
+            texture=ParticalFactory.get()
+        )
+
+    def kill(self):
+        self.partical = None
+
+        
+
 
 class Snowgrave(bs.Actor):
     """Cast a snowgrave in this position. 
@@ -44,7 +60,7 @@ class Snowgrave(bs.Actor):
         self.spaz_specific_hits = {}
         self.spaz_touch_cooldown = bs.time()
         bs.timer(1, self.make)
-        self.tick_timer = bs.Timer(0.1, self.handle_nodes_inside, repeat=True)
+        self.tick_timer = bs.Timer(0.01, self.handle_nodes_inside, repeat=True)
 
     def handle_nodes_inside(self):
         if not self.active:
@@ -78,12 +94,38 @@ class Snowgrave(bs.Actor):
 
                 # if this spaz got hit 15 times, freeze it
                 if self.spaz_specific_hits[actor_id] > 15 and not delegate.snowgraved:
-                    delegate.snowgraved = True
+                    # Ice em
                     delegate.handlemessage(bs.FreezeMessage())
+                    if delegate.frozen and delegate.is_alive():
+                        # Okay, you're gonna die
+                        delegate.snowgraved = True
+                        DamageText(
+                            position=self.position,
+                            text=str(random.randint(988, 1199)),
+                            color=(1,1,1)
+                        ).autoretain()
+                        # Delete their node but save their data
+                        SnowgraveCrystal(
+                            delegate.last_saved_position,
+                            delegate.character,
+                            delegate.color,
+                            delegate.highlight
+                        )
+                        # soo what ever activity knows they died,
+                        #  and we were the last to hit em
+                        delegate.handlemessage(bs.HitMessage(
+                            flat_damage=1,
+                            source_player=self.source_player
+                        ))
+                        # we need regular for some reason
+                        delegate.handlemessage(bs.DieMessage())
+                        delegate.node.delete()
+                        
+                   
 
             elif isinstance(delegate, bs.Actor):
                 # any other actor gets swept away... hopefully
-                delegate.impulse(y=40)
+                delegate.impulse(y=6)
 
 
     def handle_touched_snowgrave(self, entered):
