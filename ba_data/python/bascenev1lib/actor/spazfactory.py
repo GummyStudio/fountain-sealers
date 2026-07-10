@@ -203,7 +203,7 @@ class SpazFactory:
         self.roller_material.add_actions(
             conditions=('they_have_material', footing_material),
             actions=(
-                ('impact_sound', self.foot_impact_sounds, 1, 0.2),
+                ('impact_sound', self.foot_impact_sounds, 99, 99),
                 ('skid_sound', self.foot_skid_sound, 20, 0.3),
                 ('roll_sound', self.foot_roll_sound, 20, 3.0),
             ),
@@ -214,7 +214,7 @@ class SpazFactory:
         self.spaz_material.add_actions(
             conditions=('they_have_material', footing_material),
             actions=(
-                ('impact_sound', self.foot_impact_sounds, 20, 6),
+                ('impact_sound', self.foot_impact_sounds, 99, 99),
                 ('skid_sound', self.skid_sound, 2.0, 1),
                 ('roll_sound', self.skid_sound, 2.0, 1),
             ),

@@ -113,6 +113,7 @@ class AudioSettingsWindow(bui.MainWindow):
         x = width * 0.5 - 160
         y = height * 0.5 + (100 if show_soundtracks else 70)
         y -= spacing * 1.0
+        self._sound_change_sound = bui.getsound('noise')
 
         self._sound_volume_numedit = svne = ConfigNumberEdit(
             parent=self._root_widget,
@@ -123,6 +124,8 @@ class AudioSettingsWindow(bui.MainWindow):
             minval=0.0,
             maxval=1.0,
             increment=0.05,
+            changesound=False,
+            callback=self._sound_change_sound.play,
             as_percent=True,
         )
         bui.widget(

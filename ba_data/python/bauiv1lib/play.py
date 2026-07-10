@@ -33,22 +33,7 @@ class PlayWindow(bui.MainWindow):
         # pylint: disable=too-many-locals
 
         import bacommon.cloud
-
-        # TEMP TESTING
-        if bool(False):
-            print('HELLO FROM TEST')
-            plus = bui.app.plus
-            assert plus is not None
-            plus.cloud.send_message_cb(
-                bacommon.cloud.SecureDataCheckMessage(
-                    data=b'fo', signature=b'mo'
-                ),
-                on_response=lambda r: print('GOT CHECK RESPONSE', r),
-            )
-            plus.cloud.send_message_cb(
-                bacommon.cloud.SecureDataCheckerRequest(),
-                on_response=lambda r: print('GOT CHECKER RESPONSE', r),
-            )
+        show_coop = False
 
         # Preload some modules we use in a background thread so we won't
         # have a visual hitch when the user taps them.
@@ -163,11 +148,11 @@ class PlayWindow(bui.MainWindow):
             v_align='center',
         )
 
-        scl = 0.75 if self._playlist_select_context is None else 0.68
+        scl = 0.75 if not show_coop else 0.68
         v = height * 0.5 - button_height * scl * 0.5 - 20.0
         clr = (0.6, 0.7, 0.6, 1.0)
 
-        bcount = 3 if self._playlist_select_context is None else 2
+        bcount = 3 if show_coop else 2
 
         total_b_width = (
             bcount * button_width * scl + (bcount - 1) * button_spacing
@@ -195,7 +180,7 @@ class PlayWindow(bui.MainWindow):
         self._coop_button: bui.Widget | None = None
 
         # Only show coop button in regular variant.
-        if self._playlist_select_context is None:
+        if show_coop:
             self._coop_button = btn = bui.buttonwidget(
                 parent=self._root_widget,
                 position=(hoffs, v),
@@ -536,7 +521,7 @@ class PlayWindow(bui.MainWindow):
                 edit=self._root_widget,
                 selected_child=(
                     self._coop_button
-                    if self._playlist_select_context is None
+                    if show_coop
                     else self._teams_button
                 ),
             )
@@ -545,7 +530,7 @@ class PlayWindow(bui.MainWindow):
                 edit=self._root_widget,
                 selected_child=(
                     self._coop_button
-                    if self._playlist_select_context is None
+                    if show_coop
                     else self._teams_button
                 ),
             )

@@ -205,7 +205,7 @@ def register_appearances() -> None:
     t.lower_leg_mesh = 'susieLowerLeg'
     t.toes_mesh = 'susieToes'
     t.jump_sounds = ['voicelines/susie/jump' + str(i + 1) + '' for i in range(4)]
-    t.attack_sounds = ['voicelines/susie/attack' + str(i + 1) + '' for i in range(4)]
+    t.attack_sounds = ['voicelines/susie/jump' + str(i + 1) + '' for i in range(4)]
     t.victory_sounds = ['voicelines/susie/win']
     t.gloat_sounds = ['voicelines/susie/gloat']
     t.impact_sounds = ['voicelines/susie/hurt' + str(i + 1) + '' for i in range(2)]
