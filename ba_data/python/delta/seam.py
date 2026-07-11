@@ -290,7 +290,7 @@ class ShopUI(bui.MainWindow):
                                         expression='talk',
                                         on_complete=lambda: (
                                             self.say(
-                                                "* Around here, you learn to find ways to pass the time... ... or go mad like everyone else.{pause:2.0}\n",
+                                                "* Around here, you learn to find ways to pass the time.{pause:0.1}.{pause:0.1}.or go mad like\n    everyone else.{pause:2.0}\n",
                                                 expression='laugh',
                                                 on_complete=self.show_talk_menu
                                             )
