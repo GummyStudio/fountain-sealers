@@ -770,6 +770,11 @@
   "macControllerSubsystemMFiText": "Made-for-iOS/Mac",
   "macControllerSubsystemTitleText": "Controller Support",
   "mainMenu": {
+	"selectText": "Please select a option.",
+    "playInfoText": "'Battle together\nwith your friends.'",
+	"gatherInfoText": "'Challenge your friends,\nno matter the distance.'",
+	"replayInfoText": "'Watch games you had\npreviously played and saved.'",
+	"storeText": "Store",
     "creditsText": "Credits",
     "demoMenuText": "Demo Menu",
     "endGameText": "End Game",
@@ -873,6 +878,9 @@
     "teamsText": "Teams"
   },
   "playText": "Play",
+  "localPlayText": "Local Play",
+  "onlinePlayText": "Online Play",
+  "replaysText": "Replays",
   "playWindow": {
     "oneToFourPlayersText": "1-4 players",
     "titleText": "Play",

@@ -352,7 +352,7 @@ class InboxWindow(bui.MainWindow):
             root_widget=bui.containerwidget(
                 size=(self._width, self._height),
                 toolbar_visibility=(
-                    'menu_full' if uiscale is bui.UIScale.SMALL else 'menu_full'
+                    'menu_minimal',
                 ),
                 scale=scale,
             ),

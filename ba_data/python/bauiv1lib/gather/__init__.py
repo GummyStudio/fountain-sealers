@@ -127,9 +127,7 @@ class GatherWindow(bui.MainWindow):
             root_widget=bui.containerwidget(
                 size=(self._width, self._height),
                 toolbar_visibility=(
-                    'menu_tokens'
-                    if uiscale is bui.UIScale.SMALL
-                    else 'menu_full'
+                    'menu_minimal'
                 ),
                 scale=scale,
             ),

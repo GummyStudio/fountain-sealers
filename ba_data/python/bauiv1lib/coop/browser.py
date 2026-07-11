@@ -130,7 +130,7 @@ class CoopBrowserWindow(bui.MainWindow):
         super().__init__(
             root_widget=bui.containerwidget(
                 size=(self._width, self._height + top_extra),
-                toolbar_visibility='menu_full',
+                toolbar_visibility='menu_minimal',
                 scale=scale,
             ),
             transition=transition,

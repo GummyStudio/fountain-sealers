@@ -99,6 +99,22 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             },
         )
         bs.animate(node, 'opacity', {1.3: 0, 1.8: 1.0})
+        # FIXME: remove in release maybe???
+        bs.newnode(
+            'text',
+            attrs={
+                'position': (640, -355),
+                'v_align': 'bottom',
+                'h_align': 'right',
+                'scale': 0.5,
+                'opacity': 0.4,
+                'text': (
+                    f'{app.env.engine_version} build {app.env.engine_build_number}.'
+                    f'\nFountain Sealers version INDEV.'
+                    f'\nCopyright 2025 Eric Froemling.'
+                ),
+            },
+        )
 
         # mesh = bs.getmesh('thePadLevel')
         # trees_mesh = bs.getmesh('trees')

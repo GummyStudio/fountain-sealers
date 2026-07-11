@@ -56,8 +56,6 @@ class ProfileBrowserWindow(bui.MainWindow):
                 size=(self._width, self._height + top_extra),
                 toolbar_visibility=(
                     'menu_minimal'
-                    if (uiscale is bui.UIScale.SMALL or minimal_toolbar)
-                    else 'menu_full'
                 ),
                 scale=(
                     2.5

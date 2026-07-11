@@ -91,11 +91,6 @@ class PlaylistBrowserWindow(bui.MainWindow):
                 size=(self._width, self._height),
                 toolbar_visibility=(
                     'menu_minimal'
-                    if (
-                        uiscale is bui.UIScale.SMALL
-                        or playlist_select_context is not None
-                    )
-                    else 'menu_full'
                 ),
                 scale=scale,
             ),

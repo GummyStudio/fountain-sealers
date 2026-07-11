@@ -84,8 +84,6 @@ class PlaylistCustomizeBrowserWindow(bui.MainWindow):
                 scale=scale,
                 toolbar_visibility=(
                     'menu_minimal'
-                    if uiscale is bui.UIScale.SMALL
-                    else 'menu_full'
                 ),
             ),
             transition=transition,
