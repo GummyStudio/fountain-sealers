@@ -475,13 +475,13 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
                     
                     # Last Punch + Fell
                     if (
-                        player.actor.last_attack_hit_type is DeathType.PUNCH
+                        last_hit_type is DeathType.PUNCH
                         and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
                     ):
                         last_hit_type = DeathType.PUNCH_HIT_FALL
                     # Rude Buster + Fell
                     elif (
-                        player.actor.last_attack_hit_type is DeathType.RUDE_BUSTER
+                        last_hit_type is DeathType.RUDE_BUSTER
                         and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
                     ):
                         last_hit_type = DeathType.RUDE_BUSTER_FALL

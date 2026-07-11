@@ -54,6 +54,7 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
     MusicType.RAKUICHI_BUSTER: AssetSoundtrackEntry('music/rakuichi_buster', volume=1.2),
     
     MusicType.MEW_MEW_KISSY: AssetSoundtrackEntry('music/pink', volume=1.2),
+    MusicType.KING_BOSS: AssetSoundtrackEntry('music/kingboss')
 }
 class MusicSubsystem:
     """Subsystem for music playback in the app.
