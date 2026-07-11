@@ -248,6 +248,7 @@ class Spaz(bs.Actor):
         self.was_fataled = False
         self.rudebusters = 0
         self.snowgraves = 0
+        self.annoyingdogs = 0
         self.gigabombs = 0
         self.input_x = 0.0
         self.input_y = 0.0
@@ -858,6 +859,9 @@ class Spaz(bs.Actor):
             elif msg.poweruptype == 'gigabomb':
                 self.reset_all_counts()
                 self.set_giga_bomb_count(1)
+            elif msg.poweruptype == 'annoyingdog':
+                self.reset_all_counts()
+                self.set_annoying_dog_count(1)
             elif msg.poweruptype == 'impact_bombs':
                 self.bomb_type = 'impact'
                 tex = self._get_bomb_type_tex()
@@ -1543,7 +1547,8 @@ class Spaz(bs.Actor):
             self.bomb_count <= 0 and 
             self.rudebusters <= 0 and
             self.snowgraves <= 0 and
-            self.gigabombs <= 0 
+            self.gigabombs <= 0 and
+            self.annoyingdogs <= 0
         ) or self.frozen:
             return None
         assert self.node
@@ -1574,6 +1579,11 @@ class Spaz(bs.Actor):
             dropping_bomb = False
             self.set_giga_bomb_count(self.gigabombs - 1)
             bomb_type = 'gigabomb'
+        
+        elif self.annoyingdogs > 0:
+            dropping_bomb = False
+            self.set_annoying_dog_count(self.annoyingdogs-1)
+            bomb_type = 'annoyingdog'
        
         else:
             dropping_bomb = True
@@ -1702,12 +1712,26 @@ class Spaz(bs.Actor):
             else:
                 self.node.counter_text = ''
     
+    def set_annoying_dog_count(self, count: int) -> None:
+        """Set the number of annoying dogs this spaz is carrying."""
+        self.annoyingdogs = count
+        if self.node:
+            if self.annoyingdogs != 0:
+                self.node.counter_text = 'x' + str(self.annoyingdogs)
+                self.node.counter_texture = (
+                    PowerupBoxFactory.get().tex_realknife
+                )
+            else:
+                self.node.counter_text = ''
+    
+    
     
     def reset_all_counts(self):
         self.set_land_mine_count(0)
         self.set_rude_busters_count(0)
         self.set_snowgraves_count(0)
         self.set_giga_bomb_count(0)
+        self.set_annoying_dog_count(0)
     
     def fatal_death(self):
         # import bascenev1 as bs; bs.getactivity().players[0].actor.fatal_death()
