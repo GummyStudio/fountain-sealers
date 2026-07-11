@@ -275,9 +275,8 @@ class EliminationGame(bs.TeamGameActivity[Player, Team]):
 
         # Base class overrides:
         self.slow_motion = self._epic_mode
-        self.default_music = (
-            bs.MusicType.EPIC if self._epic_mode else bs.MusicType.SURVIVAL
-        )
+         # No override.
+        self.default_music = None
 
     @override
     def get_instance_description(self) -> str | Sequence:

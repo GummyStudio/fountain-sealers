@@ -48,7 +48,7 @@ class TargetPracticeGame(bs.TeamGameActivity[Player, Team]):
         bs.BoolSetting('Enable Impact Bombs', default=True),
         bs.BoolSetting('Enable Triple Bombs', default=True),
     ]
-    default_music = bs.MusicType.FORWARD_MARCH
+    default_music = None
 
     @override
     @classmethod

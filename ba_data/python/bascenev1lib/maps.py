@@ -90,6 +90,12 @@ class Rudebuster(bs.Map):
         gnode.ambient_color = (1.3, 1.2, 1.03)
         gnode.vignette_outer = (0.62, 0.64, 0.69)
         gnode.vignette_inner = (0.97, 0.95, 0.93)
+    
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        
+        return bs.MusicType.TO_THE_DEATH
 
 class MewersLive(bs.Map):
     """the nonexistent stage from
@@ -117,6 +123,7 @@ class MewersLive(bs.Map):
             'mesh': bs.getmesh('mewers_live'),
             'collision_mesh': bs.getcollisionmesh('mewers_live'),
             'tex': bs.gettexture('mewers_live'), # everything is stored into a single nice texture... who's good at optimizing now huh >:3
+            # i dont care lol
             'bgmesh': bs.getmesh('mewers_liveBG'),
             'kill_cmesh': bs.getcollisionmesh('mewers_live_death'),
         }
@@ -161,3 +168,9 @@ class MewersLive(bs.Map):
         gnode.ambient_color = (1.1, 1.2, 1.1)
         gnode.vignette_outer = (0.8, 0.8, 0.8)
         gnode.vignette_inner = (0.8, 0.8, 0.8)
+
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        
+        return bs.MusicType.MEW_MEW_KISSY

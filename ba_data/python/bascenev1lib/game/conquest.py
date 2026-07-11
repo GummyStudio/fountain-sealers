@@ -135,10 +135,8 @@ class ConquestGame(bs.TeamGameActivity[Player, Team]):
 
         # Base class overrides.
         self.slow_motion = self._epic_mode
-        self.default_music = (
-            bs.MusicType.EPIC if self._epic_mode else bs.MusicType.GRAND_ROMP
-        )
-
+         # No override.
+        self.default_music = None
         # We want flags to tell us they've been hit but not react physically.
         self._extraflagmat.add_actions(
             conditions=('they_have_material', shared.player_material),

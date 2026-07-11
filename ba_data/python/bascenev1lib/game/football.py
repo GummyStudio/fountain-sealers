@@ -173,9 +173,8 @@ class FootballTeamGame(bs.TeamGameActivity[Player, Team]):
         self._time_limit = float(settings['Time Limit'])
         self._epic_mode = bool(settings['Epic Mode'])
         self.slow_motion = self._epic_mode
-        self.default_music = (
-            bs.MusicType.EPIC if self._epic_mode else bs.MusicType.FOOTBALL
-        )
+         # No override.
+        self.default_music = None
 
     @override
     def get_instance_description(self) -> str | Sequence:
@@ -402,7 +401,7 @@ class FootballCoopGame(bs.CoopGameActivity[Player, Team]):
         scoretype=bs.ScoreType.MILLISECONDS, version='B'
     )
 
-    default_music = bs.MusicType.FOOTBALL
+    default_music = None
 
     # FIXME: Need to update co-op games to use getscoreconfig.
     @override

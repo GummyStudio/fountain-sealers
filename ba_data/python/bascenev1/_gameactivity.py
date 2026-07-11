@@ -361,8 +361,11 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
             )
 
         # Give our map a chance to override the music
+
+        # UPDATE FOR FOUNTAIN SEALEARS:
+        # music is now dependant on the MAP, and is overriden by the ACTIVITY
         map_music = self._map_type.get_music_type()
-        music = map_music if map_music is not None else self.default_music
+        music = self.default_music if self.default_music is not None else map_music
 
         if music is not None:
             _music.setmusic(music)

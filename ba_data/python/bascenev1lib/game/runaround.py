@@ -114,7 +114,7 @@ class RunaroundGame(bs.CoopGameActivity[Player, Team]):
         'No, you can\'t get up on the ledge. You have to throw bombs.',
         'Whip back and forth to get more distance on your throws..',
     ]
-    default_music = bs.MusicType.MARCHING
+    default_music =None
 
     # How fast our various bot types walk.
     _bot_speed_map: dict[type[SpazBot], float] = {

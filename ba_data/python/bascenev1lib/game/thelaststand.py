@@ -71,7 +71,7 @@ class TheLastStandGame(bs.CoopGameActivity[Player, Team]):
     # And of course the most important part.
     slow_motion = True
 
-    default_music = bs.MusicType.EPIC
+    default_music = None
 
     def __init__(self, settings: dict):
         settings['map'] = 'Rampage'

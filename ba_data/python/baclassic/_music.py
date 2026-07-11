@@ -43,36 +43,14 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
         'victoryMusic', volume=1.2, loop=False
     ),
     MusicType.CHAR_SELECT: AssetSoundtrackEntry('charSelectMusic', volume=0.4),
-    MusicType.RUN_AWAY: AssetSoundtrackEntry('runAwayMusic', volume=1.2),
-    MusicType.ONSLAUGHT: AssetSoundtrackEntry('runAwayMusic', volume=1.2),
-    MusicType.KEEP_AWAY: AssetSoundtrackEntry('runAwayMusic', volume=1.2),
-    MusicType.RACE: AssetSoundtrackEntry('runAwayMusic', volume=1.2),
-    MusicType.EPIC_RACE: AssetSoundtrackEntry('slowEpicMusic', volume=1.2),
+
     MusicType.SCORES: AssetSoundtrackEntry(
         'scoresEpicMusic', volume=0.6, loop=False
     ),
-    MusicType.GRAND_ROMP: AssetSoundtrackEntry('grandRompMusic', volume=1.2),
+
     MusicType.TO_THE_DEATH: AssetSoundtrackEntry('toTheDeathMusic', volume=1.2),
-    MusicType.CHOSEN_ONE: AssetSoundtrackEntry('survivalMusic', volume=0.8),
-    MusicType.FORWARD_MARCH: AssetSoundtrackEntry(
-        'forwardMarchMusic', volume=0.8
-    ),
-    MusicType.FLAG_CATCHER: AssetSoundtrackEntry(
-        'flagCatcherMusic', volume=1.2
-    ),
-    MusicType.SURVIVAL: AssetSoundtrackEntry('survivalMusic', volume=0.8),
-    MusicType.EPIC: AssetSoundtrackEntry('slowEpicMusic', volume=1.2),
-    MusicType.SPORTS: AssetSoundtrackEntry('sportsMusic', volume=0.8),
-    MusicType.HOCKEY: AssetSoundtrackEntry('sportsMusic', volume=0.8),
-    MusicType.FOOTBALL: AssetSoundtrackEntry('sportsMusic', volume=0.8),
-    MusicType.FLYING: AssetSoundtrackEntry('flyingMusic', volume=0.8),
-    MusicType.SCARY: AssetSoundtrackEntry('scaryMusic', volume=0.8),
-    MusicType.MARCHING: AssetSoundtrackEntry(
-        'whenJohnnyComesMarchingHomeMusic', volume=0.8
-    ),
+    MusicType.MEW_MEW_KISSY: AssetSoundtrackEntry('music/pink', volume=1.2),
 }
-
-
 class MusicSubsystem:
     """Subsystem for music playback in the app.
 

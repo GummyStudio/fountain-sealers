@@ -75,9 +75,7 @@ class MeteorShowerGame(bs.TeamGameActivity[Player, Team]):
         self._ended: bool = False
 
         # Some base class overrides:
-        self.default_music = (
-            bs.MusicType.EPIC if self._epic_mode else bs.MusicType.SURVIVAL
-        )
+        self.default_music = None
         if self._epic_mode:
             self.slow_motion = True
 

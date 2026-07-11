@@ -25,26 +25,10 @@ class MusicType(Enum):
     MENU2 = 'Menu2'
     VICTORY = 'Victory'
     CHAR_SELECT = 'CharSelect'
-    RUN_AWAY = 'RunAway'
-    ONSLAUGHT = 'Onslaught'
-    KEEP_AWAY = 'Keep Away'
-    RACE = 'Race'
-    EPIC_RACE = 'Epic Race'
+ 
     SCORES = 'Scores'
-    GRAND_ROMP = 'GrandRomp'
     TO_THE_DEATH = 'ToTheDeath'
-    CHOSEN_ONE = 'Chosen One'
-    FORWARD_MARCH = 'ForwardMarch'
-    FLAG_CATCHER = 'FlagCatcher'
-    SURVIVAL = 'Survival'
-    EPIC = 'Epic'
-    SPORTS = 'Sports'
-    HOCKEY = 'Hockey'
-    FOOTBALL = 'Football'
-    FLYING = 'Flying'
-    SCARY = 'Scary'
-    MARCHING = 'Marching'
-
+    MEW_MEW_KISSY = 'pink'
 
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:
     """Set the app to play (or stop playing) a certain type of music.

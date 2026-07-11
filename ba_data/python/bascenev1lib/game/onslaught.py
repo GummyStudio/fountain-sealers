@@ -284,7 +284,7 @@ class OnslaughtGame(bs.CoopGameActivity[Player, Team]):
                 },
             )
         )
-        bs.setmusic(bs.MusicType.ONSLAUGHT)
+        bs.setmusic(None)
 
         self._scoreboard = Scoreboard(
             label=bs.Lstr(resource='scoreText'), score_split=0.5
