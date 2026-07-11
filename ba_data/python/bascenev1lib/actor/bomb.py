@@ -1095,8 +1095,9 @@ class Bomb(bs.Actor):
         )
         self.dog_cooldown = 0
         self.tick_timer = bs.Timer(0.1, self._tick, repeat=True)
-        bs.timer(
-                fuse_time*0.95, self.dog_warn_about_to_explode)
+        if self.bomb_type == 'annoyingdog':
+            bs.timer(
+                    fuse_time*0.95, self.dog_warn_about_to_explode)
         
     def exists(self):
         return bool(self.node)
