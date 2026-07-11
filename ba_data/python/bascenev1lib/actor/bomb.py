@@ -163,8 +163,8 @@ class BombFactory:
         self.sticky_tex = bs.gettexture('bombStickyColor')
         self.impact_tex = bs.gettexture('impactBombColor')
         self.impact_lit_tex = bs.gettexture('impactBombColorLit')
-        self.land_mine_tex = bs.gettexture('landMine')
-        self.land_mine_lit_tex = bs.gettexture('landMineLit')
+        self.land_mine_tex = bs.gettexture('bombColorIce')
+        self.land_mine_lit_tex = bs.gettexture('bombColorIce')
         self.tnt_tex = bs.gettexture('tnt')
         self.mew_mew_tex = bs.gettexture('white')
 
@@ -914,7 +914,7 @@ class Bomb(bs.Actor):
                 },
             )
         
-        if self.bomb_type == 'snowgrave':
+        elif self.bomb_type == 'snowgrave':
             fuse_time = None
             self.scale = 0.5
             self.node = bs.newnode(
@@ -1208,7 +1208,7 @@ class Bomb(bs.Actor):
                     )
                 ):
                     return
-                self.handlemessage(ExplodeMessage())
+                
             elif self.bomb_type == 'annoyingdog':
                 if not self.dropped:
                     # chill bro
@@ -1251,6 +1251,9 @@ class Bomb(bs.Actor):
                         actor.impulse(x=220, y=50, direction=(
                             -node.velocity[0],  -node.velocity[1], -node.velocity[2],
                         ))
+                return
+            
+            self.handlemessage(ExplodeMessage())
                     
                     
 
@@ -1445,10 +1448,9 @@ class Bomb(bs.Actor):
         # impact-bombs by all impacts.
         if not self._exploded and (
             (not ispunched or self.bomb_type in ['impact', 'land_mine'])
-            and self.bomb_type not in [
+        ) and self.bomb_type not in [
                  'annoyingdog', # bombs that dont wana be blown up by others
-             ] 
-        ):
+             ] :
             # Also lets change the owner of the bomb to whoever is setting
             # us off. (this way points for big chain reactions go to the
             # person causing them).
