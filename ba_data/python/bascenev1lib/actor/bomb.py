@@ -168,8 +168,8 @@ class BombFactory:
         self.tnt_tex = bs.gettexture('tnt')
         self.mew_mew_tex = bs.gettexture('white')
 
-        self.jevil_bomb_tex = bs.gettexture('black')
-        self.jevil_bomb_flash_tex = bs.gettexture('white')
+        self.jevil_bomb_tex = bs.gettexture('spadeDim')
+        self.jevil_bomb_flash_tex = bs.gettexture('spadeLit')
         self.jevil_bomb_arm_sfx = bs.getsound('snd_bombfall')
 
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
@@ -1326,9 +1326,31 @@ class Bomb(bs.Actor):
             for callback in self._explode_callbacks:
                 callback(self, blast)
 
+            if self.bomb_type == 'spades':
+                from delta.actor.cloverprojectile import clover
+                directions = [
+                    (-1, 0, 0),  
+                    (1, 0, 0),  
+                    (0, 0, -1),  
+                    (0,0, 1), 
+                    (-0.5,0,-1),
+                    (0.5, 0,-1),
+                    (-0.5,0,1),
+                    (0.5, 0,1),
+                ]
+
+
+                for dx, dy, dz in directions:
+                    clover(
+                        position=self.node.position,
+                        velocity=(dx, dy, dz)
+                    ).autoretain()
+
         # We blew up so we need to go away.
         # NOTE TO SELF: do we actually need this delay?
         bs.timer(0.001, bs.WeakCall(self.handlemessage, bs.DieMessage()))
+        
+        
 
     def _handle_warn(self) -> None:
         if self.texture_sequence and self.node:
