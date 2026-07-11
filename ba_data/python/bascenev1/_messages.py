@@ -49,7 +49,7 @@ class DeathType(Enum):
     ICE_SHOCK = 'ice_shock'
     GLOVE = 'glove'
     PUNCH = 'punch'
-    
+    EXPLOSION = 'explosion'
     RUDE_BUSTER = 'rude_buster'
     MEW_MEW = 'mewmewbomb'
     SNOWGRAVE = 'snowgrave'
@@ -60,9 +60,9 @@ class DeathType(Enum):
    
     
     # Unique interactions
-    FROZEN_SHATTERED = 'frozen_shattered'
     PUNCH_HIT_FALL = 'punch_hit_fall'
     RUDE_BUSTER_FALL = 'rude_buster_fall'
+    ANNOYING_DOG_FALL = 'annoying_dog_fall'
 @dataclass
 class DieMessage:
     """A message telling an object to die.

@@ -254,7 +254,7 @@ class Snowgrave(bs.Actor):
 
     
     def make(self):
-        hitbox_size = (2, 10, 2)
+        hitbox_size = (3, 10, 4)
         # i'm assuming this is debug;
         # if not, just keep it true
         debug = False

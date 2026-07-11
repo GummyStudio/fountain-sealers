@@ -981,7 +981,7 @@ class Bomb(bs.Actor):
 
         elif self.bomb_type == 'annoyingdog':
             self.scale = 0.8
-            fuse_time = 30
+            fuse_time = 20.0
             factory.annoying_dog_spawn_sfx.play()
 
             # He doesnt care.
@@ -1103,7 +1103,7 @@ class Bomb(bs.Actor):
         self.tick_timer = bs.Timer(0.1, self._tick, repeat=True)
         if self.bomb_type == 'annoyingdog':
             bs.timer(
-                    fuse_time*0.95, self.dog_warn_about_to_explode)
+                    fuse_time*0.92, self.dog_warn_about_to_explode)
         
     def exists(self):
         return bool(self.node)
@@ -1134,7 +1134,7 @@ class Bomb(bs.Actor):
            
             for node in bs.getnodes():
                 if node.getnodetype() == 'spaz':
-                    if node.getdelegate(bs.Actor):
+                    if node.getdelegate(bs.Actor) and not node.dead:
                         targets.append(node.getdelegate(bs.Actor))
             if not targets:
                 return
@@ -1216,7 +1216,7 @@ class Bomb(bs.Actor):
                 punch_momentum_angular = (
                     1.0
                 )
-                punch_power = 0.15
+                punch_power = 0.2
                 ppos = self.node.position
                 punchdir = self.node.velocity
                 vel = self.node.velocity
@@ -1240,12 +1240,19 @@ class Bomb(bs.Actor):
                 if node.getdelegate(Spaz):
                     actor = node.getdelegate(Spaz)
                     assert isinstance(actor, Spaz)
-                    rando = random.randint(0, 1)
+                    rando = random.randint(0, 2)
                     if rando == 0:
                         # steal bomb
                         actor.drop_bomb()
+                        actor.node.hold_node = None
                     elif rando == 1:
                         node.handlemessage('knockout', 100)
+                    elif rando == 2:
+                        actor.impulse(x=220, y=50, direction=(
+                            -node.velocity[0],  -node.velocity[1], -node.velocity[2],
+                        ))
+                    
+                    
 
 
 

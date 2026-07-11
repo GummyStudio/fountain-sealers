@@ -461,9 +461,7 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
             # Just incase Spaz didnt have any time to change their attack type, here.
             # Only FALL will override.
             if how_died not in (DeathType.GENERIC, None):
-                # now, if the deathtype is these specific only count 
-                # if they havent been hit in the last
-                # few seconds otherwise always override
+                # These 
                 if how_died in (DeathType.IMPACT,):
                     try:
                         # Hit in the last 3 seconds? Don't do it.
@@ -474,9 +472,7 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
                 else:
                     # Unique interactions
         
-                    # Sooo they've been hit in the last few seconds to smth else.
-                    # Lets create unique death types!
-
+                    
                     # Last Punch + Fell
                     if (
                         player.actor.last_attack_hit_type is DeathType.PUNCH
@@ -489,12 +485,14 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
                         and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
                     ):
                         last_hit_type = DeathType.RUDE_BUSTER_FALL
-                    # Last Punch + Impact + player was frozen
+                    
+                    # Annoying Dog hit + Fell
                     elif (
-                        how_died in (DeathType.PUNCH, DeathType.IMPACT)
-                        and player.actor.frozen
+                        player.actor.last_attack_hit_type in (DeathType.ANNOYING_DOG_BLAST, DeathType.ANNOYING_DOG )
+                        and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
                     ):
-                        last_hit_type = DeathType.FROZEN_SHATTERED
+                        last_hit_type = DeathType.ANNOYING_DOG_FALL
+                  
                     else:
                         last_hit_type = how_died
 

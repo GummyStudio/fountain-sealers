@@ -1382,7 +1382,7 @@ class Spaz(bs.Actor):
 
         elif isinstance(msg, bs.OutOfBoundsMessage):
             # By default we just die here.
-            self.handlemessage(bs.DieMessage(how=bs.DeathType.FALL))
+            self.handlemessage(bs.DieMessage(how=bs.DeathType.OUT_OF_BOUNDS))
 
         elif isinstance(msg, bs.StandMessage):
             self._last_stand_pos = (
