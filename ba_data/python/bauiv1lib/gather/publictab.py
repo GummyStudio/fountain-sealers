@@ -351,6 +351,7 @@ class PublicGatherTab(GatherTab):
 
     def __init__(self, window: GatherWindow) -> None:
         super().__init__(window)
+        self._num_edit_sound = bui.getsound('noise')
         self._container: bui.Widget | None = None
         self._join_text: bui.Widget | None = None
         self._host_text: bui.Widget | None = None
@@ -797,6 +798,7 @@ class PublicGatherTab(GatherTab):
             position=(280 + xoffs, v - 26),
             label='-',
             autoselect=True,
+            enable_sound=False,
         )
         btn2 = self._host_max_party_size_plus_button = bui.buttonwidget(
             parent=self._container,
@@ -807,6 +809,7 @@ class PublicGatherTab(GatherTab):
             position=(350 + xoffs, v - 26),
             label='+',
             autoselect=True,
+            enable_sound=False,
         )
         v -= 50
         v -= 70
@@ -1486,11 +1489,13 @@ class PublicGatherTab(GatherTab):
         self._have_user_selected_row = True
 
     def _on_max_public_party_size_minus_press(self) -> None:
+        self._num_edit_sound.play()
         val = max(1, bs.get_public_party_max_size() - 1)
         bs.set_public_party_max_size(val)
         bui.textwidget(edit=self._host_max_party_size_value, text=str(val))
 
     def _on_max_public_party_size_plus_press(self) -> None:
+        self._num_edit_sound.play()
         val = bs.get_public_party_max_size()
         val += 1
         bs.set_public_party_max_size(val)

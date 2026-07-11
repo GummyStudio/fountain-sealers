@@ -103,6 +103,7 @@ class MainWindow(Window):
 
         self._main_window_transition = transition
         self._main_window_origin_widget = origin_widget
+        self._num_edit_sound = _bauiv1.getsound('noise')
         super().__init__(
             root_widget,
             cleanupcheck=cleanupcheck,
