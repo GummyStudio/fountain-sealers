@@ -1768,7 +1768,7 @@
             "diedtobot": "${NAME} died to cuteness."
         },
         "snowgrave": {
-            "kill": "${NAME} casted snowgrave on ${VICTIM}",
+            "kill": "${NAME} snowgraved ${VICTIM}",
             "suicide": "${NAME} snowgraved themselves.",
             "betrayal": "${NAME} snowgraved the wrong side.",
             "diedtobot": "${NAME} was snowgraved."
@@ -1800,13 +1800,13 @@
         "punch_hit_fall": {
             "kill": "${NAME} punched ${VICTIM} off the map.",
             "suicide": "",
-            "betrayal": "${NAME} punched their teammate off the map.",
+            "betrayal": "${NAME} punched their teammate\noff the map.",
             "diedtobot": "${NAME} was punched off the map."
         },
         "rude_buster_fall": {
-            "kill": "${NAME} rude buster'd ${VICTIM} off the map.",
+            "kill": "${NAME} rude buster'd ${VICTIM}\noff the map.",
             "suicide": "literally how man",
-            "betrayal": "${NAME} rude buster'd their teammate off the map.",
+            "betrayal": "${NAME} rude buster'd their teammate off\nthe map.",
             "diedtobot": "${NAME} was rude buster'd off the map."
         },
         "annoying_dog_fall": {
