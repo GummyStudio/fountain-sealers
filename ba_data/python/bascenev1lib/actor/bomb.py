@@ -15,6 +15,7 @@ import bascenev1 as bs
 from bascenev1lib.gameutils import SharedObjects
 from delta.actor.particals import Partical, ParticalFactory
 from delta.actor.snowgrave import Snowgrave
+import math
 
 if TYPE_CHECKING:
     from typing import Any, Sequence, Callable
@@ -174,6 +175,11 @@ class BombFactory:
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
 
+        self.annoying_dog_mesh = bs.getmesh('box')
+        self.annoying_dog_tex = bs.gettexture('impactBombColor')
+        self.annoying_dog_spawn_sfx = bs.getsound('annoyingDogSpawn')
+        self.annoying_dog_bark_sfx = bs.getsound('blip')
+
         self.hiss_sound = bs.getsound('hiss')
         self.debris_fall_sound = bs.getsound('debrisFall')
         self.wood_debris_fall_sound = bs.getsound('woodDebrisFall')
@@ -330,6 +336,7 @@ class WarnMessage:
 
 class ExplodeHitMessage:
     """Tell an object it was hit by an explosion."""
+
 
 
 class Blast(bs.Actor):
@@ -737,6 +744,8 @@ class Blast(bs.Actor):
                 mag *= 1.3
             elif self.blast_type == 'spades':
                 mag *= 0.85
+            elif self.blast_type == 'annoyingdog':
+                mag *= 2
 
 
             node.handlemessage(
@@ -803,6 +812,7 @@ class Bomb(bs.Actor):
             'snowgrave',
             'gigabomb',
             'spades',
+            'annoyingdog',
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -832,6 +842,7 @@ class Bomb(bs.Actor):
             self.blast_radius *= 1.5
         elif self.bomb_type == 'spades':
             self.blast_radius *= 0.50
+        
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []
 
@@ -847,6 +858,7 @@ class Bomb(bs.Actor):
         # should be all we need I think...
         self.hit_type = 'explosion'
         self.hit_subtype = self.bomb_type
+        self.dropped = False
 
         # The node this came from.
         # FIXME: can we unify this and source_player?
@@ -866,7 +878,7 @@ class Bomb(bs.Actor):
         else:
             materials = (factory.bomb_material, shared.object_material)
 
-        if self.bomb_type in ['impact', 'snowgrave']:
+        if self.bomb_type in ['impact', 'snowgrave', 'annoyingdog']:
             materials = materials + (factory.impact_blast_material,)
         elif self.bomb_type == 'land_mine':
             materials = materials + (factory.land_mine_no_explode_material,)
@@ -957,6 +969,34 @@ class Bomb(bs.Actor):
                     'color_texture': factory.jevil_bomb_tex,
                     'reflection': 'soft',
                     'reflection_scale': [0.23],
+                    'materials': materials,
+                },
+            )
+
+        elif self.bomb_type == 'annoyingdog':
+            self.scale = 0.8
+            fuse_time = 30
+            factory.annoying_dog_spawn_sfx.play()
+
+            # He doesnt care.
+            self._source_player = None
+
+            self.node = bs.newnode(
+                'prop',
+                delegate=self,
+                attrs={
+                    'position': position,
+                    'velocity': velocity,
+                    'mesh': factory.annoying_dog_mesh,
+                    'light_mesh': factory.annoying_dog_mesh,
+                    'body': 'crate',
+                    'mesh_scale': self.scale,
+                    'body_scale': self.scale,
+                    'shadow_size': 0.5,
+                    'color_texture': factory.annoying_dog_tex,
+                    'reflection': 'soft',
+                    'reflection_scale': [0.23],
+                    'gravity_scale': 1.1,
                     'materials': materials,
                 },
             )
@@ -1053,6 +1093,68 @@ class Bomb(bs.Actor):
             'mesh_scale',
             {0: 0, 0.2: 1.3 * self.scale, 0.26: self.scale},
         )
+        self.dog_cooldown = 0
+        self.tick_timer = bs.Timer(0.1, self._tick, repeat=True)
+        bs.timer(
+                fuse_time*0.95, self.dog_warn_about_to_explode)
+        
+    def exists(self):
+        return bool(self.node)
+    def dog_warn_about_to_explode(self):
+        if self.exists() and self.bomb_type == 'annoyingdog':
+            BombFactory.get().annoying_dog_spawn_sfx.play()
+            scl =self.node.mesh_scale
+            bs.animate(self.node, 'mesh_scale', {
+                0: scl,
+                0.1: scl*0.6,
+                0.2: scl*1.2,
+                0.3: scl
+
+            }, loop=True)
+    def _tick(self):
+        if not self.exists():
+            self.tick_timer = None
+            return
+        
+        if self.bomb_type == 'annoyingdog':
+            
+            if not (self.dog_cooldown - bs.time() < 0) or not self.dropped:
+                return
+            self.dog_cooldown= bs.time() + random.uniform(0.8,1.9)
+            BombFactory.get().annoying_dog_bark_sfx.play()
+            targets: list[bs.Actor] = []
+            # scan for spaps
+           
+            for node in bs.getnodes():
+                if node.getnodetype() == 'spaz':
+                    if node.getdelegate(bs.Actor):
+                        targets.append(node.getdelegate(bs.Actor))
+            if not targets:
+                return
+            toby_pos = self.node.position 
+            # fuck the closest target pick a RANDOM ONE
+            t_pos = random.choice(targets).node.position
+
+                
+            direction = (
+                t_pos[0] - toby_pos[0],
+                t_pos[1] - toby_pos[1],
+                t_pos[2] - toby_pos[2]
+            )
+                
+            mag = math.sqrt(direction[0]**2 + direction[1]**2 + direction[2]**2)
+            if mag > 0:
+                normalized_dir = (
+                    direction[0] / mag,
+                    direction[1] / mag,
+                    direction[2] / mag
+                )
+            self.impulse(
+                x=350, y=90, direction=normalized_dir
+            )
+                
+        
+
 
     def get_source_player[PlayerT: bs.Player](
         self, playertype: type[PlayerT]
@@ -1089,18 +1191,64 @@ class Bomb(bs.Actor):
         # throwing/etc.)
         node_delegate = node.getdelegate(object)
         if node:
-            if self.bomb_type in ['impact', 'snowgrave'] and (
-                node is self.owner
-                or (
-                    isinstance(node_delegate, Bomb)
-                    and node_delegate.bomb_type in ['impact', 'snowgrave']
-                    and node_delegate.owner is self.owner
+            if self.bomb_type in ['impact', 'snowgrave']:
+                if (
+                    node is self.owner
+                    or (
+                        isinstance(node_delegate, Bomb)
+                        and node_delegate.bomb_type in ['impact', 'snowgrave']
+                        and node_delegate.owner is self.owner
+                    )
+                ):
+                    return
+                self.handlemessage(ExplodeMessage())
+            elif self.bomb_type == 'annoyingdog':
+                if not self.dropped:
+                    # chill bro
+                    return
+                punch_momentum_angular = (
+                    1.0
                 )
-            ):
-                return
-            self.handlemessage(ExplodeMessage())
+                punch_power = 0.15
+                ppos = self.node.position
+                punchdir = self.node.velocity
+                vel = self.node.velocity
+
+                node.handlemessage(
+                    bs.HitMessage(
+                        pos=ppos,
+                        velocity=vel,
+                        magnitude=punch_power * punch_momentum_angular * 110.0,
+                        velocity_magnitude=punch_power * 40,
+                        radius=0,
+                        srcnode=self.node,
+                        source_player=None,
+                        force_direction=punchdir,
+                        hit_type='blast',
+                        hit_subtype='annoyingdog'
+                    ),
+                )
+                from bascenev1lib.actor.spaz import Spaz
+
+                # do random effects to spaz
+                if node.getdelegate(Spaz):
+                    actor = node.getdelegate(Spaz)
+                    assert isinstance(actor, Spaz)
+                    rando = random.randint(0, 1)
+                    if rando == 0:
+                        # steal bomb
+                        actor.drop_bomb()
+                    elif rando == 1:
+                        node.handlemessage('knockout', 100)
+
+
 
     def _handle_dropped(self) -> None:
+
+        # for the doggo just let the guy breathe for a sec
+        self.dog_cooldown = bs.time() + 2
+        self.dropped = True
+        
         if self.bomb_type == 'land_mine':
             self.arm_timer = bs.Timer(
                 1.25, bs.WeakCall(self.handlemessage, ArmMessage())
@@ -1261,7 +1409,10 @@ class Bomb(bs.Actor):
         # Normal bombs are triggered by non-punch impacts;
         # impact-bombs by all impacts.
         if not self._exploded and (
-            not ispunched or self.bomb_type in ['impact', 'land_mine']
+            (not ispunched or self.bomb_type in ['impact', 'land_mine'])
+            and self.bomb_type not in [
+                 'annoyingdog', # bombs that dont wana be blown up by others
+             ] 
         ):
             # Also lets change the owner of the bomb to whoever is setting
             # us off. (this way points for big chain reactions go to the
