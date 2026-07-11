@@ -14,11 +14,17 @@ def get_appearances(include_locked: bool = False) -> list[str]:
     assert plus is not None
 
     assert bs.app.classic is not None
-    get_purchased = plus.get_v1_account_product_purchased
+    startup = bs.app.classic.startup
     disallowed = []
+
     if not include_locked:
-        # Hmm yeah this'll be tough to hack...
-        pass
+        # Automatec process, yay!!
+        # Check the store if we unlocked it, otherwise just say no to it
+        for item in startup.store:
+            if not startup.gameconfig[startup.store[item]['config']]:
+                disallowed.append(item)
+
+
 
     return [
         s

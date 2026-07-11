@@ -1688,6 +1688,9 @@
     "useVanillaText": "Use the vanilla shop...",
     "frozenText": "Frozen",
     "fatalText": "Fatal",
+    "seam": {
+      
+    },
     "deathmessages": {
         "template": {
             "kill": "${NAME} killed ${VICTIM}.",

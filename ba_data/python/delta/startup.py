@@ -45,15 +45,15 @@ class Startup:
         
         config.apply_and_commit()
 
-        self.store = {
+        self.store: dict[dict] = {
             'Roaring Knight': {
                 'config': 'OWNED_roaringknight',
                 'description':  (
-                        "* That Black Knight everyone was talking about.",
-                        'suprised'
+                        "* The Knight?{pause:0.4}\n* THAT Knight??{pause:0.6}\n* I'll sell him to you, but.{pause:0.1}.{pause:0.1}.{pause:0.7}don't expect any good to come\n     out of it.",
+                        'annoyed'
                     ),
-                'cost': 5000,
-            }
+                'cost': 5000
+            },      
         }
         self.stats = {
             'dd': 'dark_dollars',
@@ -83,7 +83,7 @@ class Startup:
             self.gameconfig[self.stats[stat]] += by
             bui.app.config.apply_and_commit()
         except:
-            pass
+            print('increase_statistic WARN: stat doesnt exist')
     
     
     

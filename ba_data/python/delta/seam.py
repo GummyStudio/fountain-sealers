@@ -20,6 +20,7 @@ class ShopUI(bui.MainWindow):
         self.did_clean_up = False
         self.menu_container = None
         self.empty_texture = bui.gettexture('empty')
+        self.active_timers = []
 
         
 
@@ -34,6 +35,7 @@ class ShopUI(bui.MainWindow):
         self.animate_type = 'idle'
         self.animation_frames_past = 0
         bgscale=3.5
+        self.buy_sfx = bui.getsound('snd_locker')
         
         bui.imagewidget(
             parent=self._root_widget,
@@ -101,16 +103,17 @@ class ShopUI(bui.MainWindow):
         bs.apptimer(0.1, self._tick)
     
     def show_main_menu(self):
+        self.split()
+        
         intro = [
             ('* Hee hee... Welcome, travellers.', 'talk'),
-            ( '* YO HIT THE SPLITS!', 'suprised'),
             ( '* Don\'t like the prices? Then get out.', 'laugh'),
         ]
         say = random.choice(intro)
         self.say(
            say[0], expression=say[1]
         )
-        self.split()
+        
         if self.menu_container is not None:
             self.menu_container.delete()
             
@@ -125,16 +128,118 @@ class ShopUI(bui.MainWindow):
         
         
         bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, 110), 
-                         label='BUY', on_activate_call=None, texture=self.empty_texture)
+                         label='BUY', on_activate_call=self.show_buy_menu, texture=self.empty_texture)
         bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, 40), 
                          label='TALK', on_activate_call=self.show_talk_menu, texture=self.empty_texture)
         bui.buttonwidget(parent=self.menu_container, size=(180, 50), position=(210, -30), 
                          label='EXIT', on_activate_call=self.leave, texture=self.empty_texture)
-    def show_buy_menu(self):
-        self.split_reverse()
+    
+    def confirm_purchase(self, item_name: str):
+        item = babase.app.classic.startup.store[item_name]
+        current_money = babase.app.classic.startup.gameconfig.get('dark_dollars', 0)
+        
+        
+        if current_money >= item['cost']:
+            babase.app.classic.startup.gameconfig[item['config']] = True
+            babase.app.classic.startup.increase_statistic('dd', -item['cost'] )
+            self.show_buy_menu()
+            
+            
+            self.say(f"* A fine choice.\n    It's yours.", expression='talk')
+            self.buy_sfx.play(0.85)
+        else:
+            self.show_buy_menu()
+            self.say("* You don't have\n    enough money for\n    that.", expression='annoyed')
+        
+    
+    def purchase_item(self, item_name: str):
+        self.split()
+        item = bs.app.classic.startup.store[item_name]
+        
+  
+        desc_text = item['description'][0]
+        expression = item['description'][1]
+        self.say(f"{desc_text}", expression=expression)
+
         if self.menu_container is not None:
             self.menu_container.delete()
-        self.say("* What do you like to buy?", expression='talk')
+        
+        self.menu_container = bui.containerwidget(
+            parent=self._root_widget,
+            size=(200, 200),
+            position=(450, 100),
+            background=False
+        )
+        
+        bui.buttonwidget(
+            parent=self.menu_container, size=(180, 50), position=(210, 110), 
+            label='YES', on_activate_call=bs.Call(self.confirm_purchase, item_name), 
+            texture=self.empty_texture
+        )
+        bui.buttonwidget(
+            parent=self.menu_container, size=(180, 50), position=(210, 40), 
+            label='NO', on_activate_call=self.show_buy_menu, 
+            texture=self.empty_texture
+        )
+        bui.textwidget(
+            parent=self.menu_container, size=(180, 50), position=(280, -20), 
+            text=f'COST: ${item['cost']}', h_align='left',
+        )
+
+    def show_buy_menu(self):
+        self.split_reverse()
+        store = bs.app.classic.startup.store
+        if self.menu_container is not None:
+            self.menu_container.delete()
+        
+        self.say("* What do you want\n   to buy?", expression='talk')
+
+        self.menu_container = bui.scrollwidget(
+            parent=self._root_widget,
+            size=(730, 270),
+            position=(-180, 0),
+            background=False
+        )
+        
+
+        row_container = bui.containerwidget(
+            parent=self.menu_container,
+            size=(500, 75*len(store.items())), 
+            background=False
+        )
+
+        y_pos = (75*len(store.items()))-50
+        for item_name, data in store.items():
+            if bs.app.classic.startup.gameconfig[data['config']]:
+                bui.buttonwidget(
+                    parent=row_container, 
+                    size=(260, 50), 
+                    position=(10, y_pos), 
+                    label=f"{item_name} (OWNED)",
+                    on_activate_call=lambda: self.say(
+                        '* You already own\n     this.',
+                        expression='annoyed'
+                    ),
+                    texture=self.empty_texture
+                )
+            else:
+                bui.buttonwidget(
+                    parent=row_container, 
+                    size=(260, 50), 
+                    position=(10, y_pos), 
+                    label=f"{item_name} (${data['cost']})",
+                    on_activate_call=bs.Call(self.purchase_item, item_name),
+                    texture=self.empty_texture
+                )
+            y_pos -= 60
+       
+        bui.buttonwidget(
+            parent=row_container, size=(180, 50), position=(10, y_pos), 
+            label='BACK', on_activate_call=self.show_main_menu, texture=self.empty_texture
+        )
+    
+
+
     def show_talk_menu(self):
         self.say(
             '* Don\'t have anything better to do.', expression='talk'
@@ -230,17 +335,38 @@ class ShopUI(bui.MainWindow):
                 expression='talk',
                 on_complete=self.show_talk_menu
             )
-
-    def leave(self):
+    def die(self):
         self.exists = False
+        babase.app.classic.return_to_main_menu_session_gracefully()
+    def leave(self):
+        
         if self.menu_container is not None:
             self.menu_container.delete()
         self.merge()
-        self.say(
-            '* Take your time... Ain\'t like it\'s better spent.{pause:1.5}', 
-            expression='talk',
-            on_complete=babase.app.classic.return_to_main_menu_session_gracefully
-        )
+        rando = random.randint(0, 1)
+        if rando == 0:
+            self.say(
+                '* Take your time... Ain\'t like it\'s better spent.{pause:1.5}', 
+                expression='talk',
+                on_complete=self.die
+            )
+        elif rando == 1:
+            
+
+            self.say((
+                '* See you again...\n{pause:0.5}'
+                '* Or not.{pause:0.5}'
+                ), 
+                expression='talk',
+                on_complete=lambda: self.say(
+                    '* Ha ha ha ha...{pause:1.5}', 
+                    expression='laugh',
+                    on_complete=self.die
+                )
+            )
+        else:
+            self.die()
+
         
        
     def split(self):
@@ -276,6 +402,10 @@ class ShopUI(bui.MainWindow):
             pos = (700, 0)
         else:
             pos = (-180, 0)
+
+        for timer in self.active_timers:
+            self.active_timers.clear()
+        self.active_timers = []
        
         bui.textwidget(
             edit=self._dialogue_txt,
@@ -298,12 +428,12 @@ class ShopUI(bui.MainWindow):
                 for char in part:
                     full_text += char
                     
-                    bs.apptimer(current_delay, lambda s=full_text:self.advance(s))
+                    self.active_timers.append(bs.AppTimer(current_delay, lambda s=full_text:self.advance(s)))
                     current_delay += 0.02
         
-        bs.apptimer(current_delay, lambda: self.animate_seam('idle'))
+        self.active_timers.append(bs.AppTimer(current_delay, lambda: self.animate_seam('idle')))
         if on_complete:
-            bui.apptimer(current_delay+0.01, on_complete)
+            self.active_timers.append(bui.AppTimer(current_delay+0.01, on_complete))
     
     
     def next_frame(self):

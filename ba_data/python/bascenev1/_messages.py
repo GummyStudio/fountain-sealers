@@ -36,7 +36,7 @@ class OutOfBoundsMessage:
 
 
 class DeathType(Enum):
-    """A reason for a death."""
+    """A reason for a death or, hit_type."""
 
     GENERIC = 'generic'
     OUT_OF_BOUNDS = 'out_of_bounds'

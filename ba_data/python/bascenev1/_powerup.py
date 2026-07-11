@@ -64,7 +64,7 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
         ('snowgrave', 2),
         ('gigabomb', 2),
         ('spades', 3),
-        ('annoyingdog', 1),
+        ('annoyingdog', 2),
     )
     # normal
     return (
@@ -82,5 +82,5 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
         ('snowgrave', 2),
         ('gigabomb', 1),
         ('spades', 3),
-        ('annoyingdog', 1),
+        ('annoyingdog', 2),
     )
