@@ -1219,7 +1219,10 @@ class Spaz(bs.Actor):
             self.node.handlemessage('hurt_sound')
 
             # Play punch impact sound based on damage if it was a punch.
-            if msg.hit_type == bs.DeathType.GLOVE:
+            if (
+                msg.hit_type is bs.DeathType.GLOVE
+                or msg.hit_type is bs.DeathType.PUNCH
+            ):
                 self.on_punched(damage)
 
                 # If damage was significant, lets show it.
