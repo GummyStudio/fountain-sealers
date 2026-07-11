@@ -48,7 +48,11 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
         'scoresEpicMusic', volume=0.6, loop=False
     ),
 
-    MusicType.TO_THE_DEATH: AssetSoundtrackEntry('toTheDeathMusic', volume=1.2),
+    MusicType.RUDE_BUSTER: AssetSoundtrackEntry('toTheDeathMusic', volume=1.2),
+    MusicType.RUDER_BUSTER: AssetSoundtrackEntry('music/ruder_buster', volume=1.2),
+    MusicType.CH4_BUSTER: AssetSoundtrackEntry('music/ch4_rude_buster', volume=1.2),
+    MusicType.RAKUICHI_BUSTER: AssetSoundtrackEntry('music/rakuichi_buster', volume=1.2),
+    
     MusicType.MEW_MEW_KISSY: AssetSoundtrackEntry('music/pink', volume=1.2),
 }
 class MusicSubsystem:

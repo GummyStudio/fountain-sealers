@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, override
 
 import bascenev1 as bs
+import random
 
 from bascenev1lib.gameutils import SharedObjects
 
@@ -95,7 +96,13 @@ class Rudebuster(bs.Map):
     @classmethod
     def get_music_type(cls) -> bs.MusicType:
         
-        return bs.MusicType.TO_THE_DEATH
+        
+        return random.choice([
+            bs.MusicType.RUDE_BUSTER,
+            bs.MusicType.RUDER_BUSTER,
+            bs.MusicType.CH4_BUSTER,
+            bs.MusicType.RAKUICHI_BUSTER
+        ])
 
 class MewersLive(bs.Map):
     """the nonexistent stage from

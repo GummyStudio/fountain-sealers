@@ -27,7 +27,10 @@ class MusicType(Enum):
     CHAR_SELECT = 'CharSelect'
  
     SCORES = 'Scores'
-    TO_THE_DEATH = 'ToTheDeath'
+    RUDE_BUSTER = 'ToTheDeath'
+    RUDER_BUSTER = 'rude buster if it was'
+    CH4_BUSTER = 'idk the boss'
+    RAKUICHI_BUSTER ='im not saying that again'
     MEW_MEW_KISSY = 'pink'
 
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:
