@@ -18,7 +18,8 @@ if TYPE_CHECKING:
 def register_all_maps() -> None:
     """Registering all maps."""
     for maptype in [
-        Rudebuster
+        Rudebuster,
+        MewersLive,
     ]:
         bs.register_map(maptype)
 
@@ -89,3 +90,74 @@ class Rudebuster(bs.Map):
         gnode.ambient_color = (1.3, 1.2, 1.03)
         gnode.vignette_outer = (0.62, 0.64, 0.69)
         gnode.vignette_inner = (0.97, 0.95, 0.93)
+
+class MewersLive(bs.Map):
+    """the nonexistent stage from
+    pink's fight but i made it better"""
+
+    from delta.mapdata import mewerslive_mapdefs as defs
+
+    name = 'Mewers Live'
+
+    @override
+    @classmethod
+    def get_play_types(cls) -> list[str]:
+        """Return valid play types for this map."""
+        return ['melee', 'team_flag', 'keep_away']
+
+    @override
+    @classmethod
+    def get_preview_texture_name(cls) -> str:
+        return 'mewersLivePreview'
+
+    @override
+    @classmethod
+    def on_preload(cls) -> Any:
+        data: dict[str, Any] = {
+            'mesh': bs.getmesh('mewers_live'),
+            'collision_mesh': bs.getcollisionmesh('mewers_live'),
+            'tex': bs.gettexture('mewers_live'), # everything is stored into a single nice texture... who's good at optimizing now huh >:3
+            'bgmesh': bs.getmesh('mewers_liveBG'),
+            'kill_cmesh': bs.getcollisionmesh('mewers_live_death'),
+        }
+        return data
+
+    def __init__(self) -> None:
+        super().__init__(vr_overlay_offset=(0, 0, 2))
+        shared = SharedObjects.get()
+        self.node = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['collision_mesh'],
+                'mesh': self.preloaddata['mesh'],
+                'color_texture': self.preloaddata['tex'],
+                'materials': [shared.footing_material],
+            },
+        )
+        self.background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['bgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': self.preloaddata['tex'],
+            },
+        )
+        # kill_mat = []
+        kill_mat = [shared.death_material]
+        self.kill_node = bs.newnode(
+            'terrain',
+            attrs={
+                'collision_mesh': self.preloaddata['kill_cmesh'],
+                'materials': kill_mat,
+            },
+        )
+        # oh yeah fun fact press ctrl shift k to uncomment
+        # (and ctrl k to comment)
+        
+        gnode = bs.getactivity().globalsnode
+        gnode.tint = (1.2, 1.2, 1.2)
+        gnode.ambient_color = (1.1, 1.2, 1.1)
+        gnode.vignette_outer = (0.8, 0.8, 0.8)
+        gnode.vignette_inner = (0.8, 0.8, 0.8)
