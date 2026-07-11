@@ -232,6 +232,7 @@ class Spaz(bs.Actor):
         self.frozen = False
         self.shattered = False
         self._last_hit_time: int | None = None
+        self._REAL_last_hit_time: int | None = None
         self._num_times_hit = 0
         self._bomb_held = False
         if self.default_shields:
@@ -255,6 +256,8 @@ class Spaz(bs.Actor):
         self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
         self.snowgraved = False
         self.last_saved_position = (0, 0, 0)
+
+        
 
         # try to get a name
         try:
@@ -1025,6 +1028,7 @@ class Spaz(bs.Actor):
                 self._flash_billboard(PowerupBoxFactory.get().tex_health)
                 self.node.hurt = 0
                 self._last_hit_time = None
+                self._REAL_last_hit_time = None
                 self._num_times_hit = 0
 
             self.node.handlemessage('flash')
@@ -1084,6 +1088,11 @@ class Spaz(bs.Actor):
             ):
                 self._num_times_hit += 1
                 self._last_hit_time = local_time
+            self._REAL_last_hit_time = local_time
+            # and say what we got hit by
+            if msg.hit_type:
+                
+                self.last_attack_hit_type = msg.hit_type
 
             mag = msg.magnitude * self.impact_scale
             velocity_mag = msg.velocity_magnitude * self.impact_scale
@@ -1210,7 +1219,7 @@ class Spaz(bs.Actor):
             self.node.handlemessage('hurt_sound')
 
             # Play punch impact sound based on damage if it was a punch.
-            if msg.hit_type == 'punch':
+            if msg.hit_type == bs.DeathType.GLOVE:
                 self.on_punched(damage)
 
                 # If damage was significant, lets show it.
@@ -1233,6 +1242,8 @@ class Spaz(bs.Actor):
                     else:
                         sound = SpazFactory.get().punch_sound_weak
                     sound.play(1.0, position=self.node.position)
+                else:
+                    self.last_attack_hit_type = bs.DeathType.GLOVE
 
                 # Throw up some chunks.
                 assert msg.force_direction is not None
@@ -1352,6 +1363,8 @@ class Spaz(bs.Actor):
             self.bomb_count += 1
 
         elif isinstance(msg, bs.DieMessage):
+           
+
             wasdead = self._dead
             self._dead = True
             self.hitpoints = 0
@@ -1456,7 +1469,7 @@ class Spaz(bs.Actor):
                         srcnode=self.node,
                         source_player=self.source_player,
                         force_direction=punchdir,
-                        hit_type='punch',
+                        hit_type=bs.DeathType.PUNCH,
                         hit_subtype=(
                             'super_punch'
                             if self._has_boxing_gloves

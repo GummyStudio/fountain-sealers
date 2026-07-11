@@ -346,6 +346,7 @@ class Stats:
         importance: int = 1,
         showpoints: bool = True,
         big_message: bool = False,
+       
     ) -> int:
         """Register a score for the player.
 
@@ -358,6 +359,7 @@ class Stats:
         from bascenev1lib.actor.popuptext import PopupText
 
         from bascenev1._gameactivity import GameActivity
+        
 
         del victim_player  # Currently unused.
         name = player.getname()
@@ -458,43 +460,109 @@ class Stats:
         player: bascenev1.Player,
         killed: bool = False,
         killer: bascenev1.Player | None = None,
+        how_died: bascenev1.DeathType | str = None,
     ) -> None:
         """Should be called when a player is killed."""
         name = player.getname()
         prec = self._player_records[name]
         prec.streak = 0
+        import bascenev1
+
+       
+        
         if killed:
             prec.accum_killed_count += 1
             prec.killed_count += 1
+        # no
+        if how_died == bascenev1.DeathType.LEFT_GAME:
+            return
         try:
             if killed and _bascenev1.getactivity().announce_player_deaths:
-                if killer is player:
-                    _bascenev1.broadcastmessage(
-                        babase.Lstr(
-                            resource='nameSuicideText', subs=[('${NAME}', name)]
-                        ),
-                        top=True,
-                        color=player.color,
-                        image=player.get_icon(),
-                    )
-                elif killer is not None:
-                    if killer.team is player.team:
+                # If our thing is generic or None, use the default texts otherwise custom ones
+                if (how_died is bascenev1.DeathType.GENERIC) or (how_died is None):
+                    if killer is player:
                         _bascenev1.broadcastmessage(
                             babase.Lstr(
-                                resource='nameBetrayedText',
-                                subs=[
-                                    ('${NAME}', killer.getname()),
-                                    ('${VICTIM}', name),
-                                ],
+                                resource='nameSuicideText', subs=[('${NAME}', name)]
                             ),
                             top=True,
-                            color=killer.color,
-                            image=killer.get_icon(),
+                            color=player.color,
+                            image=player.get_icon(),
+                        )
+                    elif killer is not None:
+                    
+                        if killer.team is player.team:
+                            _bascenev1.broadcastmessage(
+                                    babase.Lstr(
+                                        resource='nameBetrayedText',
+                                        subs=[
+                                            ('${NAME}', killer.getname()),
+                                            ('${VICTIM}', name),
+                                        ],
+                                    ),
+                                    top=True,
+                                    color=killer.color,
+                                    image=killer.get_icon(),
+                                )
+                        else:
+                                _bascenev1.broadcastmessage(
+                                    babase.Lstr(
+                                        resource='nameKilledText',
+                                        subs=[
+                                            ('${NAME}', killer.getname()),
+                                            ('${VICTIM}', name),
+                                        ],
+                                    ),
+                                    top=True,
+                                    color=killer.color,
+                                    image=killer.get_icon(),
+                                )
+                
+                    else:
+                        _bascenev1.broadcastmessage(
+                            babase.Lstr(
+                                resource='nameDiedText', subs=[('${NAME}', name)]
+                            ),
+                            top=True,
+                            color=player.color,
+                            image=player.get_icon(),
+                        )
+                        
+                else:
+                    
+                    first_lstr = 'delta.deathmessages.'
+                    try:
+                        second_lstr = how_died.value
+                    except:
+                        # Its a string, i think
+                        second_lstr = str(how_died)
+                    type = 'other'
+
+                    if killer is player:
+                        third_lstr = '.suicide'
+                        type = 'single'
+                    elif killer is not None:
+                        if killer.team is player.team:
+                            third_lstr = '.betrayal'    
+                        else:
+                            third_lstr = '.kill'
+                    else:
+                        third_lstr = '.diedtobot'
+                        type = 'single'
+                    
+                    if type == 'single':
+                        _bascenev1.broadcastmessage(
+                            babase.Lstr(
+                                resource=(first_lstr+second_lstr+third_lstr), subs=[('${NAME}', name)]
+                            ),
+                            top=True,
+                            color=player.color,
+                            image=player.get_icon(),
                         )
                     else:
                         _bascenev1.broadcastmessage(
                             babase.Lstr(
-                                resource='nameKilledText',
+                                resource=(first_lstr+second_lstr+third_lstr),
                                 subs=[
                                     ('${NAME}', killer.getname()),
                                     ('${VICTIM}', name),
@@ -504,14 +572,7 @@ class Stats:
                             color=killer.color,
                             image=killer.get_icon(),
                         )
-                else:
-                    _bascenev1.broadcastmessage(
-                        babase.Lstr(
-                            resource='nameDiedText', subs=[('${NAME}', name)]
-                        ),
-                        top=True,
-                        color=player.color,
-                        image=player.get_icon(),
-                    )
+                    
+
         except Exception:
             logging.exception('Error announcing kill.')

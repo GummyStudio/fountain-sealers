@@ -222,10 +222,11 @@ class Snowgrave(bs.Actor):
                         #  and we were the last to hit em
                         delegate.handlemessage(bs.HitMessage(
                             flat_damage=1,
-                            source_player=self.source_player
+                            source_player=self.source_player,
+                            hit_type=bs.DeathType.SNOWGRAVE
                         ))
                         # we need regular for some reason
-                        delegate.handlemessage(bs.DieMessage())
+                        delegate.handlemessage(bs.DieMessage(how=bs.DeathType.SNOWGRAVE))
                         delegate.node.delete()
                         
                    

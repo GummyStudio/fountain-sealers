@@ -880,7 +880,6 @@
   "playText": "Play",
   "localPlayText": "Local Play",
   "onlinePlayText": "Online Play",
-  "replaysText": "Replays",
   "playWindow": {
     "oneToFourPlayersText": "1-4 players",
     "titleText": "Play",
@@ -1688,6 +1687,20 @@
   "delta": {
     "useVanillaText": "Use the vanilla shop...",
     "frozenText": "Frozen",
-    "fatalText": "Fatal"
+    "fatalText": "Fatal",
+    "deathmessages": {
+        "template": {
+            "kill": "${NAME} killed ${VICTIM}.",
+            "suicide": "${NAME} died.",
+            "betrayal": "${NAME} killed ${VICTIM}.",
+            "diedtobot": "${NAME} died."
+        },
+        "ice_shock": {
+            "kill": "${NAME} killed ${VICTIM}.",
+            "suicide": "${NAME} died.",
+            "betrayal": "${NAME} killed ${VICTIM}.",
+            "diedtobot": "${NAME} died."
+        }
+    }
   }
 }

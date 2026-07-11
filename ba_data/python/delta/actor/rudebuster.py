@@ -106,8 +106,7 @@ class Rudebuster(bs.Actor):
                     srcnode=self.node,
                     source_player=self.source_player,
                     force_direction=punchdir,
-                    hit_type='blast',
-                    hit_subtype='rudebuster'
+                    hit_type=bs.DeathType.RUDE_BUSTER
                 ),
             )
             self.handlemessage(bs.DieMessage())

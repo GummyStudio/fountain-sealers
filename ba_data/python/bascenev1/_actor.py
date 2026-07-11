@@ -15,6 +15,7 @@ from bascenev1._messages import (
     DieMessage,
     DeathType,
     OutOfBoundsMessage,
+    HitMessage,
     UNHANDLED,
 )
 
@@ -87,13 +88,16 @@ class Actor:
         self._activity = weakref.ref(activity)
         activity.add_actor_weak_ref(self)
 
+        # Last attack type.
+        self.last_attack_hit_type: DeathType | None = None
+
     def __del__(self) -> None:
         try:
             # Unexpired Actors send themselves a DieMessage when going down.
             # That way we can treat DieMessage handling as the single
             # point-of-action for death.
             if not self.expired:
-                self.handlemessage(DieMessage())
+                self.handlemessage(DieMessage(immediate=True))
         except Exception:
             logging.exception(
                 'Error in bascenev1.Actor.__del__() for %s.', self
@@ -106,6 +110,11 @@ class Actor:
         # By default, actors going out-of-bounds simply kill themselves.
         if isinstance(msg, OutOfBoundsMessage):
             return self.handlemessage(DieMessage(how=DeathType.OUT_OF_BOUNDS))
+
+        if isinstance(msg, HitMessage):
+            if msg.hit_type:
+                self.last_attack_hit_type = msg.hit_type
+
 
         return UNHANDLED
 

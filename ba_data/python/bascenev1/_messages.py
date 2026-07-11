@@ -45,7 +45,24 @@ class DeathType(Enum):
     REACHED_GOAL = 'reached_goal'
     LEFT_GAME = 'left_game'
 
-
+    # hit types idk
+    ICE_SHOCK = 'ice_shock'
+    GLOVE = 'glove'
+    PUNCH = 'punch'
+    
+    RUDE_BUSTER = 'rude_buster'
+    MEW_MEW = 'mewmewbomb'
+    SNOWGRAVE = 'snowgrave'
+    SPADES = 'spades'
+    ANNOYING_DOG = 'annoying dog'
+    ANNOYING_DOG_BLAST = 'dog_exploded'
+    SPARED = 'spared'
+   
+    
+    # Unique interactions
+    FROZEN_SHATTERED = 'frozen_shattered'
+    PUNCH_HIT_FALL = 'punch_hit_fall'
+    RUDE_BUSTER_FALL = 'rude_buster_fall'
 @dataclass
 class DieMessage:
     """A message telling an object to die.

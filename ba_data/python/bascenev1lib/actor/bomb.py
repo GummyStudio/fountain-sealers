@@ -731,21 +731,27 @@ class Blast(bs.Actor):
             node = bs.getcollision().opposingnode
             assert self.node
             nodepos = self.node.position
+            hittype = self.hit_type
             mag = 2000.0
             if self.blast_type == 'ice':
                 mag *= 0.5
+                hittype = bs.DeathType.ICE_SHOCK
             elif self.blast_type == 'land_mine':
                 mag *= 2.5
             elif self.blast_type == 'tnt':
                 mag *= 2.0
             elif self.blast_type == 'mewmew':
                 mag *= 0.75
+                hittype = bs.DeathType.MEW_MEW
             elif self.blast_type == 'gigabomb':
                 mag *= 1.3
+                hittype = bs.DeathType.MEW_MEW
             elif self.blast_type == 'spades':
                 mag *= 0.85
+                hittype = bs.DeathType.SPADES
             elif self.blast_type == 'annoyingdog':
                 mag *= 2
+                hittype = bs.DeathType.ANNOYING_DOG_BLAST
 
 
             node.handlemessage(
@@ -753,7 +759,7 @@ class Blast(bs.Actor):
                     pos=nodepos,
                     velocity=(0, 0, 0),
                     magnitude=mag,
-                    hit_type=self.hit_type,
+                    hit_type=hittype,
                     hit_subtype=self.hit_subtype,
                     radius=self.radius,
                     source_player=bs.existing(self._source_player),
@@ -1225,8 +1231,7 @@ class Bomb(bs.Actor):
                         srcnode=self.node,
                         source_player=None,
                         force_direction=punchdir,
-                        hit_type='blast',
-                        hit_subtype='annoyingdog'
+                        hit_type=bs.DeathType.ANNOYING_DOG
                     ),
                 )
                 from bascenev1lib.actor.spaz import Spaz

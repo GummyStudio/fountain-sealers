@@ -161,9 +161,6 @@ def register_appearances() -> None:
     t.color_texture = 'krisColor'
     t.color_mask_texture = 'krisColorMask'
     t.icon_texture = 'krisIcon'
-    t.earthportrait = 'earthbound/krisbound'
-    t.EBwin = 'earthbound/krisbound'
-    t.EBlose = 'earthbound/krisbound_lose'
     t.icon_mask_texture = 'krisIconCM'
     t.head_mesh = 'krisHead'
     t.torso_mesh = 'krisTorso'
@@ -180,8 +177,6 @@ def register_appearances() -> None:
     t.death_sounds = ['voicelines/kris/death']
     t.pickup_sounds = ['voicelines/kris/pickup']
     t.fall_sounds = ['voicelines/kris/fall']
-    t.victory_sounds = ['voicelines/kris/win']
-    t.gloat_sounds = ['voicelines/kris/gloat']
     t.style = 'agent'
     t.default_color = (0.4588235294117647, 0.984313725490196, 0.9294117647058824)
     t.default_highlight = (0.9215686274509803, 0.0, 0.5843137254901961)
@@ -191,9 +186,6 @@ def register_appearances() -> None:
     t.color_texture = 'susieColor'
     t.color_mask_texture = 'susieColorMask'
     t.icon_texture = 'susieIcon'
-    t.earthportrait = 'earthbound/susiebound'
-    t.EBwin = 'earthbound/susiebound_win'
-    t.EBlose = 'earthbound/susiebound_lose'
     t.icon_mask_texture = 'susieIconCM'
     t.head_mesh = 'susieHead'
     t.torso_mesh = 'susieTorso'
@@ -206,8 +198,6 @@ def register_appearances() -> None:
     t.toes_mesh = 'susieToes'
     t.jump_sounds = ['voicelines/susie/jump' + str(i + 1) + '' for i in range(4)]
     t.attack_sounds = ['voicelines/susie/jump' + str(i + 1) + '' for i in range(4)]
-    t.victory_sounds = ['voicelines/susie/win']
-    t.gloat_sounds = ['voicelines/susie/gloat']
     t.impact_sounds = ['voicelines/susie/hurt' + str(i + 1) + '' for i in range(2)]
     t.death_sounds = ['voicelines/susie/death']
     t.pickup_sounds = ['voicelines/susie/attack' + str(i + 1) + '' for i in range(4)]
@@ -221,13 +211,10 @@ def register_appearances() -> None:
     t.color_texture = 'knightColor'
     t.color_mask_texture = 'knightColorMask'
     t.icon_texture = 'knightIcon'
-    t.earthportrait = 'earthbound/knightbound'
-    t.EBlose = 'earthbound/knightbound_lose'
-    t.EBwin = 'earthbound/knightbound_win'
     t.icon_mask_texture = 'knightIconCM'
     t.head_mesh = 'knightHead'
     t.torso_mesh = 'knightTorso'
-    t.pelvis_mesh = 'knightPelvis'
+    t.pelvis_mesh = 'none'
     t.upper_arm_mesh = 'knightUpperArm'
     t.forearm_mesh = 'knightForeArm'
     t.hand_mesh = 'knightHand'
@@ -240,8 +227,6 @@ def register_appearances() -> None:
     t.impact_sounds = ['voicelines/knight/hurt' + str(i + 1) + '' for i in range(2)]
     t.death_sounds = ['voicelines/knight/death']
     t.pickup_sounds = knightsounds
-    t.victory_sounds = ['voicelines/knight/win']
-    t.gloat_sounds = ['voicelines/knight/gloat']
     t.fall_sounds = ['voicelines/knight/fall']
     t.style = 'agent'
     t.default_color = (0.0, 0.0, 0.0)

@@ -437,13 +437,74 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
         if isinstance(msg, PlayerDiedMessage):
             # pylint: disable=cyclic-import
             from bascenev1lib.actor.spaz import Spaz
+            from bascenev1._messages import DeathType
+            from bascenev1 import time
 
             player = msg.getplayer(self.playertype)
             killer = msg.getkillerplayer(self.playertype)
 
             # Inform our stats of the demise.
+
+            # Check for any hit types.
+            # attempt to get the enums
+            try:
+                last_hit_type = DeathType(player.actor.last_attack_hit_type)
+            except:
+                last_hit_type = player.actor.last_attack_hit_type
+            
+            try:
+                how_died = DeathType(msg.how)
+            except ValueError:
+                how_died = msg.how
+
+
+            # Just incase Spaz didnt have any time to change their attack type, here.
+            # Only FALL will override.
+            if how_died not in (DeathType.GENERIC, None):
+                # now, if the deathtype is these specific only count 
+                # if they havent been hit in the last
+                # few seconds otherwise always override
+                if how_died in (DeathType.IMPACT,):
+                    try:
+                        # Hit in the last 3 seconds? Don't do it.
+                        if ((time()-player.actor._REAL_last_hit_time/1000) > 3):
+
+                            last_hit_type = how_died 
+                    except: last_hit_type = how_died # wasnt hit at all
+                else:
+                    # Unique interactions
+        
+                    # Sooo they've been hit in the last few seconds to smth else.
+                    # Lets create unique death types!
+
+                    # Last Punch + Fell
+                    if (
+                        player.actor.last_attack_hit_type is DeathType.PUNCH
+                        and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
+                    ):
+                        last_hit_type = DeathType.PUNCH_HIT_FALL
+                    # Rude Buster + Fell
+                    elif (
+                        player.actor.last_attack_hit_type is DeathType.RUDE_BUSTER
+                        and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
+                    ):
+                        last_hit_type = DeathType.RUDE_BUSTER_FALL
+                    # Last Punch + Impact + player was frozen
+                    elif (
+                        how_died in (DeathType.PUNCH, DeathType.IMPACT)
+                        and player.actor.frozen
+                    ):
+                        last_hit_type = DeathType.FROZEN_SHATTERED
+                    else:
+                        last_hit_type = how_died
+
+            print('--------')
+            print('got sent:', last_hit_type)
+            print('last hit_type player had:', player.actor.last_attack_hit_type)
+            print('deathtype:', msg.how)
+            
             self.stats.player_was_killed(
-                player, killed=msg.killed, killer=killer
+                player, killed=msg.killed, killer=killer, how_died=last_hit_type
             )
 
             # Award the killer points if he's on a different team.
