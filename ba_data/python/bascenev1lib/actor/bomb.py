@@ -15,10 +15,19 @@ import bascenev1 as bs
 from bascenev1lib.gameutils import SharedObjects
 from delta.actor.particals import Partical, ParticalFactory
 from delta.actor.snowgrave import Snowgrave
+from dataclasses import dataclass
 import math
 
 if TYPE_CHECKING:
     from typing import Any, Sequence, Callable
+
+@dataclass
+class SlashBombHitMessage:
+    """An object got hit by a slash bomb."""
+    pos: tuple[float, float, float]
+    """Position of the bomb that hit the object."""
+    player: bs.Player
+    """Player owner of the bomb."""
 
 
 class BombFactory:
@@ -733,6 +742,7 @@ class Blast(bs.Actor):
             nodepos = self.node.position
             hittype = self.hit_type
             mag = 2000.0
+            vel = (0, 0, 0)
             if self.blast_type == 'ice':
                 mag *= 0.5
                 hittype = bs.DeathType.ICE_SHOCK
@@ -752,12 +762,21 @@ class Blast(bs.Actor):
             elif self.blast_type == 'annoyingdog':
                 mag *= 2
                 hittype = bs.DeathType.ANNOYING_DOG_BLAST
+            elif self.blast_type == 'slash':
+                mag *= 0.6
+                self.radius *= 6 # change this to do whatever makes the knocbkack stronger idk
+                node.handlemessage(
+                    SlashBombHitMessage(
+                        pos=nodepos, 
+                        player=bs.existing(self._source_player)
+                    )
+                )
 
 
             node.handlemessage(
                 bs.HitMessage(
                     pos=nodepos,
-                    velocity=(0, 0, 0),
+                    velocity=vel,
                     magnitude=mag,
                     hit_type=hittype,
                     hit_subtype=self.hit_subtype,
@@ -768,6 +787,8 @@ class Blast(bs.Actor):
             if self.blast_type == 'ice':
                 BombFactory.get().freeze_sound.play(1, position=nodepos)
                 node.handlemessage(bs.FreezeMessage())
+            
+            
 
         else:
             return super().handlemessage(msg)
@@ -819,6 +840,7 @@ class Bomb(bs.Actor):
             'gigabomb',
             'spades',
             'annoyingdog',
+            'slash',
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -850,6 +872,8 @@ class Bomb(bs.Actor):
             self.blast_radius *= 0.50
         elif self.bomb_type == 'annoyingdog':
             self.blast_radius *= 1.2
+        elif self.bomb_type == 'slash':
+            self.blast_radius *= 0.99
         
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []
@@ -1058,7 +1082,9 @@ class Bomb(bs.Actor):
                 fuse_time = 4.5
                 self.scale *= 1.5
                 tex = factory.mew_mew_tex
-                
+            elif self.bomb_type == 'slash':
+                tex = factory.impact_tex # placeholder
+                fuse_time = 4.1
             else:
                 tex = factory.regular_tex
             self.node = bs.newnode(
@@ -1108,6 +1134,7 @@ class Bomb(bs.Actor):
         
     def exists(self):
         return bool(self.node)
+        
     def dog_warn_about_to_explode(self):
         if self.exists() and self.bomb_type == 'annoyingdog':
             BombFactory.get().annoying_dog_spawn_sfx.play()
@@ -1119,6 +1146,7 @@ class Bomb(bs.Actor):
                 0.3: scl
 
             }, loop=True)
+            
     def _tick(self):
         if not self.exists():
             self.tick_timer = None

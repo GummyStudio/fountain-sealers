@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, override
 
 import bascenev1 as bs
 
-from bascenev1lib.actor.bomb import Bomb, Blast
+from bascenev1lib.actor.bomb import Bomb, Blast, SlashBombHitMessage
 from bascenev1lib.actor.powerupbox import PowerupBoxFactory, PowerupBox
 from bascenev1lib.actor.spazfactory import SpazFactory
 from bascenev1lib.actor.popuptext import PopupText
@@ -36,6 +36,13 @@ GLOVE_COOLDOWNS = {
     2: 300,
     3: 360,
 }
+GLOVE_MULTS = {
+    0: 0.6,
+    1: 0.8,
+    2: 1.0,
+    3: 1.4,
+}
+    
 
 
 class PickupMessage:
@@ -449,6 +456,117 @@ class Spaz(bs.Actor):
         self._score_text_hide_timer = bs.Timer(
             1.0, bs.WeakCall(self._hide_score_text)
         )
+    
+    def _apply_slash(
+        self,
+        pos: tuple,
+        player: bs.Player,
+    ):
+        if not self.node:
+            return
+        ParticalFactory.get().slash_start_sfx.play(
+            position=self.last_saved_position,
+        )   
+        text = bs.newnode(
+            'text',
+            owner=self.node,
+            attrs={
+                'text': ' |',
+                'in_world': True,
+                'shadow': 1.0,
+                'flatness': 1.0,
+                'scale': 0,
+                'h_align': 'center',
+                'v_align': 'center',
+            },
+        )
+        bs.animate(
+            text,
+            'opacity',
+            {
+                0: 0,
+                0.3: 1,
+            }
+        )
+        bs.animate(
+            text,
+            'scale',
+            {
+                0: 0,
+                0.13: 0.7 * 0.1,
+                0.6: 0.5 * 0.1,
+                1.1: 0.4 * 0.1,
+            }
+        )
+        bs.animate_array(
+            text,
+            'color', 3,
+            {
+                0: (1, 1, 1),
+                0.3: (1, 0, 0),
+                0.8: (0.1, 0, 0),
+                1.0: (0.6, 0, 0),
+            }
+        )
+        bs.animate(
+            text,
+            'rotate',
+            {
+                0: 0,
+                0.05: 180,
+                1.4: random.uniform(1080, 3080),
+            }
+        )
+            
+        def hit():
+            nonlocal pos
+            if not self.node:
+                return
+            ParticalFactory.get().slash_hit_sfx.play(
+                position=self.last_saved_position
+            )
+            bs.animate(
+                text,
+                'scale',
+                {
+                    0: 0,
+                    0.05: 0.8 * 0.1,
+                    0.4: 0 * 0.1,
+                }
+            )
+            bs.animate_array(
+                text,
+                'color', 3,
+                {
+                    0: (0.6, 1, 1),
+                    0.4: (2, 0, 0),
+                    0.8: (0.1, 0, 0),
+                }
+            )
+            text.rotate = text.rotate
+            our_pos = bs.Vec3(self.last_saved_position)
+            pos = bs.Vec3(pos)
+            dist = our_pos - pos
+            mag = dist.length() * 3
+            try:
+                src = player.actor.node
+            except:
+                src = None
+            self.handlemessage(
+                bs.HitMessage(
+                    pos=pos,
+                    velocity=dist,
+                    magnitude=mag,
+                    velocity_magnitude=mag * 2,
+                    radius=0,
+                    srcnode=src,
+                    source_player=player,
+                    force_direction=dist,
+                    hit_type='slash',
+                )
+            )
+        bs.timer(1, hit)
+        self.node.connectattr('torso_position', text, 'position')
 
     def on_jump_press(self) -> None:
         """
@@ -784,6 +902,12 @@ class Spaz(bs.Actor):
         # pylint: disable=too-many-statements
         # pylint: disable=too-many-branches
         assert not self.expired
+    
+        if isinstance(msg, SlashBombHitMessage):
+            self._apply_slash(
+                pos=msg.pos, 
+                player=msg.player
+            )
 
         if isinstance(msg, bs.PickedUpMessage):
             if self.node:
@@ -972,6 +1096,26 @@ class Spaz(bs.Actor):
                 self.equip_shields(decay=factory.shield_decay_rate > 0)
             elif msg.poweruptype == 'curse':
                 self.curse()
+            elif msg.poweruptype == 'slashbomb':
+                self.bomb_type = 'slash'
+                tex = self._get_bomb_type_tex()
+                self._flash_billboard(tex)
+                if self.powerups_expire:
+                    self.node.mini_billboard_2_texture = tex
+                    t_ms = int(bs.time() * 1000.0)
+                    assert isinstance(t_ms, int)
+                    self.node.mini_billboard_2_start_time = t_ms
+                    self.node.mini_billboard_2_end_time = (
+                        t_ms + POWERUP_WEAR_OFF_TIME
+                    )
+                    self._bomb_wear_off_flash_timer = bs.Timer(
+                        (POWERUP_WEAR_OFF_TIME - 2000) / 1000.0,
+                        bs.WeakCall(self._bomb_wear_off_flash),
+                    )
+                    self._bomb_wear_off_timer = bs.Timer(
+                        POWERUP_WEAR_OFF_TIME / 1000.0,
+                        bs.WeakCall(self._bomb_wear_off),
+                    )
             elif msg.poweruptype == 'ice_bombs':
                 self.bomb_type = 'ice'
                 tex = self._get_bomb_type_tex()
@@ -1446,11 +1590,16 @@ class Spaz(bs.Actor):
                 if self._has_boxing_gloves:
                     if node and node.getnodetype() == 'spaz':
                         self._tough_punches += 1
+                        mult = 1
                         # change cooldown too
                         for num in list(GLOVE_COOLDOWNS.keys()):
                             if self._tough_punches >= num:
                                 self._punch_cooldown = GLOVE_COOLDOWNS.get(num)
-                        mag *= (self._tough_punches * 0.7)
+                        # get markiplier
+                        for num in list(GLOVE_MULTS.keys()):
+                            if self._tough_punches >= num:
+                                mult = GLOVE_MULTS.get(num)
+                        mag *= mult
                         if self._tough_punches < 4:
                             ParticalFactory.get()._tough_glove_weak_sfx.play(
                                 1.5, position=self.node.position
@@ -1882,6 +2031,8 @@ class Spaz(bs.Actor):
             return factory.tex_ice_bombs
         if self.bomb_type == 'impact':
             return factory.tex_impact_bombs
+        if self.bomb_type == 'slash':
+            return factory.tex_bomb
         else:
             return factory.tex_bomb
 

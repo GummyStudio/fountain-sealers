@@ -44,6 +44,9 @@ class ParticalFactory:
         self.pink_short_laugh_sfx = bs.getsound('snd_pink_laugh_short')
         self.pink_throw1_sfx = bs.getsound('snd_pink_throw')
         self.pink_throw2_sfx = bs.getsound('snd_pink_throw2')
+        
+        self.slash_start_sfx = bs.getsound('slash_start')
+        self.slash_hit_sfx = bs.getsound('slash_hit')
 
         self._tough_glove_weak_sfx = bs.getsound('tough_glove_weak')
         self._tough_glove_strong_sfx = bs.getsound('tough_glove_strong')
