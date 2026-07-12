@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, override
 
 import bascenev1 as bs
 import random
+from babase._logging import deltalog
 
 from bascenev1lib.gameutils import SharedObjects
 
@@ -479,7 +480,7 @@ class CardCastle(bs.Map):
                            'materials': [door_detection_mat2]})
     
     def _handle_door_change(self, door_id: int, entering: bool):
-        print('hi')
+        deltalog.debug('player went through door')
         if door_id == 1:
             self.door1_occupants += 1 if entering else -1
             count = self.door1_occupants
@@ -493,7 +494,6 @@ class CardCastle(bs.Map):
         if (entering and count == 1) or (not entering and count == 0):
             target_opacity = 0.1 if entering else 1.0
             for node in nodes:
-           
                 bs.animate(node, 'opacity', {0: node.opacity, 0.25: target_opacity})
 
 
