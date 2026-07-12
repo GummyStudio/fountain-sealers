@@ -32,6 +32,7 @@ class MusicType(Enum):
     CH4_BUSTER = 'idk the boss'
     RAKUICHI_BUSTER ='im not saying that again'
     MEW_MEW_KISSY = 'pink'
+    JEVIL_BOSS = 'metamorphosis'
     KING_BOSS = 'mr hampter'
 
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:

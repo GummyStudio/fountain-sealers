@@ -42,10 +42,10 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
     MusicType.VICTORY: AssetSoundtrackEntry(
         'victoryMusic', volume=1.2, loop=False
     ),
-    MusicType.CHAR_SELECT: AssetSoundtrackEntry('charSelectMusic', volume=0.4),
+    MusicType.CHAR_SELECT: AssetSoundtrackEntry('charSelectMusic', volume=0.7),
 
     MusicType.SCORES: AssetSoundtrackEntry(
-        'scoresEpicMusic', volume=0.6, loop=False
+        'scoresEpicMusic', volume=0.8, loop=False
     ),
 
     MusicType.RUDE_BUSTER: AssetSoundtrackEntry('toTheDeathMusic', volume=1.2),
@@ -54,8 +54,10 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
     MusicType.RAKUICHI_BUSTER: AssetSoundtrackEntry('music/rakuichi_buster', volume=1.2),
     
     MusicType.MEW_MEW_KISSY: AssetSoundtrackEntry('music/pink', volume=1.2),
-    MusicType.KING_BOSS: AssetSoundtrackEntry('music/kingboss')
+    MusicType.KING_BOSS: AssetSoundtrackEntry('music/kingboss'),
+    MusicType.JEVIL_BOSS: AssetSoundtrackEntry('music/jevil_boss', volume=1.1),
 }
+
 class MusicSubsystem:
     """Subsystem for music playback in the app.
 
