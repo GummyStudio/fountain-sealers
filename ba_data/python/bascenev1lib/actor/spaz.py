@@ -242,6 +242,7 @@ class Spaz(bs.Actor):
         self._REAL_last_hit_time: int | None = None
         self._num_times_hit = 0
         self._bomb_held = False
+        self.mercy = 0 # a meter 0-100
         if self.default_shields:
             self.equip_shields()
         self._dropped_bomb_callbacks: list[Callable[[Spaz, bs.Actor], Any]] = []
@@ -277,10 +278,39 @@ class Spaz(bs.Actor):
         # sound effects
         
         self._utheal_sfx = bs.getsound('utHeal')
+
+        if True:
+            self.add_mercy(98, True)
+    
+    def get_mercy(self):
+        return int(
+            max(0.0, min(
+                self.mercy, 100.0
+            ))
+        )
+    def add_mercy(self, by, dmgtext=False):
+        # Not alive, so doesnt matter.
+        if not self.is_alive():
+            return
+        self.mercy += by
+        if dmgtext:
+            DamageText(
+                self.last_saved_position,
+                text='+100%' if self.spareable() else f'+{int(by)}%',
+                color=(0,1,0) if self.spareable() else (1,1,0),
+                scl=0.64
+            ).autoretain()
+
+    def spareable(self) -> bool:
+        if not self.is_alive():
+            return False
+        return bool(self.get_mercy() == 100)
         
     def _tick(self):
         if not self.exists():
             return
+        
+        
         
         # GUMMY:
         # The last saved position of this spaz before its node was deleted, 
@@ -310,13 +340,14 @@ class Spaz(bs.Actor):
         if self.black_knife:
             for _ in range(random.randint(1, 3)):
                 bs.emitfx(
-                    position=(self.node.position),
+                    position=(self.last_saved_position),
                     velocity=(0, 1,0),
                     count=2,
                     scale=0.25,
                     spread=1,
                     chunk_type='spark',
                 ),
+
 
 
                     
@@ -986,8 +1017,36 @@ class Spaz(bs.Actor):
                 self.node.handlemessage('hurt_sound')
                 self.node.handlemessage('picked_up')
 
+            if self.spareable():
+                DamageText(
+                    text=bs.Lstr(resource='delta.recruitText'),
+                    position=self.last_saved_position,
+                    color=(1,1,0),
+                    scl=0.7
+                ).autoretain()
+                bs.getsound('snd_spare').play()
+                try:
+                    self.last_player_attacked_by = msg.node.getdelegate(Spaz).source_player
+                except:
+                    pass
+                self.handlemessage(bs.DieMessage(how=bs.DeathType.SPARED))
+                self.handlemessage(bs.DieMessage(True, how=bs.DeathType.SPARED))
+                bs.emitfx(
+                    position=(self.last_saved_position),
+                    velocity=(0, 0,2),
+                    count=5,
+                    scale=0.25,
+                    spread=1,
+                    chunk_type='spark',
+                ),
+
+            self.add_mercy(
+                1, True
+            ) 
+
             # This counts as a hit.
             self._num_times_hit += 1
+
 
         elif isinstance(msg, bs.ShouldShatterMessage):
             # Eww; seems we have to do this in a timer or it wont work right.
