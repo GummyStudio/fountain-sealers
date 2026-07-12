@@ -780,6 +780,7 @@ class Blast(bs.Actor):
                 bs.HitMessage(
                     pos=nodepos,
                     velocity=vel,
+                    velocity=(0, 0, 0),
                     magnitude=mag,
                     hit_type=hittype,
                     hit_subtype=self.hit_subtype,
@@ -1114,6 +1115,7 @@ class Bomb(bs.Actor):
             elif self.bomb_type == 'slash':
                 tex = factory.impact_tex # placeholder
                 fuse_time = 4.1
+                
             else:
                 tex = factory.regular_tex
             self.node = bs.newnode(
@@ -1326,7 +1328,7 @@ class Bomb(bs.Actor):
                     elif rando == 1:
                         node.handlemessage('knockout', 100)
                     elif rando == 2:
-                        actor.impulse(x=420, y=50, direction=(
+                        actor.impulse(x=520, y=120, direction=(
                             -node.velocity[0],  -node.velocity[1], -node.velocity[2],
                         ))
                 return
