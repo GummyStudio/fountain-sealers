@@ -493,6 +493,14 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
                         and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
                     ):
                         last_hit_type = DeathType.ANNOYING_DOG_FALL
+                    
+                    # Banana hit + Fell
+                    elif (
+                        player.actor.last_attack_hit_type in (DeathType.BANANA, )
+                        and how_died in (DeathType.FALL, DeathType.OUT_OF_BOUNDS)
+                    ):
+                        last_hit_type = DeathType.BANANA_FALL
+                  
                   
                     else:
                         last_hit_type = how_died

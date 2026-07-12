@@ -1520,9 +1520,11 @@ class Bomb(bs.Actor):
             raise RuntimeError(
                 'arm() should only be called on armable bombs.'
             )
-        self.texture_sequence.connectattr(
-            'output_texture', self.node, 'color_texture'
-        )
+        try:
+            self.texture_sequence.connectattr(
+                'output_texture', self.node, 'color_texture'
+            )
+        except: pass
         
     def _handle_hit(self, msg: bs.HitMessage) -> None:
         ispunched = msg.srcnode and msg.srcnode.getnodetype() == 'spaz'

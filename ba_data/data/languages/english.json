@@ -1818,7 +1818,19 @@
             "suicide": "${NAME} was pushed by Annoying Dog.",
             "betrayal": "${NAME} was pushed by Annoying Dog.",
             "diedtobot": "${NAME} was pushed by Annoying Dog."
-        }
+        },
+        "banana": {
+          "kill": "${NAME} made ${VICTIM} slipped and died.",
+          "suicide": "${NAME} slipped on their own banana.",
+          "betrayal": "${VICTIM} slipped and died.",
+          "diedtobot": "${NAME} slipped and died."
+        },
+        "banana_fall": {
+          "kill": "${NAME} accidentally made ${VICTIM} trip and fall.",
+          "suicide": "${NAME} tripped and fall.",
+          "betrayal": "${NAME} made ${VICTIM} trip and fall.",
+          "diedtobot": "${NAME} tripped and fall."
+    }
     }
 }
 
