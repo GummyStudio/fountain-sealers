@@ -848,6 +848,8 @@ class Bomb(bs.Actor):
             self.blast_radius *= 1.5
         elif self.bomb_type == 'spades':
             self.blast_radius *= 0.50
+        elif self.bomb_type == 'annoyingdog':
+            self.blast_radius *= 1.2
         
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []

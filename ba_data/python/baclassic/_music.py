@@ -56,6 +56,8 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
     MusicType.MEW_MEW_KISSY: AssetSoundtrackEntry('music/pink', volume=1.2),
     MusicType.KING_BOSS: AssetSoundtrackEntry('music/kingboss'),
     MusicType.JEVIL_BOSS: AssetSoundtrackEntry('music/jevil_boss', volume=1.1),
+        MusicType.DEATH_BY_GLAMOUR: AssetSoundtrackEntry('music/gayrobot', volume=1.0),
+
 }
 
 class MusicSubsystem:

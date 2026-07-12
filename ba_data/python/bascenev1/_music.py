@@ -34,6 +34,7 @@ class MusicType(Enum):
     MEW_MEW_KISSY = 'pink'
     JEVIL_BOSS = 'metamorphosis'
     KING_BOSS = 'mr hampter'
+    DEATH_BY_GLAMOUR = 'gay robot'
 
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:
     """Set the app to play (or stop playing) a certain type of music.
