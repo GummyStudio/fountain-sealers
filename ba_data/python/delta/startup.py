@@ -29,6 +29,7 @@ class Startup:
             # stats
             'STATS_freezed': 0,
             'STATS_fatalities': 0,
+            'STATS_swooned': 0,
 
             # characters
             'OWNED_roaringknight': False
@@ -59,6 +60,7 @@ class Startup:
             'dd': 'dark_dollars',
             'frozen': 'STATS_freezed',
             'fatal': 'STATS_fatalities',
+            'swooned': 'STATS_swooned',
         }        
         try:
             user32 = ctypes.windll.user32

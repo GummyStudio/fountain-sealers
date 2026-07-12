@@ -45,12 +45,12 @@ class PowerupAcceptMessage:
 def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
     """Standard set of powerups."""
     # test
-    if bool(False):
+    if bool(True):
         return (
-  
-        ('annoyingdog', 2),
-        
-    )
+    
+        ('black_knife', 1),
+            
+        )
     # modded only
     if bool(True):
         return (
@@ -65,6 +65,7 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
         ('gigabomb', 2),
         ('spades', 3),
         ('annoyingdog', 2),
+        ('black_knife', 1),
     )
     # normal
     return (
@@ -83,4 +84,5 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
         ('gigabomb', 1),
         ('spades', 3),
         ('annoyingdog', 2),
+        ('black_knife', 1),
     )

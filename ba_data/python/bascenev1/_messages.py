@@ -54,9 +54,10 @@ class DeathType(Enum):
     MEW_MEW = 'mewmewbomb'
     SNOWGRAVE = 'snowgrave'
     SPADES = 'spades'
-    ANNOYING_DOG = 'annoying dog'
+    ANNOYING_DOG = 'annoying_dog'
     ANNOYING_DOG_BLAST = 'dog_exploded'
     SPARED = 'spared'
+    SWOON = 'swoon'
    
     
     # Unique interactions

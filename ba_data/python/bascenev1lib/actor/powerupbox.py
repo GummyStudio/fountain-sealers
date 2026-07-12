@@ -202,6 +202,8 @@ class PowerupBox(bs.Actor):
             tex = factory.tex_realknife
         elif poweruptype == 'annoyingdog':
             tex = factory.tex_bomb
+        elif poweruptype == 'black_knife':
+            tex = factory.tex_shield
         else:
             raise ValueError('invalid poweruptype: ' + str(poweruptype))
 
