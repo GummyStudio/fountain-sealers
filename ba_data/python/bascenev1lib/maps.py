@@ -44,7 +44,7 @@ class Rudebuster(bs.Map):
     @override
     @classmethod
     def get_preview_texture_name(cls) -> str:
-        return 'rampagePreview'
+        return 'rudebusterPreview'
 
     @override
     @classmethod
