@@ -47,11 +47,18 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
     # test
     if bool(True):
         return (
+<<<<<<< Updated upstream
             ('black_knife', 1),
+=======
+    
+        ('banana', 3),
+            
+>>>>>>> Stashed changes
         )
     # modded only
     if bool(True):
         return (
+<<<<<<< Updated upstream
             ('triple_bombs', 3),
             ('ice_bombs', 3),
             ('punch', 3),
@@ -66,6 +73,22 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
             ('slashbomb', 1),
             ('black_knife', 1),
         )
+=======
+        ('triple_bombs', 3),
+        ('ice_bombs', 3),
+        ('punch', 3),
+        ('shield', 2),
+        ('health', 1),
+        ('rudebuster', 2),
+        ('mewmew', 3),
+        ('snowgrave', 2),
+        ('gigabomb', 2),
+        ('spades', 3),
+        ('annoyingdog', 2),
+        ('black_knife', 1),
+        ('banana', 3),
+    )
+>>>>>>> Stashed changes
     # normal
     return (
         ('triple_bombs', 3),
@@ -84,4 +107,5 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
         ('spades', 3),
         ('annoyingdog', 2),
         ('black_knife', 1),
+        ('banana', 3),
     )

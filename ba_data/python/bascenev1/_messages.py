@@ -58,12 +58,14 @@ class DeathType(Enum):
     ANNOYING_DOG_BLAST = 'dog_exploded'
     SPARED = 'spared'
     SWOON = 'swoon'
+    BANANA = 'banana'
    
     
     # Unique interactions
     PUNCH_HIT_FALL = 'punch_hit_fall'
     RUDE_BUSTER_FALL = 'rude_buster_fall'
     ANNOYING_DOG_FALL = 'annoying_dog_fall'
+    BANANA_FALL = 'banana_fall'
 @dataclass
 class DieMessage:
     """A message telling an object to die.

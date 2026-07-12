@@ -1065,6 +1065,9 @@ class Spaz(bs.Actor):
             elif msg.poweruptype == 'annoyingdog':
                 self.reset_all_counts()
                 self.set_annoying_dog_count(1)
+            elif msg.poweruptype == 'banana':
+                self.reset_all_counts()
+                self.set_banana_count(1)
             elif msg.poweruptype == 'impact_bombs':
                 self.bomb_type = 'impact'
                 tex = self._get_bomb_type_tex()
@@ -1808,7 +1811,8 @@ class Spaz(bs.Actor):
             self.rudebusters <= 0 and
             self.snowgraves <= 0 and
             self.gigabombs <= 0 and
-            self.annoyingdogs <= 0
+            self.annoyingdogs <= 0 and
+            self.bananas <= 0
         ) or self.frozen:
             return None
         assert self.node
@@ -1844,6 +1848,10 @@ class Spaz(bs.Actor):
             dropping_bomb = False
             self.set_annoying_dog_count(self.annoyingdogs-1)
             bomb_type = 'annoyingdog'
+        elif self.bananas > 0:
+            dropping_bomb = False
+            self.set_banana_count(self.bananas-1)
+            bomb_type = 'banana'
        
         else:
             dropping_bomb = True
@@ -1984,6 +1992,18 @@ class Spaz(bs.Actor):
             else:
                 self.node.counter_text = ''
     
+    def set_banana_count(self, count: int) -> None:
+        """Set the number of bananas this spaz is carrying."""
+        self.bananas = count
+        if self.node:
+            if self.bananas != 0:
+                self.node.counter_text = 'x' + str(self.bananas)
+                self.node.counter_texture = (
+                    PowerupBoxFactory.get().tex_sticky_bombs
+                )
+            else:
+                self.node.counter_text = ''
+    
     
     
     def reset_all_counts(self):
@@ -1992,6 +2012,7 @@ class Spaz(bs.Actor):
         self.set_snowgraves_count(0)
         self.set_giga_bomb_count(0)
         self.set_annoying_dog_count(0)
+        self.set_banana_count(0)
     
     def fatal_death(self):
         # import bascenev1 as bs; bs.getactivity().players[0].actor.fatal_death()

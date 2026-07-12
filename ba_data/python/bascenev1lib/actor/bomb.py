@@ -184,6 +184,9 @@ class BombFactory:
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
 
+        self.banana_mesh = bs.getmesh('box')
+        self.banana_tex = bs.gettexture('white')
+
         self.annoying_dog_mesh = bs.getmesh('annoyingDogPixelArt')
         self.annoying_dog_tex = bs.gettexture('annoyingDogColor')
         self.annoying_dog_spawn_sfx = bs.getsound('annoyingDogSpawn')
@@ -840,7 +843,11 @@ class Bomb(bs.Actor):
             'gigabomb',
             'spades',
             'annoyingdog',
+<<<<<<< Updated upstream
             'slash',
+=======
+            'banana',
+>>>>>>> Stashed changes
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -864,7 +871,7 @@ class Bomb(bs.Actor):
             self.blast_radius *= 1.45
         elif self.bomb_type == 'mewmew':
             self.blast_radius *= 0.8
-        elif self.bomb_type == 'snowgrave':
+        elif self.bomb_type in ['snowgrave', 'banana']:
             self.blast_radius *= 0.0
         elif self.bomb_type == 'gigabomb':
             self.blast_radius *= 1.5
@@ -874,6 +881,7 @@ class Bomb(bs.Actor):
             self.blast_radius *= 1.2
         elif self.bomb_type == 'slash':
             self.blast_radius *= 0.99
+        
         
 
         self._explode_callbacks: list[Callable[[Bomb, Blast], Any]] = []
@@ -910,7 +918,7 @@ class Bomb(bs.Actor):
         else:
             materials = (factory.bomb_material, shared.object_material)
 
-        if self.bomb_type in ['impact', 'snowgrave', 'annoyingdog']:
+        if self.bomb_type in ['impact', 'snowgrave', 'annoyingdog', 'banana']:
             materials = materials + (factory.impact_blast_material,)
         elif self.bomb_type == 'land_mine':
             materials = materials + (factory.land_mine_no_explode_material,)
@@ -934,6 +942,27 @@ class Bomb(bs.Actor):
                     'body_scale': self.scale,
                     'shadow_size': 0.44,
                     'color_texture': factory.land_mine_tex,
+                    'reflection': 'powerup',
+                    'reflection_scale': [1.0],
+                    'materials': materials,
+                },
+            )
+        elif self.bomb_type == 'banana':
+            fuse_time = None
+            self.scale = 0.85
+            self.node = bs.newnode(
+                'prop',
+                delegate=self,
+                attrs={
+                    'position': position,
+                    'velocity': velocity,
+                    'mesh': factory.banana_mesh,
+                    'light_mesh': factory.banana_mesh,
+                    'body': 'crate',
+                    'body_scale': 1.0,
+                    'gravity_scale': 1.5,
+                    'shadow_size': 0.44,
+                    'color_texture': factory.banana_tex,
                     'reflection': 'powerup',
                     'reflection_scale': [1.0],
                     'materials': materials,
@@ -1115,7 +1144,7 @@ class Bomb(bs.Actor):
             bs.animate(self.node, 'fuse_length', {0.0: 1.0, fuse_time: 0.0})
 
         # Light the fuse!!!
-        if self.bomb_type not in ('land_mine', 'tnt', 'snowgrave', 'spades'):
+        if self.bomb_type not in ('land_mine', 'tnt', 'snowgrave', 'spades', 'banana'):
             assert fuse_time is not None
             bs.timer(
                 fuse_time, bs.WeakCall(self.handlemessage, ExplodeMessage())
@@ -1220,12 +1249,14 @@ class Bomb(bs.Actor):
     def _handle_impact(self) -> None:
         node = bs.getcollision().opposingnode
 
+
         # If we're an impact bomb and we came from this node, don't explode.
         # (otherwise we blow up on our own head when jumping).
         # Alternately if we're hitting another impact-bomb from the same
         # source, don't explode. (can cause accidental explosions if rapidly
         # throwing/etc.)
         node_delegate = node.getdelegate(object)
+        from bascenev1lib.actor.spaz import Spaz
         if node:
             if self.bomb_type in ['impact', 'snowgrave']:
                 if (
@@ -1237,6 +1268,24 @@ class Bomb(bs.Actor):
                     )
                 ):
                     return
+            elif self.bomb_type == 'banana':
+                # THATS A SPAZ!! TRI PHIM
+                if node.getdelegate(Spaz) and self.dropped:
+                    actor = node.getdelegate(Spaz)
+                    assert isinstance(actor, Spaz)
+                    actor.impulse(x=800, y=80, direction=(
+                            -node.velocity[0],  2, -node.velocity[2],
+                    ))
+                    bs.getsound('powerup01').play()
+                    self.handlemessage(bs.DieMessage())
+                    node.handlemessage(
+                        bs.HitMessage(
+                            flat_damage=50,
+                            source_player=self._source_player,
+                            hit_type=bs.DeathType.BANANA
+                        ),
+                    )
+                return
                 
             elif self.bomb_type == 'annoyingdog':
                 if not self.dropped:
@@ -1263,7 +1312,7 @@ class Bomb(bs.Actor):
                         hit_type=bs.DeathType.ANNOYING_DOG
                     ),
                 )
-                from bascenev1lib.actor.spaz import Spaz
+                
 
                 # do random effects to spaz
                 if node.getdelegate(Spaz):
@@ -1277,7 +1326,7 @@ class Bomb(bs.Actor):
                     elif rando == 1:
                         node.handlemessage('knockout', 100)
                     elif rando == 2:
-                        actor.impulse(x=220, y=50, direction=(
+                        actor.impulse(x=420, y=50, direction=(
                             -node.velocity[0],  -node.velocity[1], -node.velocity[2],
                         ))
                 return
@@ -1478,7 +1527,7 @@ class Bomb(bs.Actor):
         if not self._exploded and (
             (not ispunched or self.bomb_type in ['impact', 'land_mine'])
         ) and self.bomb_type not in [
-                 'annoyingdog', # bombs that dont wana be blown up by others
+                 'annoyingdog', 'banana',# bombs that dont wana be blown up by others
              ] :
             # Also lets change the owner of the bomb to whoever is setting
             # us off. (this way points for big chain reactions go to the
