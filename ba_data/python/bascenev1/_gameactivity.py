@@ -20,6 +20,7 @@ from bascenev1._messages import PlayerDiedMessage, StandMessage
 from bascenev1._score import ScoreConfig
 from bascenev1 import _map
 from bascenev1 import _music
+from babase._logging import deltalog
 
 if TYPE_CHECKING:
     from typing import Any, Callable, Sequence
@@ -495,11 +496,12 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
                   
                     else:
                         last_hit_type = how_died
-
-            print('--------')
-            print('got sent:', last_hit_type)
-            print('last hit_type player had:', player.actor.last_attack_hit_type)
-            print('deathtype:', msg.how)
+            
+            # god i love logging
+            deltalog.debug('--------')
+            deltalog.debug('got sent:', last_hit_type)
+            deltalog.debug('last hit_type player had:', player.actor.last_attack_hit_type)
+            deltalog.debug('deathtype:', msg.how)
             
             self.stats.player_was_killed(
                 player, killed=msg.killed, killer=killer, how_died=last_hit_type

@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 class ClientLoggerName(Enum):
     """Logger names used on the Ballistica client."""
 
+    DELTALOG = 'fountainsealers' 
     BA = 'ba'
     ENV = 'ba.env'
     APP = 'ba.app'
@@ -86,6 +87,8 @@ class ClientLoggerName(Enum):
             return 'v2 (modern) account functionality'
         if self is cls.LOGIN_ADAPTER:
             return 'support for particular login types'
+        if self is cls.DELTALOG:
+            return 'debug and errors for fountain sealers'
         assert_never(self)
 
 

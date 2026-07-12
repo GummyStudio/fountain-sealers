@@ -13,6 +13,7 @@ from bacommon.logging import ClientLoggerName
 _g_logger_descs: dict[str, str] | None = None
 
 # Common loggers we may want convenient access to.
+deltalog = logging.getLogger(ClientLoggerName.DELTALOG.value)
 balog = logging.getLogger(ClientLoggerName.BA.value)
 applog = logging.getLogger(ClientLoggerName.APP.value)
 assetslog = logging.getLogger(ClientLoggerName.ASSETS.value)
@@ -31,7 +32,6 @@ cloudsublog = logging.getLogger(ClientLoggerName.CLOUD_SUBSCRIPTION.value)
 accountv2log = logging.getLogger(ClientLoggerName.ACCOUNT_V2.value)
 accountclientv2log = logging.getLogger(ClientLoggerName.ACCOUNT_CLIENT_V2.value)
 loginadapterlog = logging.getLogger(ClientLoggerName.LOGIN_ADAPTER.value)
-
 
 def description_for_logger(logger: str) -> str | None:
     """Return a short description for a given logger.
