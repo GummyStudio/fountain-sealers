@@ -175,8 +175,8 @@ class BombFactory:
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
 
-        self.annoying_dog_mesh = bs.getmesh('box')
-        self.annoying_dog_tex = bs.gettexture('impactBombColor')
+        self.annoying_dog_mesh = bs.getmesh('annoyingDogPixelArt')
+        self.annoying_dog_tex = bs.gettexture('annoyingDogColor')
         self.annoying_dog_spawn_sfx = bs.getsound('annoyingDogSpawn')
         self.annoying_dog_bark_sfx = bs.getsound('blip')
 
@@ -980,7 +980,7 @@ class Bomb(bs.Actor):
             )
 
         elif self.bomb_type == 'annoyingdog':
-            self.scale = 0.8
+            self.scale = 0.01
             fuse_time = 20.0
             factory.annoying_dog_spawn_sfx.play()
 
@@ -994,18 +994,17 @@ class Bomb(bs.Actor):
                     'position': position,
                     'velocity': velocity,
                     'mesh': factory.annoying_dog_mesh,
-                    'light_mesh': factory.annoying_dog_mesh,
-                    'body': 'crate',
-                    'mesh_scale': self.scale,
-                    'body_scale': self.scale,
+                    'body': 'landMine',
+                    'body_scale': 0.8,
                     'shadow_size': 0.5,
                     'color_texture': factory.annoying_dog_tex,
                     'reflection': 'soft',
                     'reflection_scale': [0.23],
-                    'gravity_scale': 1.1,
+                    'gravity_scale': 1.5,
                     'materials': materials,
                 },
             )
+            
 
         elif self.bomb_type == 'impact':
             fuse_time = 20.0
