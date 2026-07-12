@@ -258,6 +258,7 @@ class Spaz(bs.Actor):
         self.black_knife = False
         self.snowgraves = 0
         self.annoyingdogs = 0
+        self.bananas=0
         self.gigabombs = 0
         self.input_x = 0.0
         self.input_y = 0.0
@@ -1067,7 +1068,7 @@ class Spaz(bs.Actor):
                 self.set_annoying_dog_count(1)
             elif msg.poweruptype == 'banana':
                 self.reset_all_counts()
-                self.set_banana_count(1)
+                self.set_banana_count(5)
             elif msg.poweruptype == 'impact_bombs':
                 self.bomb_type = 'impact'
                 tex = self._get_bomb_type_tex()

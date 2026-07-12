@@ -184,7 +184,7 @@ class BombFactory:
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
 
-        self.banana_mesh = bs.getmesh('box')
+        self.banana_mesh = bs.getmesh('bomb')
         self.banana_tex = bs.gettexture('white')
 
         self.annoying_dog_mesh = bs.getmesh('annoyingDogPixelArt')
@@ -779,7 +779,6 @@ class Blast(bs.Actor):
             node.handlemessage(
                 bs.HitMessage(
                     pos=nodepos,
-                    velocity=vel,
                     velocity=(0, 0, 0),
                     magnitude=mag,
                     hit_type=hittype,
@@ -844,11 +843,8 @@ class Bomb(bs.Actor):
             'gigabomb',
             'spades',
             'annoyingdog',
-<<<<<<< Updated upstream
-            'slash',
-=======
             'banana',
->>>>>>> Stashed changes
+            'slash',
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -950,7 +946,7 @@ class Bomb(bs.Actor):
             )
         elif self.bomb_type == 'banana':
             fuse_time = None
-            self.scale = 0.85
+            self.scale = 0.8
             self.node = bs.newnode(
                 'prop',
                 delegate=self,
@@ -960,8 +956,8 @@ class Bomb(bs.Actor):
                     'mesh': factory.banana_mesh,
                     'light_mesh': factory.banana_mesh,
                     'body': 'crate',
-                    'body_scale': 1.0,
-                    'gravity_scale': 1.5,
+                    'body_scale': 0.8,
+                    'gravity_scale': 1.8,
                     'shadow_size': 0.44,
                     'color_texture': factory.banana_tex,
                     'reflection': 'powerup',
@@ -1275,7 +1271,7 @@ class Bomb(bs.Actor):
                 if node.getdelegate(Spaz) and self.dropped:
                     actor = node.getdelegate(Spaz)
                     assert isinstance(actor, Spaz)
-                    actor.impulse(x=800, y=80, direction=(
+                    actor.impulse(x=1201.12412, y=230, direction=(
                             -node.velocity[0],  2, -node.velocity[2],
                     ))
                     bs.getsound('powerup01').play()
