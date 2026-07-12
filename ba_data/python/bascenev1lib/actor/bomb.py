@@ -1270,8 +1270,8 @@ class Bomb(bs.Actor):
                 if node.getdelegate(Spaz) and self.dropped:
                     actor = node.getdelegate(Spaz)
                     assert isinstance(actor, Spaz)
-                    actor.impulse(x=1201.12412, y=230, direction=(
-                            -node.velocity[0],  2, -node.velocity[2],
+                    actor.impulse(x=2201.12412, y=830, direction=(
+                            -node.velocity[0],  node.velocity[1], -node.velocity[2],
                     ))
                     bs.getsound('powerup01').play()
                     self.handlemessage(bs.DieMessage())
