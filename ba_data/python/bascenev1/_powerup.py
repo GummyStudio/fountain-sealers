@@ -47,7 +47,7 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
     # test
     if bool(True):
         return (
-            ('slashbomb', 2),
+            ('black_knife', 1),
         )
     # modded only
     if bool(True):
@@ -64,6 +64,7 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
             ('spades', 3),
             ('annoyingdog', 2),
             ('slashbomb', 1),
+            ('black_knife', 1),
         )
     # normal
     return (
@@ -82,4 +83,5 @@ def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
         ('gigabomb', 1),
         ('spades', 3),
         ('annoyingdog', 2),
+        ('black_knife', 1),
     )

@@ -255,6 +255,7 @@ class Spaz(bs.Actor):
         self.pick_up_powerup_callback: Callable[[Spaz], Any] | None = None
         self.was_fataled = False
         self.rudebusters = 0
+        self.black_knife = False
         self.snowgraves = 0
         self.annoyingdogs = 0
         self.gigabombs = 0
@@ -304,6 +305,19 @@ class Spaz(bs.Actor):
 
                             collide_with=None
                 ).autoretain()
+        
+        if self.black_knife:
+            for _ in range(random.randint(1, 3)):
+                bs.emitfx(
+                    position=(self.node.position),
+                    velocity=(0, 1,0),
+                    count=2,
+                    scale=0.25,
+                    spread=1,
+                    chunk_type='spark',
+                ),
+
+
                     
     
 
@@ -648,6 +662,8 @@ class Spaz(bs.Actor):
             self._punched_nodes = set()  # Reset this.
             self.last_punch_time_ms = t_ms
             self.node.punch_pressed = True
+            if self.black_knife:
+                bs.timer(self._punch_cooldown/1000, bs.Call(setattr, self, 'black_knife', False))
             if not self.node.hold_node:
                 bs.timer(
                     0.1,
@@ -893,9 +909,64 @@ class Spaz(bs.Actor):
                 )
         else:
             self.shield_decay_timer = None
-        
     
-
+    def swoon(self):
+        if not self.node:
+            return
+        vol = 3
+        ogpause = self.getactivity().globalsnode.paused
+        def swoon1():
+            scale = 1.8
+            mult = 15
+            pos = self.node.position
+            finpos = (pos[0] * mult, pos[1] * mult)
+            self.bg = bs.newnode(
+                'image',
+                attrs={
+                    'texture': bs.gettexture('black'),
+                    'fill_screen': True,
+                },
+            )
+            self.swoonimg = bs.newnode(
+                'image',
+                attrs={
+                    'texture': bs.gettexture('swoon'),
+                    'position': finpos,
+                    'scale': (256 * scale, 64 * scale),
+                    'opacity': 1.0,
+                    'absolute_scale': True,
+                    'attach': 'center',
+                },
+            )
+            bs.getsound('swoon1').play(volume=vol, position=pos)
+            self.getactivity().globalsnode.paused = True
+        def swoon2():
+            pos = self.node.position
+            self.swoonimg.delete()
+            self.bg.delete()
+            bs.camerashake(7.0)
+            bs.getsound('swoon2').play(volume=vol, position=pos)
+            DamageText(
+                position=(
+                    self.last_saved_position[0],
+                    self.last_saved_position[1]+1,
+                    self.last_saved_position[2],
+                ),
+                text=bs.Lstr(resource='delta.swoonText'),
+                color=(1,0,0),
+                scl=1.24
+            ).autoretain()
+            bs.app.classic.startup.increase_statistic('swooned')
+           
+            self.getactivity().globalsnode.paused = ogpause
+            self.fatal_death()
+            
+        bs.basetimer(2.1, swoon2)
+        swoon1()
+    
+    def remove_all_hand_type_powerups(self):
+        self._gloves_wear_off()
+        self.black_knife = False
     @override
     def handlemessage(self, msg: Any) -> Any:
         # pylint: disable=too-many-return-statements
@@ -954,6 +1025,11 @@ class Spaz(bs.Actor):
                         POWERUP_WEAR_OFF_TIME / 1000.0,
                         bs.WeakCall(self._gloves_wear_off),
                     )
+            if msg.poweruptype == 'black_knife':
+                tex = PowerupBoxFactory.get().tex_punch
+                self._flash_billboard(tex)
+                self.remove_all_hand_type_powerups()
+                self.black_knife = True
             if msg.poweruptype == 'triple_bombs':
                 tex = PowerupBoxFactory.get().tex_bomb
                 self._flash_billboard(tex)
@@ -1221,6 +1297,10 @@ class Spaz(bs.Actor):
                     position=self.node.position,
                 )
                 return True
+            if msg.force_direction is None:
+                        msg.force_direction = (
+                            0, 0, 0
+                        )
 
             # If we were recently hit, don't count this as another.
             # (so punch flurries and bomb pileups essentially count as 1 hit).
@@ -1250,6 +1330,10 @@ class Spaz(bs.Actor):
                     # Hit our spaz with an impulse but tell it to only return
                     # theoretical damage; not apply the impulse.
                     assert msg.force_direction is not None
+                    if msg.force_direction is None:
+                        msg.force_direction = (
+                            0, 0, 0
+                        )
                     self.node.handlemessage(
                         'impulse',
                         msg.pos[0],
@@ -1308,6 +1392,10 @@ class Spaz(bs.Actor):
 
                 # Emit some cool looking sparks on shield hit.
                 assert msg.force_direction is not None
+                if msg.force_direction is None:
+                        msg.force_direction = (
+                            0, 0, 0
+                        )
                 bs.emitfx(
                     position=msg.pos,
                     velocity=(
@@ -1342,6 +1430,7 @@ class Spaz(bs.Actor):
             else:
                 # Hit it with an impulse and get the resulting damage.
                 assert msg.force_direction is not None
+                
                 self.node.handlemessage(
                     'impulse',
                     msg.pos[0],
@@ -1506,6 +1595,9 @@ class Spaz(bs.Actor):
                 if damage_avg >= 1000:
                     self.shatter()
 
+            if msg.hit_type == bs.DeathType.SWOON:
+                self.swoon()
+
         elif isinstance(msg, BombDiedMessage):
             self.bomb_count += 1
 
@@ -1553,7 +1645,7 @@ class Spaz(bs.Actor):
             if not self.node:
                 return None
             node = bs.getcollision().opposingnode
-
+            
             # Don't want to physically affect powerups.
             if node.getdelegate(PowerupBox):
                 return None
@@ -1609,6 +1701,7 @@ class Spaz(bs.Actor):
                             ParticalFactory.get()._tough_glove_strong_sfx.play(
                                 1.5, position=self.node.position,
                             )
+                
 
                 self._punched_nodes.add(node)
                 node.handlemessage(
@@ -1621,7 +1714,7 @@ class Spaz(bs.Actor):
                         srcnode=self.node,
                         source_player=self.source_player,
                         force_direction=punchdir,
-                        hit_type=bs.DeathType.PUNCH,
+                        hit_type=bs.DeathType.SWOON if self.black_knife else bs.DeathType.PUNCH,
                         hit_subtype=(
                             'super_punch'
                             if self._has_boxing_gloves
@@ -1629,6 +1722,8 @@ class Spaz(bs.Actor):
                         ),
                     )
                 )
+                if self.black_knife:
+                    self.black_knife = False
                 
                 
                         
