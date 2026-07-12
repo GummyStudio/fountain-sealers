@@ -184,8 +184,8 @@ class BombFactory:
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
 
-        self.banana_mesh = bs.getmesh('bomb')
-        self.banana_tex = bs.gettexture('white')
+        self.banana_mesh = bs.getmesh('banana')
+        self.banana_tex = bs.gettexture('bananaColor')
 
         self.annoying_dog_mesh = bs.getmesh('annoyingDogPixelArt')
         self.annoying_dog_tex = bs.gettexture('annoyingDogColor')
@@ -915,7 +915,7 @@ class Bomb(bs.Actor):
         else:
             materials = (factory.bomb_material, shared.object_material)
 
-        if self.bomb_type in ['impact', 'snowgrave', 'annoyingdog', 'banana']:
+        if self.bomb_type in ['impact', 'snowgrave', 'annoyingdog']:
             materials = materials + (factory.impact_blast_material,)
         elif self.bomb_type == 'land_mine':
             materials = materials + (factory.land_mine_no_explode_material,)
@@ -946,7 +946,6 @@ class Bomb(bs.Actor):
             )
         elif self.bomb_type == 'banana':
             fuse_time = None
-            self.scale = 0.8
             self.node = bs.newnode(
                 'prop',
                 delegate=self,
@@ -955,8 +954,8 @@ class Bomb(bs.Actor):
                     'velocity': velocity,
                     'mesh': factory.banana_mesh,
                     'light_mesh': factory.banana_mesh,
-                    'body': 'crate',
-                    'body_scale': 0.8,
+                    'body': 'landMine',
+                    'body_scale': 1.0,
                     'gravity_scale': 1.8,
                     'shadow_size': 0.44,
                     'color_texture': factory.banana_tex,
@@ -1341,10 +1340,11 @@ class Bomb(bs.Actor):
         self.dog_cooldown = bs.time() + 2
         self.dropped = True
         
-        if self.bomb_type == 'land_mine':
+        if self.bomb_type in ['land_mine', 'banana']:
             self.arm_timer = bs.Timer(
                 1.25, bs.WeakCall(self.handlemessage, ArmMessage())
             )
+
         elif self.bomb_type == 'spades':
             self.arm_timer = bs.Timer(
                 1.0, bs.WeakCall(self.handlemessage, ArmMessage())
@@ -1470,6 +1470,13 @@ class Bomb(bs.Actor):
                 ),
             )
             factory.activate_sound.play(0.5, position=self.node.position)
+        elif self.bomb_type == 'banana':
+            bs.timer(
+                0.25,
+                bs.WeakCall(
+                    self._add_material, factory.land_mine_blast_material
+                ),
+            )
 
         elif self.bomb_type == 'spades':
             intex = (factory.jevil_bomb_flash_tex, factory.jevil_bomb_tex)
