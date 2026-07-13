@@ -208,6 +208,8 @@ class PowerupBox(bs.Actor):
             tex = factory.tex_realknife
         elif poweruptype == 'banana':
             tex = factory.tex_sticky_bombs
+        elif poweruptype == 'bell':
+            tex = factory.tex_curse
         else:
             raise ValueError('invalid poweruptype: ' + str(poweruptype))
 

@@ -279,7 +279,7 @@ class Spaz(bs.Actor):
         
         self._utheal_sfx = bs.getsound('utHeal')
 
-        if True:
+        if False:
             self.add_mercy(98, True)
     
     def get_mercy(self):
@@ -1210,6 +1210,26 @@ class Spaz(bs.Actor):
                     )
             elif msg.poweruptype == 'spades':
                 self.bomb_type = 'spades'
+                tex = self._get_bomb_type_tex()
+                self._flash_billboard(tex)
+                if self.powerups_expire:
+                    self.node.mini_billboard_2_texture = tex
+                    t_ms = int(bs.time() * 1000.0)
+                    assert isinstance(t_ms, int)
+                    self.node.mini_billboard_2_start_time = t_ms
+                    self.node.mini_billboard_2_end_time = (
+                        t_ms + POWERUP_WEAR_OFF_TIME
+                    )
+                    self._bomb_wear_off_flash_timer = bs.Timer(
+                        (POWERUP_WEAR_OFF_TIME - 2000) / 1000.0,
+                        bs.WeakCall(self._bomb_wear_off_flash),
+                    )
+                    self._bomb_wear_off_timer = bs.Timer(
+                        POWERUP_WEAR_OFF_TIME / 1000.0,
+                        bs.WeakCall(self._bomb_wear_off),
+                    )
+            elif msg.poweruptype == 'bell':
+                self.bomb_type = 'bell'
                 tex = self._get_bomb_type_tex()
                 self._flash_billboard(tex)
                 if self.powerups_expire:

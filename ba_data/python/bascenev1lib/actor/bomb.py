@@ -181,6 +181,9 @@ class BombFactory:
         self.jevil_bomb_flash_tex = bs.gettexture('spadeLit')
         self.jevil_bomb_arm_sfx = bs.getsound('snd_bombfall')
 
+        self.bell_mesh = bs.getmesh('mercyBell')
+        self.bell_tex = bs.gettexture('mercyBellColor')
+
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
 
@@ -845,6 +848,7 @@ class Bomb(bs.Actor):
             'annoyingdog',
             'banana',
             'slash',
+            'bell',
         ):
             raise ValueError('invalid bomb type: ' + bomb_type)
         self.bomb_type = bomb_type
@@ -915,7 +919,7 @@ class Bomb(bs.Actor):
         else:
             materials = (factory.bomb_material, shared.object_material)
 
-        if self.bomb_type in ['impact', 'snowgrave', 'annoyingdog']:
+        if self.bomb_type in ['impact', 'snowgrave', 'annoyingdog', 'bell']:
             materials = materials + (factory.impact_blast_material,)
         elif self.bomb_type == 'land_mine':
             materials = materials + (factory.land_mine_no_explode_material,)
@@ -1082,6 +1086,30 @@ class Bomb(bs.Actor):
                 fuse_time - 1.7, bs.WeakCall(self.handlemessage, WarnMessage())
             )
 
+        elif self.bomb_type == 'bell':
+            fuse_time = None
+            self.node = bs.newnode(
+                'prop',
+                delegate=self,
+                attrs={
+                    'position': position,
+                    'velocity': velocity,
+                    'body': 'sphere',
+                    'body_scale': self.scale,
+                    'mesh': factory.bell_mesh,
+                    'shadow_size': 0.3,
+                    'color_texture': factory.bell_tex,
+                    'reflection': 'powerup',
+                    'reflection_scale': [0.0],
+                    'materials': materials,
+                },
+            )
+            self.arm_timer = bs.Timer(
+                0.2, bs.WeakCall(self.handlemessage, ArmMessage())
+            )
+        
+
+
         else:
             fuse_time = 3.0
             if self.bomb_type == 'sticky':
@@ -1141,7 +1169,14 @@ class Bomb(bs.Actor):
             bs.animate(self.node, 'fuse_length', {0.0: 1.0, fuse_time: 0.0})
 
         # Light the fuse!!!
-        if self.bomb_type not in ('land_mine', 'tnt', 'snowgrave', 'spades', 'banana'):
+        if self.bomb_type not in (
+                'land_mine', 
+                'tnt',
+                'snowgrave', 
+                'spades', 
+                'banana',
+                'bell',
+            ):
             assert fuse_time is not None
             bs.timer(
                 fuse_time, bs.WeakCall(self.handlemessage, ExplodeMessage())
@@ -1255,12 +1290,12 @@ class Bomb(bs.Actor):
         node_delegate = node.getdelegate(object)
         from bascenev1lib.actor.spaz import Spaz
         if node:
-            if self.bomb_type in ['impact', 'snowgrave']:
+            if self.bomb_type in ['impact', 'snowgrave', 'bell']:
                 if (
                     node is self.owner
                     or (
                         isinstance(node_delegate, Bomb)
-                        and node_delegate.bomb_type in ['impact', 'snowgrave']
+                        and node_delegate.bomb_type in ['impact', 'snowgrave', 'bell']
                         and node_delegate.owner is self.owner
                     )
                 ):
@@ -1495,7 +1530,14 @@ class Bomb(bs.Actor):
             )
             
 
-
+        elif self.bomb_type == 'bell':
+           
+            bs.timer(
+                0.25,
+                bs.WeakCall(
+                    self._add_material, factory.land_mine_blast_material
+                ),
+            )
            
         elif self.bomb_type == 'impact':
             intex = (
@@ -1532,7 +1574,7 @@ class Bomb(bs.Actor):
         # Normal bombs are triggered by non-punch impacts;
         # impact-bombs by all impacts.
         if not self._exploded and (
-            (not ispunched or self.bomb_type in ['impact', 'land_mine'])
+            (not ispunched or self.bomb_type in ['impact', 'land_mine', 'bell'])
         ) and self.bomb_type not in [
                  'annoyingdog', 'banana',# bombs that dont wana be blown up by others
              ] :
