@@ -230,7 +230,7 @@ class Actor:
             raise babase.ActivityNotFoundError()
         return activity
     # universal impusle
-    def impulse(self, x: float | int = 0, y: float | int = 0, direction: tuple[float, float, float] = None):
+    def impulse(self, x: float | int = 0, y: float | int = 0, direction: tuple[float, float, float] = None, position: tuple[float, float, float] = None):
         # some actors dont have velocity or a position so yeah
         try:
             if not self.node:
@@ -241,22 +241,29 @@ class Actor:
                 v = self.node.velocity
             x = x
             y = y
+            position = self.node.position
+            if position is not None:
+                position = (
+                    self.node.position[0] + position[0],
+                    self.node.position[1] + position[1],
+                    self.node.position[2] + position[2]
+                )
             if x == 0 and y == 0:
                 raise ValueError("You must specify at least X or Y for impulse.")
             # only use x and y impulse if specified
             if x != 0:
                 self.node.handlemessage('impulse', 
-                    self.node.position[0], 
-                    self.node.position[1], 
-                    self.node.position[2],
+                    position[0], 
+                    position[1], 
+                    position[2],
                     0, 25, 0, x, 0.05, 0, 0,
                     v[0]*15*2, 0, v[2]*15*2
                 )
             if y != 0:
                 self.node.handlemessage('impulse', 
-                    self.node.position[0], 
-                    self.node.position[1], 
-                    self.node.position[2],
+                    position[0], 
+                    position[1], 
+                    position[2],
                     0, 25, 0,
                     y, 0.05, 0, 0,
                     0, 20*400, 0

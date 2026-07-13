@@ -12,6 +12,8 @@ import random
 from babase._logging import deltalog
 
 from bascenev1lib.gameutils import SharedObjects
+from delta.actor.particals import Partical, ParticalFactory
+
 
 if TYPE_CHECKING:
     from typing import Any
@@ -25,6 +27,7 @@ def register_all_maps() -> None:
         CardCastle,
         JevilStage,
         MettatonStage,
+        FlowerMan,
     ]:
         bs.register_map(maptype)
 
@@ -559,7 +562,7 @@ class MettatonStage(bs.Map):
                 'mesh': self.preloaddata['bgmesh'],
                 'lighting': False,
                 'background': True,
-                'color_texture': bs.gettexture('black'),
+                'color_texture': self.preloaddata['black'], # mb gang bs.gettexture('blac'),
             },
         )
         self.bottom = bs.newnode(
@@ -580,12 +583,32 @@ class MettatonStage(bs.Map):
     def get_music_type(cls) -> bs.MusicType:
         return bs.MusicType.DEATH_BY_GLAMOUR
     
-class MettatonStage(bs.Map):
-    """oooohhhh yeahhh"""
+class FlowerMan(bs.Map):
+    """HE SOLOS BRO"""
 
-    from delta.mapdata import mettaton_mapdefs as defs
+    class defs:
+        points, boxes = {}, {}
+        points['ffa_spawn1'] = (-2.84111, 2.88037, -3.44569) + (1.0, 0.05, 2.68294)
+        points['ffa_spawn2'] = (4.54586, 2.9767, -3.57324) + (1.0, 0.05, 2.68294)
+        points['ffa_spawn3'] = (0.88351, 2.94292, -0.04327) + (4.45552, 0.05, 0.2723)
+        points['ffa_spawn4'] = (0.88351, 3.12191, -7.12434) + (4.45552, 0.05, 0.2723)
+        points['flag1'] = (-3.08471, 2.99433, -3.42737)
+        points['flag2'] = (4.73658, 3.02995, -3.54888)
+        points['flag_default'] = (1.17429, 3.16944, -3.64346)
+        points['powerup_spawn1'] = (5.18086, 3.06024, -7.53234)
+        points['powerup_spawn2'] = (-3.52909, 2.97797, 0.18939)
+        points['powerup_spawn3'] = (5.08284, 2.96335, 0.55356)
+        points['powerup_spawn4'] = (-3.59113, 2.94275, -7.62854)
+        points['shadow_lower_bottom'] = (0.59646, -0.22795, 3.36804)
+        points['shadow_lower_top'] = (0.59646, 0.69828, 3.36804)
+        points['shadow_upper_bottom'] = (0.59646, 5.41325, 3.36804)
+        points['shadow_upper_top'] = (0.59646, 7.89148, 3.36804)
+        points['spawn1'] = (-2.74475, 2.96747, -3.44569) + (1.0, 0.05, 2.68294)
+        points['spawn2'] = (4.59264, 3.01514, -3.57324) + (1.0, 0.05, 2.68294)
+        boxes['area_of_interest_bounds'] = (0.79787, 4.09268, -3.21942) + (0, 0, 0) + (13.4496, 12.77576, 14.67298)
 
-    name = 'Mettaton\'s Stage'
+
+    name = 'Flower Man'
 
     @override
     @classmethod
@@ -605,28 +628,37 @@ class MettatonStage(bs.Map):
         # we use the same name for cmesh and mesh
         name = 'mettatonStage'
         data: dict[str, Any] = {
-            'mesh': bs.getmesh(name),
-            'collision_mesh': bs.getcollisionmesh(name),
-            'tex': bs.gettexture(name+'Color'), 
+     
             'bgmesh': bs.getmesh('thePadBG'),
-            'black': bs.gettexture('black'),
-            'meshbottom': bs.getmesh(name+"Bottom"),
+            # petal animation
+            'platform1': bs.getmesh('flowerPlatform1'),
+            'platform2': bs.getmesh('flowerPlatform2'),
+            'platform3': bs.getmesh('flowerPlatform3'),
+            'platform_tex': bs.gettexture('flowerPlatformColor'),
+      
+            'big_vine': bs.getmesh('floweryBigVine'),
+            'big_vine_tex':bs.gettexture('bigVineColor'),
+
         }
         return data
 
     def __init__(self) -> None:
         super().__init__(vr_overlay_offset=(0, 0, 2))
         shared = SharedObjects.get()
-        bs.newnode(
-            'terrain',
-            delegate=self,
-            attrs={
-                'collision_mesh': self.preloaddata['collision_mesh'],
-                'mesh': self.preloaddata['mesh'],
-                'color_texture': self.preloaddata['tex'],
-                'materials': [shared.footing_material],
-            },
-        )
+        self.big_vine_pos = (0, 0, -5)
+        self.big_vine=Partical(
+            mesh=self.preloaddata['big_vine'],
+            texture=self.preloaddata['big_vine_tex'],
+            mesh_scale=1.5,
+            position=self.big_vine_pos,
+            body='puck',
+            gravity_scale=0.0,
+            velocity=(0,0,0),
+            alive_for=None,
+            collide_with=None
+        ).autoretain()
+       
+        
         self.background = bs.newnode(
             'terrain',
             attrs={
@@ -636,19 +668,53 @@ class MettatonStage(bs.Map):
                 'color_texture': bs.gettexture('black'),
             },
         )
-        self.bottom = bs.newnode(
-            'terrain',
-            attrs={
-                'mesh': self.preloaddata['meshbottom'],
-                'color_texture': self.preloaddata['tex'],
-            },
-        )
+
+        
+        
         gnode = bs.getactivity().globalsnode
         gnode.tint = (1.0, 1.0, 1.0)
         gnode.ambient_color = (1.1, 1.2, 1.1)
         gnode.vignette_outer = (0.8, 0.8, 0.8)
         gnode.vignette_inner = (0.8, 0.8, 0.8)
-
+        # This map is SUPER unique, uses PETAL PLATFORMS that come in and out for play.
+        bs.timer(0.1, self.tick, repeat=True)
+        self.do_rotate()
+      
+    def fix_the_fucking_vine_oml(self):
+       
+        dir_x = 0.2
+        dir_z = 0
+        pos = self.big_vine.node.position
+        force = -0.5
+        self.big_vine.node.handlemessage(
+            'impulse',
+            pos[0],
+            pos[1],
+            pos[2]+0.2,
+            0, 0, 0,
+            force,
+            force,
+            0,
+            0,
+            dir_x,
+            0,
+            dir_z,
+        )
+        bs.timer(0.5, bs.Call(self.do_rotate))
+    
+    def do_rotate(self):
+        if not self.big_vine.exists():
+            return
+        self.big_vine.node.velocity = (0, 0, 0) 
+        self.big_vine.node.position = self.big_vine_pos
+        bs.timer(0.1, bs.Call(self.fix_the_fucking_vine_oml))
+        
+    
+    def tick(self):
+        pass
+        
+        
+   
     @override
     @classmethod
     def get_music_type(cls) -> bs.MusicType:

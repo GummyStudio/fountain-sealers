@@ -129,7 +129,8 @@ class Partical(bs.Actor):
                     collide_with == 'floor' else [SharedObjects.get().no_collide_mat]
             }
         )
-        bs.timer(alive_for, bs.Call(self.handlemessage, bs.DieMessage()))
+        if alive_for is not None:
+            bs.timer(alive_for, bs.Call(self.handlemessage, bs.DieMessage()))
     def exists(self):
         return bool(self.node)
     
