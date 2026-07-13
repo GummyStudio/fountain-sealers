@@ -278,9 +278,6 @@ class Spaz(bs.Actor):
         # sound effects
         
         self._utheal_sfx = bs.getsound('utHeal')
-
-        if True:
-            self.add_mercy(98, True)
     
     def get_mercy(self):
         return int(

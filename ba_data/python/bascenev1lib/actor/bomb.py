@@ -767,7 +767,6 @@ class Blast(bs.Actor):
                 hittype = bs.DeathType.ANNOYING_DOG_BLAST
             elif self.blast_type == 'slash':
                 mag *= 0.6
-                self.radius *= 6 # change this to do whatever makes the knocbkack stronger idk
                 node.handlemessage(
                     SlashBombHitMessage(
                         pos=nodepos, 

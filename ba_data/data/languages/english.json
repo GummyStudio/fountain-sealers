@@ -1694,145 +1694,144 @@
       
     },
     "deathmessages": {
-        "template": {
-            "kill": "${NAME} killed ${VICTIM}.",
-            "suicide": "${NAME} killed themselves.",
-            "betrayal": "${NAME} betrayed ${VICTIM}.",
-            "diedtobot": "${NAME} died."
-        },
-        "generic": {
-            "kill": "${NAME} killed ${VICTIM}.",
-            "suicide": "${NAME} commited suicide.",
-            "betrayal": "${NAME} betrayed ${VICTIM}.",
-            "diedtobot": "${NAME} died."
-        },
-        "out_of_bounds": {
-            "kill": "${VICTIM} didn't want to live in\nthe same world as ${NAME}.",
-            "suicide": "${NAME} fell out the world.",
-            "betrayal": "${NAME} threw ${VICTIM}.",
-            "diedtobot": "${NAME} fell out the world."
-        },
-        "impact": {
-            "kill": "${NAME} threw ${VICTIM} on the floor.",
-            "suicide": "${NAME} hit the ground too hard.",
-            "betrayal": "${NAME} pushed ${VICTIM}.",
-            "diedtobot": "${NAME} hit the ground too hard."
-        },
-        "fall":{
-            "kill": "${NAME} threw and killed ${VICTIM} ",
-            "suicide": "${NAME} tripped and died.",
-            "betrayal": "${NAME} tripped ${VICTIM}.",
-            "diedtobot": "${NAME} fell."
-        },
-        "reached_goal": {
-            "kill": "${NAME} pushed ${VICTIM} to the finish.",
-            "suicide": "${NAME} disappeared in the finish line.",
-            "betrayal": "${NAME} pushed ${VICTIM} to the finish.",
-            "diedtobot": "${NAME} got pushed into the finish."
-        },
-        "left_game": {
-            "kill": "${NAME} made ${VICTIM} leave.",
-            "suicide": "${NAME} left.",
-            "betrayal": "${NAME} had ${VICTIM} leave.",
-            "diedtobot": "${NAME} left."
-        },
-        "ice_shock": {
-            "kill": "${NAME} froze ${VICTIM}.",
-            "suicide": "${NAME} froze themselves.",
-            "betrayal": "${VICTIM} got frozen by\ntheir teammate ${NAME}.",
-            "diedtobot": "${NAME} was frozen."
-        },
-        "glove": {
-            "kill": "${NAME} stabbed ${VICTIM}.",
-            "suicide": "${NAME} stabbed themselves.",
-            "betrayal": "${NAME} played with knives around ${VICTIM}.",
-            "diedtobot": "${NAME} was stabbed."
-        },
-        "punch": {
-            "kill": "${NAME} punched ${VICTIM} to death.",
-            "suicide": "${NAME} punched themselves.",
-            "betrayal": "${NAME} accidentally punched ${VICTIM}.",
-            "diedtobot": "${NAME} died to a punch."
-        },
-        "explosion": {
-            "kill": "${NAME} blew up ${VICTIM}.",
-            "suicide": "${NAME} blew themselves up.",
-            "betrayal": "${VICTIM} ran into ${NAME}'s bomb.",
-            "diedtobot": "${NAME} blew up."
-        },
-        "rude_buster": {
-            "kill": "${NAME} was too rude for ${VICTIM}.",
-            "suicide": "${NAME} casted rude buster!\nAnd.. died.",
-            "betrayal": "${NAME} rudely busted on ${VICTIM}.",
-            "diedtobot": "${NAME} was rude busted."
-        },
-        "mewmewbomb": {
-            "kill": "${VICTIM} couldn't take the cuteness.",
-            "suicide": "${NAME} got too mad.",
-            "betrayal": "${NAME} betrayed ${VICTIM} with cuteness.",
-            "diedtobot": "${NAME} died to cuteness."
-        },
-        "snowgrave": {
-            "kill": "${NAME} snowgraved ${VICTIM}",
-            "suicide": "${NAME} built their own icy grave.",
-            "betrayal": "${NAME} betrayal snowgraved ${VICTIM}.",
-            "diedtobot": "${NAME} was snowgraved."
-        },
-        "spades": {
-            "kill": "${NAME} killed ${VICTIM} with spades.",
-            "suicide": "${NAME} was hit by their spades.",
-            "betrayal": "${NAME} betrayed ${VICTIM}.",
-            "diedtobot": "${NAME} died."
-        },
-        "annoying_dog": {
-            "kill": "${NAME} somehow killed\n${VICTIM} with Annoying Dog.",
-            "suicide": "${NAME}'s Annoying Dog betrayed themself.",
-            "betrayal": "${VICTIM} was bitten by\n${NAME}'s Annoying Dog.",
-            "diedtobot": "${NAME} was killed by Annoying Dog."
-        },
-        "dog_exploded": {
-            "kill": "${NAME} used Annoying Dog to blow up ${VICTIM}.",
-            "suicide": "${NAME}'s Annoying Dog blew up on them.",
-            "betrayal": "${VICTIM} was exploded by ${NAME}'s Annoying Dog.",
-            "diedtobot": "${NAME} was blown up by Annoying Dog."
-        },
-        "spared": {
-            "kill": "${NAME} spared ${VICTIM}.",
-            "suicide": "${NAME} spared... themselves?",
-            "betrayal": "${NAME} accidentally spared ${VICTIM}",
-            "diedtobot": "${NAME} was spared."
-        },
-        "punch_hit_fall": {
-            "kill": "${NAME} punched ${VICTIM} off the map.",
-            "suicide": "${NAME} punched themselves off the map.",
-            "betrayal": "${NAME} punched their teammate\noff the map.",
-            "diedtobot": "${NAME} was punched off the map."
-        },
-        "rude_buster_fall": {
-            "kill": "${NAME} rude buster'd ${VICTIM}\noff the map.",
-            "suicide": "${NAME} busted themselves and fell off.",
-            "betrayal": "${NAME} rude buster'd their teammate off\nthe map.",
-            "diedtobot": "${NAME} was rude buster'd off the map."
-        },
-        "annoying_dog_fall": {
-            "kill": "${NAME} used Annoying Dog to push ${VICTIM}.",
-            "suicide": "${NAME} was pushed by Annoying Dog.",
-            "betrayal": "${NAME} was pushed by Annoying Dog.",
-            "diedtobot": "${NAME} was pushed by Annoying Dog."
-        },
-        "banana": {
-          "kill": "${NAME} made ${VICTIM} slipped and died.",
-          "suicide": "${NAME} slipped on their own banana.",
-          "betrayal": "${VICTIM} slipped and died.",
-          "diedtobot": "${NAME} slipped and died."
-        },
-        "banana_fall": {
-          "kill": "${NAME} accidentally made ${VICTIM} trip and fall.",
-          "suicide": "${NAME} tripped and fall.",
-          "betrayal": "${NAME} made ${VICTIM} trip and fall.",
-          "diedtobot": "${NAME} tripped and fall."
-    }
-    }
-}
-
+		"template": {
+			"kill": "${NAME} killed ${VICTIM}.",
+			"suicide": "${NAME} killed themselves.",
+			"betrayal": "${NAME} betrayed ${VICTIM}.",
+			"diedtobot": "${NAME} died."
+		},
+		"generic": {
+			"kill": "${NAME} killed ${VICTIM}.",
+			"suicide": "${NAME} commited suicide.",
+			"betrayal": "${NAME} betrayed ${VICTIM}.",
+			"diedtobot": "${NAME} died."
+		},
+		"out_of_bounds": {
+			"kill": "${VICTIM} didn't want to live in\nthe same world as ${NAME}.",
+			"suicide": "${NAME} fell out the world.",
+			"betrayal": "${NAME} threw ${VICTIM}.",
+			"diedtobot": "${NAME} fell out the world."
+		},
+		"impact": {
+			"kill": "${NAME} threw ${VICTIM} on the floor.",
+			"suicide": "${NAME} hit the ground too hard.",
+			"betrayal": "${NAME} pushed ${VICTIM}.",
+			"diedtobot": "${NAME} hit the ground too hard."
+		},
+		"fall":{
+			"kill": "${NAME} threw and killed ${VICTIM} ",
+			"suicide": "${NAME} tripped and died.",
+			"betrayal": "${NAME} tripped ${VICTIM}.",
+			"diedtobot": "${NAME} fell."
+		},
+		"reached_goal": {
+			"kill": "${NAME} pushed ${VICTIM} to the finish.",
+			"suicide": "${NAME} disappeared in the finish line.",
+			"betrayal": "${NAME} pushed ${VICTIM} to the finish.",
+			"diedtobot": "${NAME} got pushed into the finish."
+		},
+		"left_game": {
+			"kill": "${NAME} made ${VICTIM} leave.",
+			"suicide": "${NAME} left.",
+			"betrayal": "${NAME} had ${VICTIM} leave.",
+			"diedtobot": "${NAME} left."
+		},
+		"ice_shock": {
+			"kill": "${NAME} froze ${VICTIM}.",
+			"suicide": "${NAME} froze themselves.",
+			"betrayal": "${VICTIM} got frozen by\ntheir teammate ${NAME}.",
+			"diedtobot": "${NAME} was frozen."
+		},
+		"glove": {
+			"kill": "${NAME} stabbed ${VICTIM}.",
+			"suicide": "${NAME} stabbed themselves.",
+			"betrayal": "${NAME} played with knives around ${VICTIM}.",
+			"diedtobot": "${NAME} was stabbed."
+		},
+		"punch": {
+			"kill": "${NAME} punched ${VICTIM} to death.",
+			"suicide": "${NAME} punched themselves.",
+			"betrayal": "${NAME} accidentally punched ${VICTIM}.",
+			"diedtobot": "${NAME} died to a punch."
+		},
+		"explosion": {
+			"kill": "${NAME} blew up ${VICTIM}.",
+			"suicide": "${NAME} blew themselves up.",
+			"betrayal": "${VICTIM} ran into ${NAME}'s bomb.",
+			"diedtobot": "${NAME} blew up."
+		},
+		"rude_buster": {
+			"kill": "${NAME} was too rude for ${VICTIM}.",
+			"suicide": "${NAME} casted rude buster!\nAnd.. died.",
+			"betrayal": "${NAME} rudely busted on ${VICTIM}.",
+			"diedtobot": "${NAME} was rude busted."
+		},
+		"mewmewbomb": {
+			"kill": "${VICTIM} couldn't take the cuteness.",
+			"suicide": "${NAME} got too mad.",
+			"betrayal": "${NAME} betrayed ${VICTIM} with cuteness.",
+			"diedtobot": "${NAME} died to cuteness."
+		},
+		"snowgrave": {
+			"kill": "${NAME} snowgraved ${VICTIM}",
+			"suicide": "${NAME} built their own icy grave.",
+			"betrayal": "${NAME} betrayal snowgraved ${VICTIM}.",
+			"diedtobot": "${NAME} was snowgraved."
+		},
+		"spades": {
+			"kill": "${NAME} killed ${VICTIM} with spades.",
+			"suicide": "${NAME} was hit by their spades.",
+			"betrayal": "${NAME} betrayed ${VICTIM}.",
+			"diedtobot": "${NAME} died."
+		},
+		"annoying_dog": {
+			"kill": "${NAME} somehow killed\n${VICTIM} with Annoying Dog.",
+			"suicide": "${NAME}'s Annoying Dog betrayed themself.",
+			"betrayal": "${VICTIM} was bitten by\n${NAME}'s Annoying Dog.",
+			"diedtobot": "${NAME} was killed by Annoying Dog."
+		},
+		"dog_exploded": {
+			"kill": "${NAME} used Annoying Dog to blow up ${VICTIM}.",
+			"suicide": "${NAME}'s Annoying Dog blew up on them.",
+			"betrayal": "${VICTIM} was exploded by ${NAME}'s Annoying Dog.",
+			"diedtobot": "${NAME} was blown up by Annoying Dog."
+		},
+		"spared": {
+			"kill": "${NAME} spared ${VICTIM}.",
+			"suicide": "${NAME} spared... themselves?",
+			"betrayal": "${NAME} accidentally spared ${VICTIM}",
+			"diedtobot": "${NAME} was spared."
+		},
+		"punch_hit_fall": {
+			"kill": "${NAME} punched ${VICTIM} off the map.",
+			"suicide": "${NAME} punched themselves off the map.",
+			"betrayal": "${NAME} punched their teammate\noff the map.",
+			"diedtobot": "${NAME} was punched off the map."
+		},
+		"rude_buster_fall": {
+			"kill": "${NAME} rude buster'd ${VICTIM}\noff the map.",
+			"suicide": "${NAME} busted themselves and fell off.",
+			"betrayal": "${NAME} rude buster'd their teammate off\nthe map.",
+			"diedtobot": "${NAME} was rude buster'd off the map."
+		},
+		"annoying_dog_fall": {
+			"kill": "${NAME} used Annoying Dog to push ${VICTIM}.",
+			"suicide": "${NAME} was pushed by Annoying Dog.",
+			"betrayal": "${NAME} was pushed by Annoying Dog.",
+			"diedtobot": "${NAME} was pushed by Annoying Dog."
+		},
+		"banana": {
+		  "kill": "${NAME} made ${VICTIM} slipped and died.",
+		  "suicide": "${NAME} slipped on their own banana.",
+		  "betrayal": "${VICTIM} slipped and died.",
+		  "diedtobot": "${NAME} slipped and died."
+		},
+		"banana_fall": {
+		  "kill": "${NAME} accidentally made ${VICTIM} trip and fall.",
+		  "suicide": "${NAME} tripped and fall.",
+		  "betrayal": "${NAME} made ${VICTIM} trip and fall.",
+		  "diedtobot": "${NAME} tripped and fall."
+		}
+	}
+  }
 }
