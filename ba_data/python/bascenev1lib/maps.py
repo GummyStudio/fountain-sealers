@@ -579,3 +579,77 @@ class MettatonStage(bs.Map):
     @classmethod
     def get_music_type(cls) -> bs.MusicType:
         return bs.MusicType.DEATH_BY_GLAMOUR
+    
+class MettatonStage(bs.Map):
+    """oooohhhh yeahhh"""
+
+    from delta.mapdata import mettaton_mapdefs as defs
+
+    name = 'Mettaton\'s Stage'
+
+    @override
+    @classmethod
+    def get_play_types(cls) -> list[str]:
+        """Return valid play types for this map."""
+        return ['melee', 'team_flag', 'keep_away']
+
+    @override
+    @classmethod
+    def get_preview_texture_name(cls) -> str:
+        return 'mettatonStagePreview'
+
+    @override
+    @classmethod
+    def on_preload(cls) -> Any:
+        # we can assume if we're mell's stages,
+        # we use the same name for cmesh and mesh
+        name = 'mettatonStage'
+        data: dict[str, Any] = {
+            'mesh': bs.getmesh(name),
+            'collision_mesh': bs.getcollisionmesh(name),
+            'tex': bs.gettexture(name+'Color'), 
+            'bgmesh': bs.getmesh('thePadBG'),
+            'black': bs.gettexture('black'),
+            'meshbottom': bs.getmesh(name+"Bottom"),
+        }
+        return data
+
+    def __init__(self) -> None:
+        super().__init__(vr_overlay_offset=(0, 0, 2))
+        shared = SharedObjects.get()
+        bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['collision_mesh'],
+                'mesh': self.preloaddata['mesh'],
+                'color_texture': self.preloaddata['tex'],
+                'materials': [shared.footing_material],
+            },
+        )
+        self.background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['bgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': bs.gettexture('black'),
+            },
+        )
+        self.bottom = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['meshbottom'],
+                'color_texture': self.preloaddata['tex'],
+            },
+        )
+        gnode = bs.getactivity().globalsnode
+        gnode.tint = (1.0, 1.0, 1.0)
+        gnode.ambient_color = (1.1, 1.2, 1.1)
+        gnode.vignette_outer = (0.8, 0.8, 0.8)
+        gnode.vignette_inner = (0.8, 0.8, 0.8)
+
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        return bs.MusicType.FLOWER_MAN

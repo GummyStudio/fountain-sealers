@@ -183,6 +183,7 @@ class BombFactory:
 
         self.bell_mesh = bs.getmesh('mercyBell')
         self.bell_tex = bs.gettexture('mercyBellColor')
+        self.bell_sfx = bs.getsound('snd_churchbell_short')
 
         self.snowgrave_mesh = bs.getmesh('snowgrave_crystal_bombsized')
         self.snowgrave_tex = bs.gettexture('snowgrave')
