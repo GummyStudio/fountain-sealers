@@ -1192,6 +1192,9 @@
   "tournamentsDisabledWorkspaceText": "Tournaments are disabled when workspaces are active.\nTo re-enable tournaments, disable your workspace and restart.",
   "tournamentsText": "Tournaments",
   "translations": {
+    "seam": {
+      "* Hee hee... Welcome, travellers.": null
+    },
     "characterNames": {
       "Spaz": null,
       "Ralsei": null,

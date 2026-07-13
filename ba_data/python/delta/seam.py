@@ -412,13 +412,19 @@ class ShopUI(bui.MainWindow):
             position=pos,
             text="" 
         )
+
+        # Get a lstr.
+        lstr_text =  bui.Lstr(
+            translate=('seam', text)
+        ).evaluate()
+    
         
         self.animate_seam(expression)
         
         full_text = ""
         current_delay = 0.0
         
-        parts = re.split(r'({pause:\d+\.?\d*})', text)
+        parts = re.split(r'({pause:\d+\.?\d*})', lstr_text)
         
         for part in parts:
             if part.startswith('{pause:'):
