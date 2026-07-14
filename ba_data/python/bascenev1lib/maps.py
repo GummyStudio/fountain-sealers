@@ -702,6 +702,7 @@ class FlowerMan(bs.Map):
         data: dict[str, Any] = {
      
             'bgmesh': bs.getmesh('thePadBG'),
+            'bgtex': bs.gettexture('alwaysLandBGColor'),
             # petal animation
             'platform1': bs.getmesh('flowerPlatform1'),
             'platform2': bs.getmesh('flowerPlatform2'),
@@ -748,7 +749,7 @@ class FlowerMan(bs.Map):
                 'mesh': self.preloaddata['bgmesh'],
                 'lighting': False,
                 'background': True,
-                'color_texture': bs.gettexture('black'),
+                'color_texture': self.preloaddata['bgtex'],
             },
         )
 
@@ -812,21 +813,47 @@ class FlowerMan(bs.Map):
                     self.try_spawn_grid_platform(target_x, target_z)
                         
 
-        for _ in range(3):
-            self.try_spawn_grid_platform(random.randint(-3,3), random.randint(-3,3), random.uniform(20, 70))
-        bs.timer(0.1, self.tick, repeat=True)
+        for _ in range(5):
+            self.try_spawn_grid_platform(random.randint(-5,5), random.randint(-5,5), random.uniform(20, 70))
+        bs.timer(0.1, self.attempt_platform)
+        bs.timer(0.1, self.clean, repeat=True)
+
+    def clean(self):
+        self.all_platforms = [p for p in self.all_platforms if p.is_alive()]
+    
+   
+    def get_random_free_space(self):
+        candidates = []
+        for x in range(-4, 5):
+            for z in range(-4, 5):
+                world_x = x * self.grid_size
+                world_z = z * self.grid_size
+                
+                if (x**2 + z**2)**0.5 >= 1:
+                    grid_key = self.get_grid_pos(world_x, world_z)
+                    
+                    if grid_key not in self.occupied_cells:
+                        candidates.append((world_x, world_z))
+        
+        if candidates:
+            return random.choice(candidates)
+        return None # map ful
+      
+    def attempt_platform(self):   
+        pos = self.get_random_free_space()   
 
         
-      
-    def tick(self):
-        # clean
-        self.all_platforms = [p for p in self.all_platforms if p.is_alive()]
-        
-        if random.randint(0, 7) == 0 and len(self.all_platforms) > 25:
+     
+            
+        if not len(self.all_platforms) > 45 and pos:
             self.try_spawn_grid_platform(
-                random.randrange(-5, 5), random.randrange(-5, 5),
-                random.randrange(10, 30)
+                pos[0], pos[1],
+                random.uniform(10, 30)
             )
+            
+            
+           
+        bs.timer(random.uniform(0.2, 0.8), self.attempt_platform)
         
         
     def get_grid_pos(self, x, z):
