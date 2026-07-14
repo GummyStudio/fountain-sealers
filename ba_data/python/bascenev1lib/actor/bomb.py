@@ -749,7 +749,6 @@ class Blast(bs.Actor):
             nodepos = self.node.position
             hittype = self.hit_type
             mag = 2000.0
-            vel = (0, 0, 0)
             if self.blast_type == 'ice':
                 mag *= 0.5
                 hittype = bs.DeathType.ICE_SHOCK
@@ -770,7 +769,7 @@ class Blast(bs.Actor):
                 mag *= 2
                 hittype = bs.DeathType.ANNOYING_DOG_BLAST
             elif self.blast_type == 'slash':
-                mag *= 0.6
+                mag *= 8
                 node.handlemessage(
                     SlashBombHitMessage(
                         pos=nodepos, 
@@ -1137,7 +1136,7 @@ class Bomb(bs.Actor):
                 tex = factory.mew_mew_tex
             elif self.bomb_type == 'slash':
                 tex = factory.impact_tex # placeholder
-                fuse_time = 4.1
+                fuse_time = 2.9
                 
             else:
                 tex = factory.regular_tex

@@ -593,7 +593,7 @@ class Spaz(bs.Actor):
             our_pos = bs.Vec3(self.last_saved_position)
             pos = bs.Vec3(pos)
             dist = our_pos - pos
-            mag = dist.length() * 3
+            mag = dist.length() * 4.5
             try:
                 src = player.actor.node
             except:
@@ -1403,7 +1403,10 @@ class Spaz(bs.Actor):
 
             mag = msg.magnitude * self.impact_scale
             velocity_mag = msg.velocity_magnitude * self.impact_scale
-            damage_scale = 0.22
+            damage_scale = (
+                0.0000001 if msg.hit_subtype == 'slash' #hardcoded af sooob 
+                else 0.22
+            )
 
             # If they've got a shield, deliver it to that instead.
             if self.shield:
