@@ -163,7 +163,6 @@ class CharacterPicker(PopupWindow):
                
                 # SPECIAL CASE:
                 # Vessel takes the name of the config file.
-                print(self._spazzes[index])
                 if self._spazzes[index] == 'Vessel':
                     try:
                         name = bui.app.classic.startup.gameconfig["SurveyChoices"][
