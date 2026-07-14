@@ -5,6 +5,7 @@ import _bascenev1
 import babase
 import bauiv1 as bui
 import re
+import random
 
 class SurveyUI(bui.MainWindow):
     def __init__(self):
@@ -34,20 +35,12 @@ class SurveyUI(bui.MainWindow):
             on_complete=self.cool_bg
         )
         
-    
-    def cool_bg(self):
-        with bs.get_foreground_host_activity().context:
-            bs.get_foreground_host_activity().cool_bg()
+    def vessel_sequence(self):
+        bs.get_foreground_host_activity().change_vessel_color((0,0,0), 1.0)
+        bs.get_foreground_host_activity().move_vessel((150,-100), 1.0)
 
         
-        self.dialouge(
-            lines=[
-                "{pause:1}FIRST.{pause:2}",
-                "YOU MUST SHAPE\n{pause:0.5}THIS VESSEL.{pause:2}", 
-                "ITS MIND.{pause:2.5}",               
-            ],
-            position=(400, 500),
-            on_complete=lambda: (self.add_options(
+        self.add_options(
                     question="WHAT IS ITS FAVORITE FOOD?",
                     config='food',
                     options=[
@@ -130,7 +123,22 @@ class SurveyUI(bui.MainWindow):
                         )
                     )      
                 )
-            )
+            
+
+    def cool_bg(self):
+        with bs.get_foreground_host_activity().context:
+            bs.get_foreground_host_activity().cool_bg()
+            bs.get_foreground_host_activity().make_vessel_appear()
+
+        
+        self.dialouge(
+            lines=[
+                "{pause:1}FIRST.{pause:2}",
+                "YOU MUST SHAPE\n{pause:0.5}THIS VESSEL.{pause:2}", 
+                "ITS MIND.{pause:2.5}",               
+            ],
+            position=(400, 500),
+            on_complete=self.vessel_sequence
         )
     
 
@@ -138,19 +146,9 @@ class SurveyUI(bui.MainWindow):
 
         return
     
-
-    def vessel_done(self):
-        self.dialouge(
-            lines=[
-                "UNDERSTOOD.{pause:3}", 
-
-            ],
-            position=(400, 500),
-            on_complete=lambda: (
-                self.add_text_input(
-                    "NAME YOUR VESSEL.",
-                    config='vessel_name',
-                    on_complete=lambda: (
+    def end_vessel_sequence(self):
+                        bs.get_foreground_host_activity().change_vessel_color((1,1,1), 1.0)
+                        bs.get_foreground_host_activity().move_vessel((0,-110), 1.0)
 
                         self.dialouge(
                             [(
@@ -164,13 +162,32 @@ class SurveyUI(bui.MainWindow):
                                 "THANK YOU\n{pause:0.5}FOR YOUR TIME.{pause:2}",
                                 "YOUR ANSWERS.\n{pause:0.5}YOUR WONDERFUL CREATION.{pause:2}",
                                 "WILL NOW BE PUT\n{pause:0.5}TO GOOD USE.{pause:2}",
-                                "ENJOY YOURSELF\n{pause:1.0}AND FAREWELL.{pause:2.0}",
+                                "ENJOY YOURSELF\n{pause:1.0}AND FAREWELL.{pause:4.0}",
                             ],
                         on_complete=self.end
                         )
-                    )
-                )
-            )
+                    
+                
+    
+    def name_vessel(self):
+        bs.get_foreground_host_activity().change_vessel_color((0,0,0), 1.0)
+        bs.get_foreground_host_activity().move_vessel((280,-80), 0.5)
+        self.add_text_input(
+                    "NAME YOUR VESSEL.",
+                    config='vessel_name',
+                    on_complete=self.end_vessel_sequence
+        )
+
+    def vessel_done(self):
+        bs.get_foreground_host_activity().change_vessel_color((1,1,1), 1.0)
+        bs.get_foreground_host_activity().move_vessel((0,-110), 1.0)
+        self.dialouge(
+            lines=[
+                "UNDERSTOOD.{pause:3}", 
+
+            ],
+            position=(400, 500),
+            on_complete=self.name_vessel
         )
         
     def end(self):
@@ -309,16 +326,26 @@ class DepthsBG(bs.Actor):
             }
         )
         # slightly subtle effects
+        def doitagain():
+            bs.animate(
+                self.node,
+                'opacity',
+                {
+                    0.9: 0.6,
+                    3.4: 0.7,
+                    5.4: 0.6,
+                },
+                loop=True,
+            )
         bs.animate(
             self.node,
             'opacity',
             {
-                0.9: 0.6,
-                3.4: 0.7,
-                5.4: 0.6,
+                0.0: 0.0,
+                1.0: 0.6,
             },
-            loop=True,
         )
+        bs.timer(0.6, doitagain)
         bs.animate_array(
             self.node,
             'color', 3,
@@ -415,9 +442,68 @@ class SurveyActivity(bs.Activity[bs.Player, bs.Team]):
                 'music': True
             }
         )
+       
+    
+    
+    def make_vessel_appear(self):
+        with self.context:
+            self.vessel = bs.newnode('image', attrs={
+                'texture': bs.gettexture('evilfuckedupunevenpixelsvessel'),
+                'tint_texture': bs.gettexture('evilfuckedupunevenpixelsvesselCM'),
+                'tint_color': (1, 1, 1),
+                'tint2_color': (1, 1, 1),
+                'absolute_scale': True,
+                'scale': (350, 350),
+                'position': (0, -120),
+                'front': True
+            })
+            bs.animate(
+                self.vessel,
+                'opacity',
+                {
+                    0: 0,
+                    0.8: 1.0
+                }
+            )
+            self.animate_vessel()
+    def animate_vessel(self):
+        pos = self.vessel.position
+        
+        with self.context:
+            bs.animate_array(
+                self.vessel, 'position', 2,
+                {
+                    0: pos,
+                    3.0: (pos[0]+random.uniform(-9, -9),pos[1]+random.uniform(-9, 9)),
+                    6.0: pos
+
+                },
+                loop=True
+            )
+
+    def move_vessel(self, pos, time):
+        with self.context:
+            bs.animate_array(
+                self.vessel, 'position', 2,
+                {
+                    0.0: self.vessel.position,
+                    time: pos
+                }
+            )
+            bs.timer(time+0.01, self.animate_vessel)
+    def change_vessel_color(self, color, time):
+        with self.context:
+            bs.animate_array(
+                self.vessel, 'tint_color', 3,
+                {
+                    0.0: self.vessel.tint_color,
+                    time: color
+                }
+            )
         
     def on_begin(self):
         super().on_begin()
+       
         self.blackbg = bs.newnode(
             'image',
             attrs={
@@ -432,6 +518,7 @@ class SurveyActivity(bs.Activity[bs.Player, bs.Team]):
                 'music': True
             }
         )
+        
         with bs.ContextRef.empty():
             babase.app.ui_v1.set_main_window(
                 SurveyUI(), from_window=None, is_top_level=True, suppress_warning=True)
