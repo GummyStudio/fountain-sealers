@@ -95,15 +95,16 @@ class Partical(bs.Actor):
                 texture: bs.Texture, 
                 mesh: bs.Mesh,
                 
-                mesh_scale: int,
                 velocity: tuple[float, float, float] = (0, 0, 0), 
                 random_vel: bool = False,
                 random_range: float = 1.5,
                 body: str = 'landMine',
+                mesh_scale: int = 1.0,
                 body_scale: int = 1.0,
                 alive_for: float = 3.0,
                 gravity_scale: int = 1.0,
-                collide_with: str = "floor"# or nothing
+                collide_with: str = "floor",# or nothing,
+                animate_in: dict = None
         ):
         super().__init__()
         from bascenev1lib.gameutils import SharedObjects
@@ -131,6 +132,8 @@ class Partical(bs.Actor):
         )
         if alive_for is not None:
             bs.timer(alive_for, bs.Call(self.handlemessage, bs.DieMessage()))
+        if animate_in is not None:
+            bs.animate(self.node, 'mesh_scale', animate_in)
     def exists(self):
         return bool(self.node)
     

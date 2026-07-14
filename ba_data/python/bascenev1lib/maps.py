@@ -586,26 +586,98 @@ class MettatonStage(bs.Map):
 class FlowerMan(bs.Map):
     """HE SOLOS BRO"""
 
-    class defs:
-        points, boxes = {}, {}
-        points['ffa_spawn1'] = (-2.84111, 2.88037, -3.44569) + (1.0, 0.05, 2.68294)
-        points['ffa_spawn2'] = (4.54586, 2.9767, -3.57324) + (1.0, 0.05, 2.68294)
-        points['ffa_spawn3'] = (0.88351, 2.94292, -0.04327) + (4.45552, 0.05, 0.2723)
-        points['ffa_spawn4'] = (0.88351, 3.12191, -7.12434) + (4.45552, 0.05, 0.2723)
-        points['flag1'] = (-3.08471, 2.99433, -3.42737)
-        points['flag2'] = (4.73658, 3.02995, -3.54888)
-        points['flag_default'] = (1.17429, 3.16944, -3.64346)
-        points['powerup_spawn1'] = (5.18086, 3.06024, -7.53234)
-        points['powerup_spawn2'] = (-3.52909, 2.97797, 0.18939)
-        points['powerup_spawn3'] = (5.08284, 2.96335, 0.55356)
-        points['powerup_spawn4'] = (-3.59113, 2.94275, -7.62854)
-        points['shadow_lower_bottom'] = (0.59646, -0.22795, 3.36804)
-        points['shadow_lower_top'] = (0.59646, 0.69828, 3.36804)
-        points['shadow_upper_bottom'] = (0.59646, 5.41325, 3.36804)
-        points['shadow_upper_top'] = (0.59646, 7.89148, 3.36804)
-        points['spawn1'] = (-2.74475, 2.96747, -3.44569) + (1.0, 0.05, 2.68294)
-        points['spawn2'] = (4.59264, 3.01514, -3.57324) + (1.0, 0.05, 2.68294)
-        boxes['area_of_interest_bounds'] = (0.79787, 4.09268, -3.21942) + (0, 0, 0) + (13.4496, 12.77576, 14.67298)
+    class PetalPlatform:
+
+        def __init__(self, preloaddata, position, lifespan: int | None = None):
+
+            self.lifespan = lifespan
+
+            self.assets = {
+                'anim1': preloaddata['platform1'],
+                'anim2': preloaddata['platform2'],
+                'anim3': preloaddata['platform3'],
+
+            }
+
+            self.alive = True
+            self.anim_index = 1
+            self.partical = Partical(
+                mesh=self.assets['anim1'],
+                texture=random.choice(preloaddata['platform_texs']),
+                position=position, 
+                body='landMine',
+                gravity_scale=0.0,
+                velocity=(0,0,0),  
+                alive_for=lifespan+5.0 if lifespan else None, 
+                collide_with=None,
+                animate_in={
+                    0: 0.0,
+                    0.65: 1.0
+                }
+            ).autoretain()
+
+
+
+
+            self.position=position
+
+            self.visual_position=(
+                position[0]+0.08,
+                position[1],
+                position[2],
+            )
+            self.hitbox = bs.Node(None)
+
+            if lifespan is not None:
+
+                bs.timer(lifespan, self.die)
+
+
+            bs.timer(random.uniform(0.81, 0.9), self.next_anim)
+
+            
+           
+
+            bs.timer(0.2, self.spawn)
+
+        def spawn(self):
+            hitbox_size = (1.5, 1, 1.5)
+            self.hitbox=bs.newnode('region',
+                attrs={'scale': hitbox_size,
+                'position':self.visual_position,
+                'type': 'box',
+                'materials': [SharedObjects.get().collision, SharedObjects.get().footing_material]})
+
+        def is_alive(self):
+            return bool(
+                self.alive and self.partical.exists()
+            )
+
+
+        def die(self):
+
+            def cleanup():
+                self.alive = False
+                # Delete the hitbox
+                self.hitbox.delete()
+                # kILL OURSEFLS
+                if self.position in bs.getactivity().map.occupied_cells:
+                    del bs.getactivity().map.occupied_cells[self.position]
+
+            bs.timer(1.0, bs.Call(setattr, self.partical.node, 'flashing', True))
+            bs.timer(5.1, cleanup)
+
+        def next_anim(self):
+            if self.is_alive():
+                self.partical.node.position = self.position
+                self.partical.node.mesh = self.assets['anim'+str(self.anim_index)]
+                if self.anim_index == 3:
+                    self.anim_index = 1
+                else:
+                    self.anim_index += 1
+                bs.timer(0.6, self.next_anim)
+
+    from delta.mapdata import flowerman_mapdefs as defs
 
 
     name = 'Flower Man'
@@ -626,7 +698,6 @@ class FlowerMan(bs.Map):
     def on_preload(cls) -> Any:
         # we can assume if we're mell's stages,
         # we use the same name for cmesh and mesh
-        name = 'mettatonStage'
         data: dict[str, Any] = {
      
             'bgmesh': bs.getmesh('thePadBG'),
@@ -634,7 +705,18 @@ class FlowerMan(bs.Map):
             'platform1': bs.getmesh('flowerPlatform1'),
             'platform2': bs.getmesh('flowerPlatform2'),
             'platform3': bs.getmesh('flowerPlatform3'),
-            'platform_tex': bs.gettexture('flowerPlatformColor'),
+            'platform_texs': [
+                bs.gettexture('flowerPlatformColor'),
+                bs.gettexture('flowerPlatformColor1'),
+                bs.gettexture('flowerPlatformColor2'),
+                bs.gettexture('flowerPlatformColor3'),
+                bs.gettexture('flowerPlatformColor4'),
+                bs.gettexture('flowerPlatformColor5'),
+                bs.gettexture('flowerPlatformColor6'),
+                bs.gettexture('flowerPlatformColor7'),
+                bs.gettexture('flowerPlatformColor8'),
+                bs.gettexture('flowerPlatformColor9'),
+            ],
       
             'big_vine': bs.getmesh('floweryBigVine'),
             'big_vine_tex':bs.gettexture('bigVineColor'),
@@ -645,7 +727,7 @@ class FlowerMan(bs.Map):
     def __init__(self) -> None:
         super().__init__(vr_overlay_offset=(0, 0, 2))
         shared = SharedObjects.get()
-        self.big_vine_pos = (0, 0, -5)
+        self.big_vine_pos = (0, -4, -15)
         self.big_vine=Partical(
             mesh=self.preloaddata['big_vine'],
             texture=self.preloaddata['big_vine_tex'],
@@ -672,20 +754,97 @@ class FlowerMan(bs.Map):
         
         
         gnode = bs.getactivity().globalsnode
-        gnode.tint = (1.0, 1.0, 1.0)
+        gnode.tint = (0.8, 0.8, 0.8)
         gnode.ambient_color = (1.1, 1.2, 1.1)
         gnode.vignette_outer = (0.8, 0.8, 0.8)
         gnode.vignette_inner = (0.8, 0.8, 0.8)
         # This map is SUPER unique, uses PETAL PLATFORMS that come in and out for play.
-        bs.timer(0.1, self.tick, repeat=True)
         self.do_rotate()
+
+        # petal platforms
+        self.all_platforms = []
+        self.platform_y = 0.2
+       
       
+      
+       
+    
+        self.grid_size = 1.2
+        self.grid_offs = [0.15, -0.3]
+        self.occupied_cells = {} # { (grid_x, grid_y): platform_obj }
+        
+        for pos in [
+            self.defs.points['flag_default'],
+            self.defs.points['flag1'],
+            self.defs.points['flag2'],
+            self.defs.points['powerup_spawn1'],
+            self.defs.points['powerup_spawn2'],
+            self.defs.points['powerup_spawn3'],
+            self.defs.points['powerup_spawn4'],
+        ]:
+            self.try_spawn_grid_platform(pos[0], pos[2], None)
+               
+        for box in [
+            self.defs.points['ffa_spawn1'],
+            self.defs.points['ffa_spawn2'],
+            self.defs.points['ffa_spawn3'],
+            self.defs.points['ffa_spawn4'],
+            self.defs.points['spawn1'],
+            self.defs.points['spawn2'],
+        ]:
+           
+            center_x, center_z = box[0], box[2]
+            width, depth = box[3], box[5]
+            
+            start_x = center_x - (width / 2.0)
+            start_z = center_z - (depth / 2.0)
+            
+            for i in range(int(max(1, width+2))):
+                for j in range(int(max(1, depth+2))):
+                    target_x = (int((start_x + i) / self.grid_size) * self.grid_size)
+                    target_z = (int((start_z + j) / self.grid_size) * self.grid_size)
+                    
+                    self.try_spawn_grid_platform(target_x, target_z)
+                        
+
+        for _ in range(3):
+            self.try_spawn_grid_platform(random.randint(-3,3), random.randint(-3,3), random.uniform(20, 70))
+        bs.timer(0.1, self.tick, repeat=True)
+
+        
+      
+    def tick(self):
+        # clean
+        self.all_platforms = [p for p in self.all_platforms if p.is_alive()]
+        
+        if random.randint(0, 7) == 0 and len(self.all_platforms) > 14:
+            self.try_spawn_grid_platform(
+                random.randrange(-5, 5), random.randrange(-5, 5),
+                random.randrange(10, 30)
+            )
+        
+        
+    def get_grid_pos(self, x, z):
+        return (round(x / self.grid_size)+self.grid_offs[0], round(z / self.grid_size)+self.grid_offs[1])
+
+    def try_spawn_grid_platform(self, x, z, lifespan=None):
+        grid_x, grid_y = self.get_grid_pos(x, z)
+        
+        if (grid_x, grid_y) not in self.occupied_cells:
+            pos = (grid_x*self.grid_size, self.platform_y, grid_y*self.grid_size)
+            plat = self.PetalPlatform(self.preloaddata, pos, lifespan=lifespan)
+            
+            self.occupied_cells[(grid_x, grid_y)] = plat
+            self.all_platforms.append(plat)
+            return plat
+        return None
+
     def fix_the_fucking_vine_oml(self):
        
         dir_x = 0.2
         dir_z = 0
         pos = self.big_vine.node.position
-        force = -0.5
+        force = -0.2
         self.big_vine.node.handlemessage(
             'impulse',
             pos[0],
@@ -709,10 +868,7 @@ class FlowerMan(bs.Map):
         self.big_vine.node.position = self.big_vine_pos
         bs.timer(0.1, bs.Call(self.fix_the_fucking_vine_oml))
         
-    
-    def tick(self):
-        pass
-        
+  
         
    
     @override
