@@ -1034,7 +1034,7 @@ class Bomb(bs.Actor):
             )
 
         elif self.bomb_type == 'annoyingdog':
-            self.scale = 0.01
+            self.scale = 1.2
             fuse_time = 20.0
             factory.annoying_dog_spawn_sfx.play()
 
@@ -1216,7 +1216,7 @@ class Bomb(bs.Actor):
             
             if not (self.dog_cooldown - bs.time() < 0) or not self.dropped:
                 return
-            self.dog_cooldown= bs.time() + random.uniform(0.8,1.9)
+            self.dog_cooldown= bs.time() + random.uniform(0.3,1.2)
             BombFactory.get().annoying_dog_bark_sfx.play()
             targets: list[bs.Actor] = []
             # scan for spaps
@@ -1246,7 +1246,7 @@ class Bomb(bs.Actor):
                     direction[2] / mag
                 )
             self.impulse(
-                x=350, y=90, direction=normalized_dir
+                x=250, y=90, direction=normalized_dir
             )
                 
         
@@ -1357,7 +1357,7 @@ class Bomb(bs.Actor):
                     elif rando == 1:
                         node.handlemessage('knockout', 100)
                     elif rando == 2:
-                        actor.impulse(x=520, y=120, direction=(
+                        actor.impulse(x=700, y=120, direction=(
                             -node.velocity[0],  -node.velocity[1], -node.velocity[2],
                         ))
                 return
@@ -1427,6 +1427,10 @@ class Bomb(bs.Actor):
                         source_player=self._source_player
                     ).autoretain()
             else:
+                if self.bomb_type == 'annoyingdog':
+                    # stop lmfao
+                    self._source_player = None
+
                 blast = Blast(
                     position=self.node.position,
                     velocity=self.node.velocity,

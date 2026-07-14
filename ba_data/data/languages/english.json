@@ -1778,14 +1778,14 @@
 		},
 		"annoying_dog": {
 			"kill": "${NAME} somehow killed\n${VICTIM} with Annoying Dog.",
-			"suicide": "${NAME}'s Annoying Dog betrayed themself.",
-			"betrayal": "${VICTIM} was bitten by\n${NAME}'s Annoying Dog.",
+			"suicide": "${NAME} was killed by Annoying Dog.",
+			"betrayal": "${VICTIM} was killed by Annoying Dog.",
 			"diedtobot": "${NAME} was killed by Annoying Dog."
 		},
 		"dog_exploded": {
 			"kill": "${NAME} used Annoying Dog to blow up ${VICTIM}.",
-			"suicide": "${NAME}'s Annoying Dog blew up on them.",
-			"betrayal": "${VICTIM} was exploded by ${NAME}'s Annoying Dog.",
+			"suicide": "${NAME} was blown up by Annoying Dog.",
+			"betrayal": "${VICTIM} was blown up by Annoying Dog.",
 			"diedtobot": "${NAME} was blown up by Annoying Dog."
 		},
 		"spared": {

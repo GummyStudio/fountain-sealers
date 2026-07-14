@@ -1046,6 +1046,11 @@ class Spaz(bs.Actor):
 
             # This counts as a hit.
             self._num_times_hit += 1
+            # was a spaz, they're gonna be our last hitter.
+            try:
+                self.last_player_attacked_by = msg.node.getdelegate(Spaz).source_player
+            except:
+                pass
 
 
         elif isinstance(msg, bs.ShouldShatterMessage):
