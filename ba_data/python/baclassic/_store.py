@@ -29,9 +29,24 @@ class StoreSubsystem:
         # pylint: disable=too-many-return-statements
         item_info = self.get_store_item(item_name)
         if item_name.startswith('characters.'):
-            return babase.Lstr(
-                translate=('characterNames', item_info['character'])
-            )
+            # SPECIAL CASE:
+            # Vessel takes the name of the config file.
+
+            if item_info['character'] == 'Vessel':
+                try:
+                    return babase.app.classic.startup.gameconfig["SurveyChoices"][
+                        'vessel_name'
+                    ].lower().capitalize().strip()
+                except Exception as e:
+                    print('WARN: Was unable to get Vessel Name.', e)
+                    # Fall back..
+                    return babase.Lstr(
+                        translate=('characterNames', item_info['character'])
+                    )
+            else:
+                return babase.Lstr(
+                    translate=('characterNames', item_info['character'])
+                )
         if item_name in ['merch']:
             return babase.Lstr(resource='merchText')
         if item_name in ['upgrades.pro', 'pro']:

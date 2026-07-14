@@ -42,7 +42,7 @@ class PlayerSpaz(Spaz):
         *,
         color: Sequence[float] = (1.0, 1.0, 1.0),
         highlight: Sequence[float] = (0.5, 0.5, 0.5),
-        character: str = 'Spaz',
+        character: str = 'Vessel',
         powerups_expire: bool = True,
     ):
         """Create a spaz for the provided bascenev1.Player.

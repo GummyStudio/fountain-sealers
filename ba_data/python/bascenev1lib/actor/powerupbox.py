@@ -54,6 +54,8 @@ class PowerupBoxFactory:
         self.tex_rudebuster = bs.gettexture('powerupBuster')
         self.tex_realknife = bs.gettexture('powerupRKnife')
         self.tex_mewbombs = bs.gettexture('powerupMew')
+        self.tex_snowgrave = bs.gettexture('powerupSnowgrave')
+        self.tex_spades = bs.gettexture('powerupSpades')
         self.health_powerup_sound = bs.getsound('healthPowerup')
         self.powerup_sound = bs.getsound('powerup01')
         self.powerdown_sound = bs.getsound('powerdown01')
@@ -195,11 +197,11 @@ class PowerupBox(bs.Actor):
         elif poweruptype == 'mewmew':
             tex = factory.tex_mewbombs 
         elif poweruptype == 'snowgrave':
-            tex = factory.tex_ice_bombs 
+            tex = factory.tex_snowgrave 
         elif poweruptype == 'gigabomb':
             tex = factory.tex_mewbombs 
         elif poweruptype == 'spades':
-            tex = factory.tex_realknife
+            tex = factory.tex_spades
         elif poweruptype == 'annoyingdog':
             tex = factory.tex_bomb
         elif poweruptype == 'black_knife':

@@ -91,7 +91,7 @@ class Spaz(bs.Actor):
         *,
         color: Sequence[float] = (1.0, 1.0, 1.0),
         highlight: Sequence[float] = (0.5, 0.5, 0.5),
-        character: str = 'Spaz',
+        character: str = 'Vessel',
         source_player: bs.Player | None = None,
         start_invincible: bool = True,
         can_accept_powerups: bool = True,
@@ -2046,7 +2046,7 @@ class Spaz(bs.Actor):
             if self.snowgraves != 0:
                 self.node.counter_text = 'x' + str(self.snowgraves)
                 self.node.counter_texture = (
-                    PowerupBoxFactory.get().tex_land_mines
+                    PowerupBoxFactory.get().tex_snowgrave
                 )
             else:
                 self.node.counter_text = ''
@@ -2226,12 +2226,14 @@ class Spaz(bs.Actor):
         factory = PowerupBoxFactory.get()
         if self.bomb_type == 'sticky':
             return factory.tex_sticky_bombs
-        if self.bomb_type == 'ice':
+        elif self.bomb_type == 'ice':
             return factory.tex_ice_bombs
-        if self.bomb_type == 'impact':
+        elif self.bomb_type == 'impact':
             return factory.tex_impact_bombs
-        if self.bomb_type == 'slash':
+        elif self.bomb_type == 'slash':
             return factory.tex_bomb
+        elif self.bomb_type == 'spades':
+            return factory.tex_spades
         else:
             return factory.tex_bomb
 

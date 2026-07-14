@@ -370,6 +370,21 @@ def instantiate_store_item_display(
                     mask_texture=char_mask_texture,
                 )
             )
+            if charname == 'Vessel':
+                try:
+                    displayname = bui.app.classic.startup.gameconfig["SurveyChoices"][
+                            'vessel_name'
+                    ].lower().capitalize().strip()
+                except Exception as e:
+                    print('WARN: Was unable to get Vessel Name.', e)
+                    # Fall back..
+                    displayname = bui.Lstr(
+                        translate=('characterNames', charname)
+                    )
+            else:
+                displayname = bui.Lstr(
+                        translate=('characterNames', charname)
+                )
             extra_texts.append(
                 bui.textwidget(
                     parent=parent_widget,
@@ -385,7 +400,7 @@ def instantiate_store_item_display(
                     v_align='center',
                     maxwidth=tile_size[0] * 0.7,
                     scale=0.55,
-                    text=bui.Lstr(translate=('characterNames', charname)),
+                    text=displayname,
                     flatness=1.0,
                     shadow=0.0,
                 )

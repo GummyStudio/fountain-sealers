@@ -383,7 +383,7 @@ class ProfileBrowserWindow(bui.MainWindow):
             try:
                 char_index = spazzes.index(p_info['character'])
             except Exception:
-                char_index = spazzes.index('Spaz')
+                char_index = spazzes.index('Vessel')
 
             assert isinstance(tval, str)
             txtw = bui.textwidget(

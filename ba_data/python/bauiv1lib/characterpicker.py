@@ -159,9 +159,26 @@ class CharacterPicker(PopupWindow):
                         selected_child=btn,
                         visible_child=btn,
                     )
-                name = bui.Lstr(
-                    translate=('characterNames', self._spazzes[index])
-                )
+                
+               
+                # SPECIAL CASE:
+                # Vessel takes the name of the config file.
+                print(self._spazzes[index])
+                if self._spazzes[index] == 'Vessel':
+                    try:
+                        name = bui.app.classic.startup.gameconfig["SurveyChoices"][
+                            'vessel_name'
+                        ].lower().capitalize().strip()
+                    except Exception as e:
+                        print('WARN: Was unable to get Vessel Name.', e)
+                        # Fall back..
+                        name = bui.Lstr(
+                            translate=('characterNames', self._spazzes[index])
+                        )
+                else:
+                    name = bui.Lstr(
+                        translate=('characterNames', self._spazzes[index])
+                    )
                 bui.textwidget(
                     parent=self._subcontainer,
                     text=name,

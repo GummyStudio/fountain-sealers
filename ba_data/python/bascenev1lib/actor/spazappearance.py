@@ -76,7 +76,7 @@ def register_appearances() -> None:
     # pylint: disable=too-many-statements
 
     # Spaz #######################################
-    t = Appearance('Spaz')
+    t = Appearance('Vessel')
     t.color_texture = 'neoSpazColor'
     t.color_mask_texture = 'neoSpazColorMask'
     t.icon_texture = 'neoSpazIcon'
