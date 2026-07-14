@@ -1,8 +1,9 @@
+"""Intro sequence for first-time players."""
+from typing import override, Any, Sequence
 import bascenev1 as bs
 import _bascenev1
 import babase
 import bauiv1 as bui
-from typing import Sequence
 import re
 
 class SurveyUI(bui.MainWindow):
@@ -293,24 +294,144 @@ class SurveySession(bs.Session):
         # Reject all player requests.
         return False
 
+class DepthsBG(bs.Actor):
+    def __init__(self):
+        # we just wanna make sure not to
+        # crash or anything
+        self.node: bs.Node | None = None
+        super().__init__()
+        self.node = bs.newnode(
+            'image',
+            attrs={
+                'texture': bs.gettexture('depths_power2'), 
+                'fill_screen': True,
+                'opacity': 0,
+            }
+        )
+        # slightly subtle effects
+        bs.animate(
+            self.node,
+            'opacity',
+            {
+                0.9: 0.6,
+                3.4: 0.7,
+                5.4: 0.6,
+            },
+            loop=True,
+        )
+        bs.animate_array(
+            self.node,
+            'color', 3,
+            {
+                0: (1, 1, 1),
+                3: (1.15, 1.15, 1.15),
+                6: (1, 1, 1),
+            },
+            loop=True
+        )
+        self._nodes = []
+        self._scaler_timer = bs.Timer(0.75, self._do_scaler, repeat=True)
+    
+    def _do_scaler(self):
+        # ugly, but this scene is onnly
+        # seen by the host so i guess thats fine :/
+        res = bui.get_virtual_safe_area_size()
+        # halve it so its correct
+        res = (
+            res[0] * 0.5,
+            res[1] * 0.5,
+        )
+        # optional spacing 
+        spacing = 20
+        if spacing:
+            res = (
+                res[0] - spacing,
+                res[1] - spacing,
+            )
+        node = bs.newnode(
+            'image',
+            attrs={
+                'texture': bs.gettexture('depths_scaler_power2'), 
+                'scale': res,
+            }
+        )
+        self._nodes.append(node)
+        bs.animate(
+            node,
+            'opacity',
+            {
+                0: 0,
+                1.2: 0.2,
+                4.6: 0,
+            }
+        )
+        scaler = 3
+        # PLEASE REDO THIS
+        bs.animate_array(
+            node,
+            'scale', 2,
+            {
+                0: res,
+                4.1: (res[0] * scaler, res[1] * scaler,),
+            }
+        )
+        bs.timer(5, node.delete)
+        
+    @override
+    def exists(self):
+        # nescesasryejjgjrh for fuckin autoretain
+        return bool(self.node)
+    
+    @override
+    def handlemessage(self, msg):
+        if isinstance(msg, bs.DieMessage):
+            # Yeah
+            if self.node:
+                self.node.delete()
+        else:
+            return super().handlemessage(msg)
+        return None
+
 class SurveyActivity(bs.Activity[bs.Player, bs.Team]):
     def __init__(self, settings):
         super().__init__(settings)
+        self.depths = None
         self.music = {
             'anotherhim': bs.getsound('music/anotherhim'),
             'audiodrone': bs.getsound('music/AUDIO_DRONE'),
         }
+        
     def die(self):
         self.session.die()
+        
     def cool_bg(self):
+        self.depths = DepthsBG()
+        self.blackbg.delete()
         self.mnode.delete()
-        self.mnode =bs.newnode('sound', attrs={'sound': self.music['anotherhim'], 'music': True})
+        self.mnode = bs.newnode(
+            'sound', 
+            attrs={
+                'sound': self.music['anotherhim'], 
+                'music': True
+            }
+        )
         
     def on_begin(self):
         super().on_begin()
-        
-        bs.newnode('image', attrs={'texture': bs.gettexture('black'), 'fill_screen': True})
-        self.mnode =bs.newnode('sound', attrs={'sound': self.music['audiodrone'], 'music': True})
+        self.blackbg = bs.newnode(
+            'image',
+            attrs={
+                'texture': bs.gettexture('black'), 
+                'fill_screen': True
+            }
+        )
+        self.mnode =bs.newnode(
+            'sound',
+            attrs={
+                'sound': self.music['audiodrone'], 
+                'music': True
+            }
+        )
         with bs.ContextRef.empty():
             babase.app.ui_v1.set_main_window(
                 SurveyUI(), from_window=None, is_top_level=True, suppress_warning=True)
