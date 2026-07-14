@@ -588,9 +588,10 @@ class FlowerMan(bs.Map):
 
     class PetalPlatform:
 
-        def __init__(self, preloaddata, position, lifespan: int | None = None):
+        def __init__(self, preloaddata, position, lifespan: int | None = None, cfg=None):
 
             self.lifespan = lifespan
+            self.cfg = cfg
 
             self.assets = {
                 'anim1': preloaddata['platform1'],
@@ -608,7 +609,7 @@ class FlowerMan(bs.Map):
                 body='landMine',
                 gravity_scale=0.0,
                 velocity=(0,0,0),  
-                alive_for=lifespan+5.0 if lifespan else None, 
+                alive_for=lifespan+2.5 if lifespan else None, 
                 collide_with=None,
                 animate_in={
                     0: 0.0,
@@ -661,11 +662,11 @@ class FlowerMan(bs.Map):
                 # Delete the hitbox
                 self.hitbox.delete()
                 # kILL OURSEFLS
-                if self.position in bs.getactivity().map.occupied_cells:
-                    del bs.getactivity().map.occupied_cells[self.position]
+                if self.cfg in bs.getactivity().map.occupied_cells:
+                    del bs.getactivity().map.occupied_cells[self.cfg]
 
             bs.timer(1.0, bs.Call(setattr, self.partical.node, 'flashing', True))
-            bs.timer(5.1, cleanup)
+            bs.timer(2.6, cleanup)
 
         def next_anim(self):
             if self.is_alive():
@@ -781,6 +782,10 @@ class FlowerMan(bs.Map):
             self.defs.points['powerup_spawn2'],
             self.defs.points['powerup_spawn3'],
             self.defs.points['powerup_spawn4'],
+            self.defs.points['powerup_spawn5'],
+            self.defs.points['powerup_spawn6'],
+            self.defs.points['powerup_spawn7'],
+            self.defs.points['powerup_spawn8'],
         ]:
             self.try_spawn_grid_platform(pos[0], pos[2], None)
                
@@ -817,7 +822,7 @@ class FlowerMan(bs.Map):
         # clean
         self.all_platforms = [p for p in self.all_platforms if p.is_alive()]
         
-        if random.randint(0, 7) == 0 and len(self.all_platforms) > 14:
+        if random.randint(0, 7) == 0 and len(self.all_platforms) > 25:
             self.try_spawn_grid_platform(
                 random.randrange(-5, 5), random.randrange(-5, 5),
                 random.randrange(10, 30)
@@ -832,7 +837,7 @@ class FlowerMan(bs.Map):
         
         if (grid_x, grid_y) not in self.occupied_cells:
             pos = (grid_x*self.grid_size, self.platform_y, grid_y*self.grid_size)
-            plat = self.PetalPlatform(self.preloaddata, pos, lifespan=lifespan)
+            plat = self.PetalPlatform(self.preloaddata, pos, lifespan=lifespan, cfg=(grid_x, grid_y))
             
             self.occupied_cells[(grid_x, grid_y)] = plat
             self.all_platforms.append(plat)
