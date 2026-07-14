@@ -692,7 +692,7 @@ class FlowerMan(bs.Map):
     @override
     @classmethod
     def get_preview_texture_name(cls) -> str:
-        return 'mettatonStagePreview'
+        return 'flowermanPreview'
 
     @override
     @classmethod
