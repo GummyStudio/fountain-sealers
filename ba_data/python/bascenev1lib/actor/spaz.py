@@ -266,6 +266,20 @@ class Spaz(bs.Actor):
         self._tick_timer = bs.Timer(0.1, self._tick, repeat=True)
         self.snowgraved = False
         self.last_saved_position = (0, 0, 0)
+        self.animate_hands = bool( # Hands dissappear and reapear on actions.
+            character in ['Ralsei']
+        )
+        self.hand_models = {
+            'upper_arm_mesh': media['upper_arm_mesh'],
+            'forearm_mesh': media['forearm_mesh'],
+            'hand_mesh': media['hand_mesh'],
+        }
+        self.hide_hands_in = bs.time()
+        if self.animate_hands:
+            self.node.upper_arm_mesh = None
+            self.node.forearm_mesh = None
+            self.node.hand_mesh = None
+        
 
         
 
@@ -281,6 +295,14 @@ class Spaz(bs.Actor):
 
         if False:
             self.add_mercy(98, True)
+    
+    def show_hands(self, hide_in):
+        if not self.animate_hands:
+            return
+        self.hide_hands_in = bs.time() +hide_in
+        self.node.upper_arm_mesh = self.hand_models['upper_arm_mesh']
+        self.node.forearm_mesh = self.hand_models['forearm_mesh']
+        self.node.hand_mesh = self.hand_models[   'hand_mesh']
     
     def get_mercy(self):
         return int(
@@ -348,6 +370,15 @@ class Spaz(bs.Actor):
                     chunk_type='spark',
                 ),
 
+        if self.node.hold_node:
+            self.show_hands(hide_in=0.15)
+        
+        if ( (self.hide_hands_in - bs.time() < 0)) and (self.animate_hands):
+
+            self.node.upper_arm_mesh = None
+            self.node.forearm_mesh = None
+            self.node.hand_mesh = None
+    
 
 
                     
@@ -649,6 +680,7 @@ class Spaz(bs.Actor):
         if t_ms - self.last_pickup_time_ms >= self._pickup_cooldown:
             self.node.pickup_pressed = True
             self.last_pickup_time_ms = t_ms
+            self.show_hands(hide_in=0.5)
         self._turbo_filter_add_press('pickup')
 
     def on_pickup_release(self) -> None:
@@ -694,7 +726,8 @@ class Spaz(bs.Actor):
             self._punched_nodes = set()  # Reset this.
             self.last_punch_time_ms = t_ms
             self.node.punch_pressed = True
-            if self.black_knife:
+            self.show_hands(hide_in=self._punch_cooldown/1000)
+            if self.black_knife and not self.node.hold_node:
                 bs.timer(self._punch_cooldown/1000, bs.Call(setattr, self, 'black_knife', False))
             if not self.node.hold_node:
                 bs.timer(
@@ -738,6 +771,7 @@ class Spaz(bs.Actor):
         if t_ms - self.last_bomb_time_ms >= self._bomb_cooldown:
             self.last_bomb_time_ms = t_ms
             self.node.bomb_pressed = True
+            
             if not self.node.hold_node:
                 self.drop_bomb()
         self._turbo_filter_add_press('bomb')
@@ -1018,6 +1052,7 @@ class Spaz(bs.Actor):
                 self.node.handlemessage('picked_up')
 
             if self.spareable():
+                bs.app.classic.startup.increase_statistic('recruits')
                 DamageText(
                     text=bs.Lstr(resource='delta.recruitText'),
                     position=self.last_saved_position,
@@ -1041,7 +1076,7 @@ class Spaz(bs.Actor):
                 ),
 
             self.add_mercy(
-                1, True
+                1, False
             ) 
 
             # This counts as a hit.

@@ -30,6 +30,7 @@ class Startup:
             'STATS_freezed': 0,
             'STATS_fatalities': 0,
             'STATS_swooned': 0,
+            'STATS_recruits': 0,
 
             # characters
             'OWNED_roaringknight': False
@@ -61,6 +62,7 @@ class Startup:
             'frozen': 'STATS_freezed',
             'fatal': 'STATS_fatalities',
             'swooned': 'STATS_swooned',
+            'recruits': 'STATS_recruits',
         }        
         try:
             user32 = ctypes.windll.user32
