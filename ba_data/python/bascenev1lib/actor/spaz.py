@@ -370,7 +370,10 @@ class Spaz(bs.Actor):
                     chunk_type='spark',
                 ),
 
-        if self.node.hold_node:
+        if  ( # Things that always show hands
+            self.node.hold_node or
+            self.node.boxing_gloves
+        ):
             self.show_hands(hide_in=0.15)
         
         if ( (self.hide_hands_in - bs.time() < 0)) and (self.animate_hands):
