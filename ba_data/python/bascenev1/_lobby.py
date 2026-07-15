@@ -448,13 +448,9 @@ class Chooser:
         is_remote = input_device.is_remote_client
         is_test_input = input_device.is_test_input
 
-        # Pull this player's list of unlocked characters.
-        if is_remote:
-            # TODO: Pull this from the remote player.
-            # (but make sure to filter it to the ones we've got).
-            self._character_names = ['Vessel']
-        else:
-            self._character_names = self.lobby.character_names_local_unlocked
+       
+
+       
 
         # If we're a local player, pull our local profiles from the config.
         # Otherwise ask the remote-input-device for its profile list.
@@ -462,6 +458,23 @@ class Chooser:
             self._profiles = input_device.get_player_profiles()
         else:
             self._profiles = app.config.get('Player Profiles', {})
+        
+        all_found_chars = set()
+        for p_data in self._profiles.values():
+            char = p_data.get('character')
+            if char and char in app.classic.spaz_appearances:
+                all_found_chars.add(char)
+            
+        # Pull this player's list of unlocked characters.
+        if is_remote:
+            # TODO: Pull this from the remote player.
+            # (but make sure to filter it to the ones we've got).
+            # FIX: does it lol
+            self._character_names = sorted(list(all_found_chars))
+            if not self._character_names:
+                self._character_names = ['Vessel']
+        else:
+            self._character_names = self.lobby.character_names_local_unlocked
 
         # These may have come over the wire from an older
         # (non-unicode/non-json) version.
