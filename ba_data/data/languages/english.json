@@ -1682,9 +1682,7 @@
     "swoonText": "SWOON",
     "fatalText": "Fatal",
     "recruitText": "+Recruit",
-    "seam": {
-      
-    },
+    "missText": "Miss",
     "deathmessages": {
 		"template": {
 			"kill": "${NAME} killed ${VICTIM}.",

@@ -1390,6 +1390,9 @@ class Spaz(bs.Actor):
                     1.0,
                     position=self.node.position,
                 )
+                DamageText(position=self.last_saved_position, text=bs.Lstr(
+                    resource='delta.missText'
+                ), color=(1, 1, 1), scl=0.5).autoretain()
                 return None
             if self.shield:
                 return None
@@ -1422,6 +1425,9 @@ class Spaz(bs.Actor):
                     1.0,
                     position=self.node.position,
                 )
+                DamageText(position=self.last_saved_position, text=bs.Lstr(
+                    resource='delta.missText'
+                ), color=(1, 1, 1), scl=0.5).autoretain()
                 return True
             if msg.force_direction is None:
                         msg.force_direction = (
@@ -1891,6 +1897,9 @@ class Spaz(bs.Actor):
             # Don't allow picking up of invincible dudes.
             try:
                 if opposingnode.invincible:
+                    DamageText(position=opposingnode.position, text=bs.Lstr(
+                        resource='delta.missText'
+                    ), color=(1, 1, 1), scl=0.5).autoretain()
                     return True
             except Exception:
                 pass
@@ -2113,7 +2122,7 @@ class Spaz(bs.Actor):
             if self.annoyingdogs != 0:
                 self.node.counter_text = 'x' + str(self.annoyingdogs)
                 self.node.counter_texture = (
-                    PowerupBoxFactory.get().tex_realknife
+                    PowerupBoxFactory.get().tex_dog
                 )
             else:
                 self.node.counter_text = ''
@@ -2274,7 +2283,7 @@ class Spaz(bs.Actor):
         elif self.bomb_type == 'impact':
             return factory.tex_impact_bombs
         elif self.bomb_type == 'slash':
-            return factory.tex_bomb
+            return factory.tex_slash
         elif self.bomb_type == 'spades':
             return factory.tex_spades
         else:
