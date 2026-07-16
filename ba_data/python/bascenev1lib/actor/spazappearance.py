@@ -22,7 +22,6 @@ class CharacterTag(Enum):
     # Role
     LIGHTER = 'Lighter'
     DARKNER = 'Darkner'
-
     HERO = 'Hero'
     BYSTANDER = 'Neutral'
     ENEMY = 'Enemy'
@@ -32,6 +31,9 @@ class CharacterTag(Enum):
     MALE = 'Male'
     NONBINARY = 'Non Binary'
     UNKNOWN_GENDER = 'Gender Unknown'
+
+    # Misc
+    MEME = 'Meme'
     
 
 def get_appearances(include_locked: bool = False) -> list[str]:
@@ -341,4 +343,34 @@ def register_appearances() -> None:
         CharacterTag.BYSTANDER,
         CharacterTag.FEMALE,
     ]
+
+    # togore BEFORE asriel #####################################
+    t = Appearance('Togore')
+    t.color_texture = 'togoreColor'
+    t.color_mask_texture = 'togoreColorMask'
+    t.icon_texture = 'togoreIconColor'
+    t.icon_mask_texture = 'togoreIconColorMask'
+    t.head_mesh = 'togoreHead'
+    t.torso_mesh = 'togoreTorso'
+    t.forearm_mesh = 'togoreHand'
+    t.lower_leg_mesh = 'togoreFoot'
+    togoresounds = []
+    t.jump_sounds = togoresounds
+    t.attack_sounds = togoresounds
+    t.impact_sounds = []
+    t.death_sounds = []
+    t.pickup_sounds = togoresounds
+    t.fall_sounds = []
+    t.style = 'agent'
+    t.default_color = (0.0, 0.0, 0.0)
+    t.default_highlight = (1, 1, 1)
+    t.tags = [
+        CharacterTag.UNDERTALE,
+        CharacterTag.MONSTER,
+        CharacterTag.BYSTANDER,
+        CharacterTag.MALE,
+        CharacterTag.MEME,
+    ]
+
+
 
