@@ -327,6 +327,38 @@ class Spaz(bs.Actor):
         if not self.is_alive():
             return False
         return bool(self.get_mercy() == 100)
+
+    def spare(self, last_hitter):
+                if not self.spareable():
+                    return
+                bs.app.classic.startup.increase_statistic('recruits')
+                DamageText(
+                    text=bs.Lstr(resource='delta.recruitText'),
+                    position=self.last_saved_position,
+                    color=(1,1,0),
+                    scl=0.7
+                ).autoretain()
+                bs.getsound('snd_spare').play()
+                if last_hitter:
+                    self.last_player_attacked_by = last_hitter
+                    self.handlemessage(
+                        bs.HitMessage(
+                            flat_damage=1,
+                            source_player=last_hitter
+                        )
+                    )
+                
+                self.handlemessage(bs.DieMessage(how=bs.DeathType.SPARED))
+                self.handlemessage(bs.DieMessage(True, how=bs.DeathType.SPARED))
+                bs.emitfx(
+                    position=(self.last_saved_position),
+                    velocity=(0, 0,2),
+                    count=5,
+                    scale=0.25,
+                    spread=1,
+                    chunk_type='spark',
+                ),
+
         
     def _tick(self):
         if not self.exists():
@@ -1055,28 +1087,11 @@ class Spaz(bs.Actor):
                 self.node.handlemessage('picked_up')
 
             if self.spareable():
-                bs.app.classic.startup.increase_statistic('recruits')
-                DamageText(
-                    text=bs.Lstr(resource='delta.recruitText'),
-                    position=self.last_saved_position,
-                    color=(1,1,0),
-                    scl=0.7
-                ).autoretain()
-                bs.getsound('snd_spare').play()
                 try:
-                    self.last_player_attacked_by = msg.node.getdelegate(Spaz).source_player
+                    self.spare(msg.node.getdelegate(Spaz).source_player)
                 except:
-                    pass
-                self.handlemessage(bs.DieMessage(how=bs.DeathType.SPARED))
-                self.handlemessage(bs.DieMessage(True, how=bs.DeathType.SPARED))
-                bs.emitfx(
-                    position=(self.last_saved_position),
-                    velocity=(0, 0,2),
-                    count=5,
-                    scale=0.25,
-                    spread=1,
-                    chunk_type='spark',
-                ),
+                    self.spare(None)
+                
 
             self.add_mercy(
                 1, False

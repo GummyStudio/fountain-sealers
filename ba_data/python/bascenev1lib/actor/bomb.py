@@ -415,6 +415,8 @@ class Blast(bs.Actor):
                 'big': (self.blast_type == 'tnt'),
             },
         )
+        if self.blast_type == 'bell':
+            explosion.color = (1, 1, 0)
         if self.blast_type == 'ice':
             explosion.color = (0, 0.05, 0.4)
             for _ in range(random.randint(3, 7)):
@@ -714,6 +716,8 @@ class Blast(bs.Actor):
         lpos = light.position
         if self.blast_type == 'mewmew':
             ParticalFactory.get().pink_bomb_explode_sfx.play()
+        elif self.blast_type == 'bell':
+            BombFactory.get().bell_sfx.play()
         else:
             factory.random_explode_sound().play(position=lpos)
         factory.debris_fall_sound.play(position=lpos)
@@ -745,9 +749,12 @@ class Blast(bs.Actor):
 
         elif isinstance(msg, ExplodeHitMessage):
             node = bs.getcollision().opposingnode
+            from bascenev1lib.actor.spaz import Spaz
             assert self.node
             nodepos = self.node.position
             hittype = self.hit_type
+            spaz = node.getdelegate(Spaz)
+            assert isinstance(spaz, Spaz)
             mag = 2000.0
             if self.blast_type == 'ice':
                 mag *= 0.5
@@ -777,21 +784,29 @@ class Blast(bs.Actor):
                     )
                 )
 
+            if self.blast_type == 'bell':
+                if spaz:
+                    if spaz.spareable():
+                        spaz.spare(self._source_player)
+                    spaz.add_mercy(35, True)
+                        
+            else:
 
-            node.handlemessage(
-                bs.HitMessage(
-                    pos=nodepos,
-                    velocity=(0, 0, 0),
-                    magnitude=mag,
-                    hit_type=hittype,
-                    hit_subtype=self.hit_subtype,
-                    radius=self.radius,
-                    source_player=bs.existing(self._source_player),
+
+                node.handlemessage(
+                    bs.HitMessage(
+                        pos=nodepos,
+                        velocity=(0, 0, 0),
+                        magnitude=mag,
+                        hit_type=hittype,
+                        hit_subtype=self.hit_subtype,
+                        radius=self.radius,
+                        source_player=bs.existing(self._source_player),
+                    )
                 )
-            )
-            if self.blast_type == 'ice':
-                BombFactory.get().freeze_sound.play(1, position=nodepos)
-                node.handlemessage(bs.FreezeMessage())
+                if self.blast_type == 'ice':
+                    BombFactory.get().freeze_sound.play(1, position=nodepos)
+                    node.handlemessage(bs.FreezeMessage())
             
             
 
