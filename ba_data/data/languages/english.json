@@ -1196,11 +1196,11 @@
       "* Hee hee... Welcome, travellers.": null
     },
     "characterNames": {
-      "Spaz": null,
       "Ralsei": null,
       "NoHatRalsei": "Ralsei (hatless)",
       "Kris": null,
-      "Susie": null
+      "Susie": null,
+      "Temmie": null
     },
     "coopLevelNames": {
       "${GAME} Training": null,
