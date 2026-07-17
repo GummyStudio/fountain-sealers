@@ -390,7 +390,7 @@ def register_appearances() -> None:
     t.death_sounds = []
     t.pickup_sounds = floradinnsounds
     t.fall_sounds = []
-    t.style = 'agent'
+    t.style = 'cyborg'
     t.default_color = (0.0, 0.0, 0.0)
     t.default_highlight = (1, 1, 1)
     t.tags = [
@@ -425,6 +425,33 @@ def register_appearances() -> None:
         CharacterTag.DELTARUNE,
         CharacterTag.MONSTER,
         CharacterTag.ENEMY,
+        CharacterTag.FEMALE,
+    ]
+
+    t = Appearance('Noelle')
+    t.color_texture = 'noelleColor'
+    t.color_mask_texture = 'noelleColorMask'
+    t.icon_texture = 'noelleIcon'
+    t.icon_mask_texture = 'noelleIconMask'
+    t.head_mesh = 'noelleHead'
+    t.torso_mesh = 'noelleTorso'
+    t.upper_arm_mesh = 'noelleArm'
+    t.lower_leg_mesh = 'noelleFoot'
+    noellesounds = []
+    t.jump_sounds = noellesounds
+    t.attack_sounds = noellesounds
+    t.impact_sounds = []
+    t.death_sounds = []
+    t.pickup_sounds = noellesounds
+    t.fall_sounds = []
+    t.style = 'agent'
+    t.default_color = (0.0, 0.0, 0.0)
+    t.default_highlight = (1, 1, 1)
+    t.tags = [
+        CharacterTag.LIGHTER,
+        CharacterTag.DELTARUNE,
+        CharacterTag.MONSTER,
+        CharacterTag.HERO,
         CharacterTag.FEMALE,
     ]
 
