@@ -15,7 +15,8 @@ if TYPE_CHECKING:
     from typing import Sequence
 
 CREDITS_WE_NEED_TO_ADD = (
-    '3d model: https://sketchfab.com/3d-models/mizzle-deltarune-chapter-4-a7cd2063c2924fa1a3df7e0c4d4b16a1'
+    'https://sketchfab.com/3d-models/mizzle-deltarune-chapter-4-a7cd2063c2924fa1a3df7e0c4d4b16a1'
+    'https://sketchfab.com/3d-models/togore-56f142c79f6847568289025eca357470'
 )
 
 class CreditsWindow(bui.MainWindow):

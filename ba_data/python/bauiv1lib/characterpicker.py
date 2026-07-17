@@ -14,9 +14,6 @@ if TYPE_CHECKING:
     from typing import Any, Sequence
 
 
-
-
-
 class CharacterPickerDelegate:
     """Delegate for character-picker."""
 
@@ -28,6 +25,70 @@ class CharacterPickerDelegate:
         """Called when the 'get more characters' button is pressed."""
         raise NotImplementedError()
 
+
+class TagPickerPopup(PopupWindow):
+    def __init__(self, picker: CharacterPicker, position: tuple[float, float], tags: list[Any]):
+        self._picker = picker
+        self._transitioning_out = False
+        self._tags = tags
+        self._r = 'delta.tagFilter'
+        
+        width = 220
+        height = 60 + max(1, len(tags)) * 35
+        
+        super().__init__(
+            position=position,
+            size=(width, height),
+            scale=1.2,
+            bg_color=(0.3, 0.3, 0.3),
+        )
+        
+        bui.textwidget(
+            parent=self.root_widget,
+            position=(10, height - 35),
+            size=(width - 20, 25),
+            text=bui.Lstr(
+                resource=self._r+'.titleText'
+            ),
+            scale=0.8,
+            h_align="center",
+            v_align="center",
+            color=(0.8, 0.8, 0.8),
+        )
+        
+      
+
+        for i, tag in enumerate(tags):
+            tag_name = bui.Lstr(resource=self._r+'.tags.'+str(tag.value))
+            is_active = tag in self._picker._active_tags
+            
+            bui.checkboxwidget(
+                parent=self.root_widget,
+                position=(20, height - 70 - i * 35),
+                size=(width - 40, 30),
+                text=tag_name,
+                value=is_active,
+                maxwidth=width - 60,
+                scale=0.8,
+                on_value_change_call=bui.Call(self._toggle_tag, tag),
+            )
+            
+    def _toggle_tag(self, tag: Any, value: bool) -> None:
+        if value:
+            self._picker._active_tags.add(tag)
+        else:
+            self._picker._active_tags.discard(tag)
+        self._picker._refresh_characters()
+
+    @override
+    def on_popup_cancel(self) -> None:
+        bui.getsound('swish').play()
+        self._transition_out()
+    
+    def _transition_out(self) -> None:
+        if not self._transitioning_out:
+            self._transitioning_out = True
+            bui.containerwidget(edit=self.root_widget, transition='out_scale')
 
 class CharacterPicker(PopupWindow):
     """Popup window for selecting characters."""
@@ -99,6 +160,8 @@ class CharacterPicker(PopupWindow):
         )
 
         self.last_filter_txt = 'kjFdjknjfksnjd'
+        self._last_active_tags_hash = None
+        
         # Creates our _root_widget.
         super().__init__(
             position=position,
@@ -109,8 +172,6 @@ class CharacterPicker(PopupWindow):
             focus_position=self._scroll_position,
             focus_size=(self._scroll_width, self._scroll_height),
         )
-
-        # deltes everhthing lol
 
         self._scrollwidget = bui.scrollwidget(
             parent=self.root_widget,
@@ -130,17 +191,27 @@ class CharacterPicker(PopupWindow):
             size=(self._sub_width, self._sub_height),
             background=False,
         )
+        
+        # Shrunk textwidget slightly to fit the Tags button next to it
         self._filter_text = bui.textwidget(
             parent=self.root_widget,
             position=(20, self._height - 45),
-            size=(self._width - 40, 35),
+            size=(self._width - 160, 35),
             editable=True,
             text='',
             max_chars=32,
             on_return_press_call=bui.Call(self._refresh_characters),
         )
         
-               
+        self._tags_button = bui.buttonwidget(
+            parent=self.root_widget,
+            position=(self._width - 130, self._height - 45),
+            size=(110, 35),
+            label=bui.Lstr(resource='delta.tagFilter.titleText'),
+            scale=0.8,
+            autoselect=True,
+            on_activate_call=bui.Call(self._open_tags_popup),
+        )
         
         self._columns = 3
         self._button_width = 100
@@ -170,13 +241,21 @@ class CharacterPicker(PopupWindow):
        
         self.tick_timer = bui.AppTimer(0.1, self._refresh_characters)
     
-    def _toggle_tag(self, tag):
-        if tag in self._active_tags:
-            self._active_tags.remove(tag)
-        else:
-            self._active_tags.add(tag)
-
-       
+    def _open_tags_popup(self) -> None:
+        tags = set()
+        for s in self._spazzes:
+            try:
+                c_tags = getattr(bui.app.classic.spaz_appearances[s], 'tags', [])
+                for t in c_tags:
+                    tags.add(t)
+            except Exception:
+                pass
+        
+        TagPickerPopup(
+            picker=self,
+            position=(20, 50),
+            tags=tags
+        )
         
     def _refresh_characters(self) -> None:
         if self._transitioning_out:
@@ -193,12 +272,13 @@ class CharacterPicker(PopupWindow):
                 .strip()
             )
 
-        if search == self.last_filter_txt:
-            # didnt do anything
+        active_tags_hash = hash(frozenset(self._active_tags))
+        if search == self.last_filter_txt and active_tags_hash == self._last_active_tags_hash:
+            # Nothing changed
             return
         self.last_filter_txt = search
+        self._last_active_tags_hash = active_tags_hash
         
-
         for widget in self._character_widgets:
             try:
                 widget.delete()
@@ -206,15 +286,9 @@ class CharacterPicker(PopupWindow):
                 pass
         self._character_widgets.clear()
 
-
-
-        
-        
-        # get an evaluated lstr to make it feel better
-        # (causeeee it might be different across languaes)
+        # Get an evaluated lstr to make it feel better
         translations = {}
         for spaz in self._spazzes:
-            name = spaz
             if spaz == "Vessel":
                 try:
                     name = (
@@ -236,11 +310,20 @@ class CharacterPicker(PopupWindow):
             if name:
                 translations[spaz] = name
 
-        characters = [
-            c for c in self._spazzes
-            if search in translations[c].lower().strip()
-        ]
-      
+        # Filter characters by both search phrase and active tag configurations
+        characters = []
+        for c in self._spazzes:
+            if search not in translations.get(c, "").lower().strip():
+                continue
+                
+            if self._active_tags:
+                try:
+                    c_tags = set(getattr(bui.app.classic.spaz_appearances[c], 'tags', []))
+                    if not self._active_tags.issubset(c_tags):
+                        continue
+                except Exception:
+                    continue
+            characters.append(c)
 
         columns = self._columns
         rows = max(1, math.ceil(len(characters) / columns))
@@ -258,7 +341,6 @@ class CharacterPicker(PopupWindow):
         mask_texture = bui.gettexture("characterIconMask")
 
         for index, character in enumerate(characters):
-
             row = index // columns
             col = index % columns
 
@@ -272,7 +354,6 @@ class CharacterPicker(PopupWindow):
                 + 12,
             )
             try:
-
                 texture = bui.gettexture(
                     bui.app.classic.spaz_appearances[
                         character
@@ -284,8 +365,9 @@ class CharacterPicker(PopupWindow):
                         character
                     ].icon_mask_texture
                 )
-            except:
+            except Exception:
                 continue
+                
             btn = bui.buttonwidget(
                 parent=self._subcontainer,
                 button_type="square",
@@ -312,8 +394,6 @@ class CharacterPicker(PopupWindow):
                     visible_child=btn,
                 )
 
-            # SPECIAL CASE:
-            # Vessel takes the name of the config file.
             if character == "Vessel":
                 try:
                     name = (
@@ -349,6 +429,7 @@ class CharacterPicker(PopupWindow):
             )
 
             self._character_widgets.extend((btn, label))
+
     def _on_store_press(self) -> None:
         from bauiv1lib.account.signin import show_sign_in_prompt
 
@@ -373,7 +454,6 @@ class CharacterPicker(PopupWindow):
         if not self._transitioning_out:
             self._transitioning_out = True
             bui.containerwidget(edit=self.root_widget, transition='out_scale')
-
 
     @override
     def on_popup_cancel(self) -> None:

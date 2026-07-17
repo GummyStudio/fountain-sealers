@@ -1680,6 +1680,25 @@
   "yourBestTimesText": "Your Best Times",
   "yourPrizeText": "Your prize:",
   "delta": {
+    "tagFilter": {
+      "titleText": "Filter",
+      "tags": {
+          "Neutral": "Neutral",
+          "Darkner": "Darkner",
+          "Enemy": "Enemy",
+          "Female": "Female",
+          "Monster": "Monster",
+          "Male": "Male",
+          "Meme": "Meme",
+          "Lighter": "Lighter",
+          "Hero": "Hero",
+          "Gender Unknown": "Unknown Gender",
+          "Deltarune": "Deltarune",
+          "Human": "Human",
+          "Non Binary": "Non-Binary",
+          "Undertale": "Undertale"
+      }
+    },
     "useVanillaText": "Go to Seams seap.",
     "frozenText": "Frozen",
     "swoonText": "SWOON",

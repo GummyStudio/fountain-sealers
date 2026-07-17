@@ -34,6 +34,8 @@ class CharacterTag(Enum):
 
     # Misc
     MEME = 'Meme'
+
+   
     
 
 def get_appearances(include_locked: bool = False) -> list[str]:
