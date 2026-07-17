@@ -372,5 +372,33 @@ def register_appearances() -> None:
         CharacterTag.MEME,
     ]
 
+    # rudin if it was good #####################################
+    t = Appearance('Floradinn')
+    t.color_texture = 'floradinnColor'
+    t.color_mask_texture = 'floradinnColorMask'
+    t.icon_texture = 'floradinnIcon'
+    t.icon_mask_texture = 'floradinnIconMask'
+    t.head_mesh = 'floradinnHead'
+    t.torso_mesh = 'floradinnTorso'
+    t.upper_arm_mesh = 'floradinnArm'
+    floradinnsounds = []
+    t.jump_sounds = floradinnsounds
+    t.attack_sounds = floradinnsounds
+    t.impact_sounds = []
+    t.death_sounds = []
+    t.pickup_sounds = floradinnsounds
+    t.fall_sounds = []
+    t.style = 'agent'
+    t.default_color = (0.0, 0.0, 0.0)
+    t.default_highlight = (1, 1, 1)
+    t.tags = [
+        CharacterTag.DARKNER,
+        CharacterTag.DELTARUNE,
+        CharacterTag.MONSTER,
+        CharacterTag.ENEMY,
+        CharacterTag.MALE,
+    ]
+
+
 
 
