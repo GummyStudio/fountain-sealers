@@ -1200,7 +1200,10 @@
       "NoHatRalsei": "Ralsei (hatless)",
       "Kris": null,
       "Susie": null,
-      "Temmie": null
+      "Temmie": null,
+      "Togore": null,
+      "Floradinn": null,
+      "Mizzle": null
     },
     "coopLevelNames": {
       "${GAME} Training": null,

@@ -399,6 +399,32 @@ def register_appearances() -> None:
         CharacterTag.MALE,
     ]
 
+    t = Appearance('Mizzle')
+    t.color_texture = 'mizzleColor'
+    t.color_mask_texture = 'mizzleColorMask'
+    t.icon_texture = 'mizzleIcon'
+    t.icon_mask_texture = 'mizzleIconMask'
+    t.head_mesh = 'mizzleHead'
+    t.torso_mesh = 'mizzleTorso'
+    t.upper_arm_mesh = 'mizzleArm'
+    t.lower_leg_mesh = 'mizzleLeg'
+    mizzlesounds = []
+    t.jump_sounds = mizzlesounds
+    t.attack_sounds = mizzlesounds
+    t.impact_sounds = []
+    t.death_sounds = []
+    t.pickup_sounds = mizzlesounds
+    t.fall_sounds = []
+    t.style = 'agent'
+    t.default_color = (0.0, 0.0, 0.0)
+    t.default_highlight = (1, 1, 1)
+    t.tags = [
+        CharacterTag.DARKNER,
+        CharacterTag.DELTARUNE,
+        CharacterTag.MONSTER,
+        CharacterTag.ENEMY,
+        CharacterTag.FEMALE,
+    ]
 
 
 
