@@ -63,19 +63,25 @@ class Startup:
             'fatal': 'STATS_fatalities',
             'swooned': 'STATS_swooned',
             'recruits': 'STATS_recruits',
-        }        
-        try:
-            user32 = ctypes.windll.user32
-        except:
-            user32 = None
-        title = 'BombSquad'
-        if user32:
-            hwnd = user32.FindWindowW(None, title)
-        else:
-            hwnd = None
-        ba.app.window_hwnd = hwnd
-        # for now, we just wanna rename the window for aesthetic
-        rename_window('BombSquad: Fountain Sealers')
+        }
+        ba.app.window_hwnd = None
+        def rename():
+            try:
+                user32 = ctypes.windll.user32
+            except:
+                user32 = None
+            title = 'BombSquad'
+            if user32:
+                hwnd = user32.FindWindowW(None, title)
+            else:
+                hwnd = None
+            ba.app.window_hwnd = hwnd
+            # for now, we just wanna rename the window for aesthetic
+            rename_window('BombSquad: Fountain Sealers')
+        # delay the rename (might take a while
+        # before the user's game window shows up;
+        # don't really wanna get ahead of us...)
+        ba.apptimer(2, rename)
         
 
     @property
