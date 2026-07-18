@@ -108,21 +108,21 @@ def register_appearances() -> None:
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-statements
 
-    # Spaz #######################################
+    # Your Body #######################################
     t = Appearance('Vessel')
-    t.color_texture = 'neoSpazColor'
-    t.color_mask_texture = 'neoSpazColorMask'
-    t.icon_texture = 'neoSpazIcon'
-    t.icon_mask_texture = 'neoSpazIconColorMask'
-    t.head_mesh = 'neoSpazHead'
-    t.torso_mesh = 'neoSpazTorso'
-    t.pelvis_mesh = 'neoSpazPelvis'
-    t.upper_arm_mesh = 'neoSpazUpperArm'
-    t.forearm_mesh = 'neoSpazForeArm'
-    t.hand_mesh = 'neoSpazHand'
-    t.upper_leg_mesh = 'neoSpazUpperLeg'
-    t.lower_leg_mesh = 'neoSpazLowerLeg'
-    t.toes_mesh = 'neoSpazToes'
+    t.color_texture = 'vesselColor'
+    t.color_mask_texture = 'vesselColorMask'
+    t.icon_texture = 'vesselIcon'
+    t.icon_mask_texture = 'vesselIconCM'
+    t.head_mesh = 'vesselHead'
+    t.torso_mesh = 'vesselTorso'
+    t.pelvis_mesh = 'vesselPelvis'
+    t.upper_arm_mesh = 'vesselUpperArm'
+    t.forearm_mesh = 'vesselForeArm'
+    t.hand_mesh = 'vesselHand'
+    t.upper_leg_mesh = 'vesselUpperLeg'
+    t.lower_leg_mesh = 'vesselLowerLeg'
+    t.toes_mesh = 'vesselToes' # vessel toes reveal
     t.jump_sounds = ['spazJump01', 'spazJump02', 'spazJump03', 'spazJump04']
     t.attack_sounds = [
         'spazAttack01',
@@ -139,7 +139,7 @@ def register_appearances() -> None:
     t.death_sounds = ['spazDeath01']
     t.pickup_sounds = ['spazPickup01']
     t.fall_sounds = ['spazFall01']
-    t.style = 'spaz'
+    t.style = 'bones'
     t.tags = [
         CharacterTag.DELTARUNE,
         CharacterTag.HUMAN,
@@ -401,6 +401,7 @@ def register_appearances() -> None:
         CharacterTag.MALE,
     ]
 
+    # The Girl from Water #####################################
     t = Appearance('Mizzle')
     t.color_texture = 'mizzleColor'
     t.color_mask_texture = 'mizzleColorMask'
@@ -428,6 +429,7 @@ def register_appearances() -> None:
         CharacterTag.FEMALE,
     ]
 
+    # The Ice Girl #####################################
     t = Appearance('Noelle')
     t.color_texture = 'noelleColor'
     t.color_mask_texture = 'noelleColorMask'

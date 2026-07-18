@@ -83,22 +83,6 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         if not self._did_initial_transition and self.my_name is not None:
             assert self.my_name.node
             bs.animate(self.my_name.node, 'opacity', {2.3: 0, 3.0: 1.0})
-
-        # Show modpack subtitel text.
-        pos = (0, -120)
-        node = self.modpack_subtitle = bs.newnode(
-            'text',
-            attrs={
-                'v_attach': 'center',
-                'h_align': 'center',
-                'scale': 0.6,
-                'vr_depth': -60,
-                'position': pos,
-                'text': bs.Lstr(resource='menuSubtitleText'),
-                'big': True,
-            },
-        )
-        bs.animate(node, 'opacity', {1.3: 0, 1.8: 1.0})
         # FIXME: remove in release maybe???
         bs.newnode(
             'text',
@@ -245,8 +229,8 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         lang = app.lang.language
         if lang != self._language:
             self._language = lang
-            y = 20
-            base_scale = 1.1
+            y = 250
+            base_scale = 1.3
             self._word_actors = []
             base_delay = 0.8
             delay = base_delay
@@ -257,182 +241,142 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 base_delay = 0.0
                 delay = base_delay
                 delay_inc = 0.02
-            base_x = -170
+            base_x = -200
             x = base_x - 20
-            spacing = 55 * base_scale
+            spacing = 50 * base_scale
             y_extra = 0
             xv1 = x
             delay1 = delay
-            for shadow in (True, False):
-                x = xv1
-                delay = delay1
-                self._make_word(
-                    'B',
-                    x - 50,
-                    y - 23 + 0.8 * y_extra,
-                    scale=1.3 * base_scale,
-                    delay=delay,
-                    vr_depth_offset=3,
-                    shadow=shadow,
-                )
-                x += spacing
-                delay += delay_inc
-                self._make_word(
-                    'm',
-                    x,
-                    y + y_extra,
-                    delay=delay,
-                    scale=base_scale,
-                    shadow=shadow,
-                )
-                x += spacing * 1.25
-                delay += delay_inc
-                self._make_word(
-                    'b',
-                    x,
-                    y + y_extra - 10,
-                    delay=delay,
-                    scale=1.1 * base_scale,
-                    vr_depth_offset=5,
-                    shadow=shadow,
-                )
-                x += spacing * 0.85
-                delay += delay_inc
-                self._make_word(
-                    'S',
-                    x,
-                    y - 25 + 0.8 * y_extra,
-                    scale=1.35 * base_scale,
-                    delay=delay,
-                    vr_depth_offset=14,
-                    shadow=shadow,
-                )
-                x += spacing
-                delay += delay_inc
-                self._make_word(
-                    'q',
-                    x,
-                    y + y_extra,
-                    delay=delay,
-                    scale=base_scale,
-                    shadow=shadow,
-                )
-                x += spacing * 0.9
-                delay += delay_inc
-                self._make_word(
-                    'u',
-                    x,
-                    y + y_extra,
-                    delay=delay,
-                    scale=base_scale,
-                    vr_depth_offset=7,
-                    shadow=shadow,
-                )
-                x += spacing * 0.9
-                delay += delay_inc
-                self._make_word(
-                    'a',
-                    x,
-                    y + y_extra,
-                    delay=delay,
-                    scale=base_scale,
-                    shadow=shadow,
-                )
-                x += spacing * 0.64
-                delay += delay_inc
-                self._make_word(
-                    'd',
-                    x,
-                    y + y_extra - 10,
-                    delay=delay,
-                    scale=1.1 * base_scale,
-                    vr_depth_offset=6,
-                    shadow=shadow,
-                )
+            self._make_word(
+                'titleB',
+                x - 70,
+                y + y_extra - 5,
+                scale=base_scale * 1.2,
+                delay=delay,
+            )
+            x += spacing + 70
+            delay += delay_inc
+            self._make_word(
+                'titleM',
+                x,
+                y + y_extra,
+                delay=delay,
+                scale=base_scale * 1.1,
+            )
+            x += spacing
+            delay += delay_inc
+            self._make_word(
+                'titleB',
+                x,
+                y + y_extra,
+                delay=delay,
+                scale=base_scale,
+            )
+            x += spacing - 5
+            delay += delay_inc
+            self._make_word(
+                'titleS',
+                x,
+                y + y_extra,
+                scale=base_scale,
+                delay=delay,
+            )
+            x += spacing
+            delay += delay_inc
+            self._make_word(
+                'titleQ',
+                x,
+                y + y_extra,
+                delay=delay,
+                scale=base_scale,
+            )
+            x += spacing * 1.1
+            delay += delay_inc
+            self._make_word(
+                'titleU',
+                x,
+                y + y_extra,
+                delay=delay,
+                scale=base_scale,
+            )
+            x += spacing * 1.1
+            delay += delay_inc
+            self._make_word(
+                'titleA',
+                x,
+                y + y_extra,
+                delay=delay,
+                scale=base_scale,
+            )
+            x += spacing
+            delay += delay_inc
+            self._make_word(
+                'titleD',
+                x,
+                y + y_extra,
+                delay=delay,
+                scale=base_scale,
+            )
             self._make_logo(
-                base_x - 28,
-                125 + y + 1.2 * y_extra,
-                0.30 * base_scale,
+                base_x + 10,
+                y + 5,
+                0.22 * base_scale,
                 delay=base_delay,
             )
+            # Show modpack subtitel text.
+            pos = ((base_x - 20) + (spacing * 3.3), -230 + y)
+            actor = self.modpack_subtitle = bs.NodeActor(
+                bs.newnode(
+                    'text',
+                    attrs={
+                        'v_attach': 'center',
+                        'h_align': 'center',
+                        'scale': 0.6,
+                        'vr_depth': -60,
+                        'position': pos,
+                        'text': bs.Lstr(resource='menuSubtitleText'),
+                        'big': True,
+                    },
+                )
+            )
+            bs.animate(actor.node, 'opacity', {delay: 0, delay + 0.6: 1.0})
+            self._word_actors.append(actor)
 
     def _make_word(
         self,
-        word: str,
+        texture: str,
         x: float,
         y: float,
         *,
         scale: float = 1.0,
         delay: float = 0.0,
-        vr_depth_offset: float = 0.0,
-        shadow: bool = False,
     ) -> None:
-        # pylint: disable=too-many-branches
+         # pylint: disable=too-many-branches
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-statements
-        if shadow:
-            word_obj = bs.NodeActor(
-                bs.newnode(
-                    'text',
-                    attrs={
-                        'position': (x, y),
-                        'big': True,
-                        'color': (0.0, 0.0, 0.2, 0.08),
-                        'tilt_translate': 0.09,
-                        'opacity_scales_shadow': False,
-                        'shadow': 0.2,
-                        'vr_depth': -130,
-                        'v_align': 'center',
-                        'project_scale': 0.97 * scale,
-                        'scale': 1.0,
-                        'text': word,
-                    },
-                )
+        word_obj = bs.NodeActor(
+            bs.newnode(
+                'image',
+                attrs={
+                    'position': (x, y),
+                    'scale': (80 * scale, 80 * scale),
+                    'texture': bs.gettexture(texture),
+                },
             )
-            self._word_actors.append(word_obj)
-        else:
-            word_obj = bs.NodeActor(
-                bs.newnode(
-                    'text',
-                    attrs={
-                        'position': (x, y),
-                        'big': True,
-                        'color': (1.2, 1.15, 1.15, 1.0),
-                        'tilt_translate': 0.11,
-                        'shadow': 0.2,
-                        'vr_depth': -40 + vr_depth_offset,
-                        'v_align': 'center',
-                        'project_scale': scale,
-                        'scale': 1.0,
-                        'text': word,
-                    },
-                )
-            )
-            self._word_actors.append(word_obj)
-
+        )
+        self._word_actors.append(word_obj)
+            
         # Add a bit of stop-motion-y jitter to the logo (unless we're in
         # VR mode in which case its best to leave things still).
         if not bs.app.env.vr:
             cmb: bs.Node | None
             cmb2: bs.Node | None
-            if not shadow:
-                cmb = bs.newnode(
-                    'combine', owner=word_obj.node, attrs={'size': 2}
-                )
-            else:
-                cmb = None
-            if shadow:
-                cmb2 = bs.newnode(
-                    'combine', owner=word_obj.node, attrs={'size': 2}
-                )
-            else:
-                cmb2 = None
-            if not shadow:
-                assert cmb and word_obj.node
-                cmb.connectattr('output', word_obj.node, 'position')
-            if shadow:
-                assert cmb2 and word_obj.node
-                cmb2.connectattr('output', word_obj.node, 'position')
+            cmb = bs.newnode(
+                'combine', owner=word_obj.node, attrs={'size': 2}
+            )
+            cmb2 = None
+            assert cmb and word_obj.node
+            cmb.connectattr('output', word_obj.node, 'position')
             keys = {}
             keys2 = {}
             time_v = 0.0
@@ -457,23 +401,16 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 time_v += random.random() * 0.1
             if cmb is not None:
                 bs.animate(cmb, 'input1', keys, loop=True)
-            if cmb2 is not None:
-                bs.animate(cmb2, 'input1', keys2, loop=True)
-
-        if not shadow:
-            assert word_obj.node
-            bs.animate(
-                word_obj.node,
-                'project_scale',
-                {delay: 0.0, delay + 0.1: scale * 1.1, delay + 0.2: scale},
-            )
-        else:
-            assert word_obj.node
-            bs.animate(
-                word_obj.node,
-                'project_scale',
-                {delay: 0.0, delay + 0.1: scale * 1.1, delay + 0.2: scale},
-            )
+            
+            cmb = bs.newnode('combine', owner=word_obj.node, attrs={'size': 2})
+            keys = {
+                delay: 0.0,
+                delay + 0.1: 90 * scale,
+                delay + 0.2: 80 * scale,
+            }
+            bs.animate(cmb, 'input0', keys)
+            bs.animate(cmb, 'input1', keys)
+            cmb.connectattr('output', word_obj.node, 'scale')
 
     def _get_custom_logo_tex_name(self) -> str | None:
         plus = bui.app.plus

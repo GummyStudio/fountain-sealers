@@ -148,7 +148,7 @@ class MainMenuWindow(bui.MainWindow):
         app = bui.app
         assert app.classic is not None
         uiscale = app.ui_v1.uiscale
-        thistdelay = 0.3
+        thistdelay = 0.001
 
         self._have_quit_button = app.classic.platform in (
             'windows',
@@ -187,7 +187,7 @@ class MainMenuWindow(bui.MainWindow):
             size=(self._width, self._height),
             background=False,
             scale=root_widget_scale,
-            stack_offset=(400, 0),
+            stack_offset=(0, 0),
         )
         bui.containerwidget(
             edit=self._root_widget,
@@ -200,34 +200,25 @@ class MainMenuWindow(bui.MainWindow):
         # but concept wise its fucking fine???
         # can someone just please remake this
         h = self._width * 0.5
-        v = 570
+        v = 410
         bui.textwidget(
             parent=self._root_widget,
-            position=(h, self._height - 90),
+            position=(h, v + 120),
             size=(0, 0),
             text=bui.Lstr(resource=f'{self._r}.selectText'),
             scale=0.8,
             color=(1, 1, 1, 0.7),
-            h_align='center',
-            v_align='center',
             transition_delay=thistdelay,
-        )
-        bui.textwidget(
-            parent=self._root_widget,
-            position=(h, self._height - 90 - 20),
-            size=(0, 0),
-            text='NOTE: should change button info text later to contain stats',
-            scale=0.5,
-            color=(1, 1, 1, 0.3),
             h_align='center',
-            v_align='center',
-            transition_delay=thistdelay,
         )
         v -= 20
-        file_button_size = (300, 100)
+        file_button_size = (500, 90)
         fb_width, fb_height = file_button_size
         file_button_scale = 1.3
         icon_size = fb_width * file_button_scale * 0.22
+        button_color = (0.2, 0.2, 0.2)
+        startup = bui.app.classic.startup
+        dark_dollars = startup.gameconfig.get('dark_dollars', 0)
         file_buttons = [
             {
                 'icon': 'startButton',
@@ -242,10 +233,11 @@ class MainMenuWindow(bui.MainWindow):
                 'callback': self._gather_press,
             },
             {
-                'icon': 'tv',
-                'name': bui.Lstr(resource='replaysText'),
-                'info_text': bui.Lstr(resource=f'{self._r}.replayInfoText'),
-                'callback': self._watch_press,
+                'icon': 'storeIcon',
+                'name': bui.Lstr(resource=f'{self._r}.storeText'),
+                'info_text': bui.Lstr(resource=f'{self._r}.storeInfoText'),
+                'callback': bui.app.mode._root_ui_store_press,
+                'stats': f'D${dark_dollars}',
             },
         ]
         start_button = None
@@ -262,6 +254,7 @@ class MainMenuWindow(bui.MainWindow):
                 label='',
                 on_activate_call=callback,
                 transition_delay=thistdelay,
+                color=button_color,
             )
             self._file_buttons.append(this_btn)
             if self._file_buttons.index(this_btn) == 0:
@@ -297,14 +290,25 @@ class MainMenuWindow(bui.MainWindow):
                 color=(1, 1, 1, 0.7),
                 transition_delay=thistdelay,
             )
-            bui.imagewidget(
-                parent=self._root_widget,
-                size=(icon_size, icon_size),
-                draw_controller=this_btn,
-                transition_delay=thistdelay,
-                position=(h + (-fb_width + 70), v + (fb_height * 0.5 - 28)),
-                texture=bui.gettexture(dict.get('icon')),
-            )
+            # icon was originally here but now isnt 
+            # (looked buggy)
+            if dict.get('stats'):
+                bui.textwidget(
+                    parent=self._root_widget,
+                    position=(
+                        h - (-fb_width + 70) - icon_size + 10 + 3, 
+                        v + (fb_height * file_button_scale) - 23,
+                    ),
+                    size=(0, 0),
+                    draw_controller=this_btn,
+                    maxwidth=fb_width * file_button_scale * 0.8,
+                    scale=0.65,
+                    text=dict.get('stats'),
+                    h_align='right',
+                    v_align='top',
+                    color=(1, 1, 1, 0.6),
+                    transition_delay=thistdelay,
+                )
             v -= fb_height * file_button_scale - 7
         # ????? :sob:
         # someone PLEASE fix this math for me later
@@ -317,52 +321,55 @@ class MainMenuWindow(bui.MainWindow):
         # Regular buttons.
         reg_button_size = (130, 60)
         reg_button_scale = 0.9
-        hoffs = -70 * 2
         spacing = reg_button_size[0] + 8
-        bui.buttonwidget(
-            parent=self._root_widget,
-            id='howtoplay',
-            position=(h + hoffs, v),
-            autoselect=self._use_autoselect,
-            size=reg_button_size,
-            scale=reg_button_scale,
-            label=bui.Lstr(resource=f'{self._r}.howToPlayText'),
-            on_activate_call=self._howtoplay,
-            transition_delay=thistdelay,
-        )
-
-        bui.buttonwidget(
-            parent=self._root_widget,
-            position=(h + hoffs + spacing, v),
-            size=reg_button_size,
-            scale=reg_button_scale,
-            autoselect=self._use_autoselect,
-            label=bui.Lstr(resource=f'{self._r}.creditsText'),
-            on_activate_call=self._credits,
-            transition_delay=thistdelay,
-        )
-        hoffs = -70 * 2
-        v -= reg_button_size[1] + 2
-        bui.buttonwidget(
-            parent=self._root_widget,
-            position=(h + hoffs, v),
-            size=reg_button_size,
-            scale=reg_button_scale,
-            autoselect=self._use_autoselect,
-            label=bui.Lstr(resource=f'{self._r}.storeText'),
-            on_activate_call=bui.app.mode._root_ui_store_press, # just use the legacy method
-            transition_delay=thistdelay,
-        )
-        bui.buttonwidget(
-            parent=self._root_widget,
-            position=(h + hoffs + spacing, v),
-            size=reg_button_size,
-            scale=reg_button_scale,
-            autoselect=self._use_autoselect,
-            label=bui.Lstr(resource=f'{self._r}.settingsText'),
-            on_activate_call=self._settings,
-            transition_delay=thistdelay,
-        )
+        text_color = (1, 1, 1)
+        default_hoffs = -65
+        this_buttons = [
+            {
+                'label': bui.Lstr(resource='inventoryText'),
+                'callback': self._inventory,
+            },
+            {
+                'label': bui.Lstr(resource='replaysText'),
+                'callback': self._watch_press,
+            },
+            {
+                'label': bui.Lstr(resource=f'{self._r}.settingsText'),
+                'callback': self._settings,
+            },
+        ]
+        hoffs = default_hoffs * len(this_buttons)
+        def gen():
+            nonlocal h, hoffs, v, reg_button_size, reg_button_scale, this_buttons, button_color, text_color, thistdelay
+            for btn in this_buttons:
+                if not btn.get('callback'):
+                    raise RuntimeError('Made a menu button without callback')
+                bui.buttonwidget(
+                    parent=self._root_widget,
+                    position=(h + hoffs + (spacing * this_buttons.index(btn)), v),
+                    autoselect=self._use_autoselect,
+                    size=reg_button_size,
+                    scale=reg_button_scale,
+                    label=btn.get('label'),
+                    on_activate_call=btn.get('callback'),
+                    transition_delay=thistdelay,
+                    color=button_color,
+                    textcolor=text_color,
+                )
+        gen()
+        v -= reg_button_size[1] - 5
+        this_buttons = [
+            {
+                'label': bui.Lstr(resource=f'{self._r}.creditsText'),
+                'callback': self._credits,
+            },
+            {
+                'label': bui.Lstr(resource=f'{self._r}.howToPlayText'),
+                'callback': self._howtoplay,
+            },
+        ]
+        hoffs = default_hoffs * len(this_buttons)
+        gen()
 
         self._quit_button: bui.Widget | None = None
         
@@ -448,3 +455,15 @@ class MainMenuWindow(bui.MainWindow):
             return
 
         self.main_window_replace(PlayWindow(origin_widget=self._play_button))
+    
+    def _inventory(self) -> None:
+        # pylint: disable=cyclic-import
+        from bauiv1lib.inventory import InventoryWindow
+
+        # no-op if we're not currently in control.
+        if not self.main_window_has_control():
+            return
+
+        self.main_window_replace(
+            InventoryWindow(),
+        )

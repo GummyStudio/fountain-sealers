@@ -72,7 +72,7 @@ class ShopUI(bui.MainWindow):
             position=(720, 0),
             h_align='left',
 
-            text=f'${babase.app.classic.startup.gameconfig.get('dark_dollars', 0)}',
+            text=f'D${babase.app.classic.startup.gameconfig.get('dark_dollars', 0)}',
         )
         self._dialogue_txt = bui.textwidget(
                 parent=self._root_widget,

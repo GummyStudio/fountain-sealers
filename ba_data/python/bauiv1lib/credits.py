@@ -169,7 +169,7 @@ class CreditsWindow(bui.MainWindow):
             bui.textwidget(
                 parent=container,
                 padding=4,
-                color=(0.7, 0.9, 0.7, 1.0),
+                color=(1, 1, 1),
                 scale=scale,
                 flatness=1.0,
                 size=(0, 0),
