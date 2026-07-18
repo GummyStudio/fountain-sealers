@@ -28,6 +28,7 @@ def register_all_maps() -> None:
         JevilStage,
         MettatonStage,
         FlowerMan,
+        TitanStage,
     ]:
         bs.register_map(maptype)
 
@@ -42,7 +43,7 @@ class Rudebuster(bs.Map):
     @classmethod
     def get_play_types(cls) -> list[str]:
         """Return valid play types for this map."""
-        return ['melee', 'hockey', 'team_flag', 'keep_away']
+        return ['melee', 'team_flag', 'keep_away']
 
     @override
     @classmethod
@@ -687,7 +688,7 @@ class FlowerMan(bs.Map):
     @classmethod
     def get_play_types(cls) -> list[str]:
         """Return valid play types for this map."""
-        return ['melee', 'team_flag', 'keep_away']
+        return ['melee', 'team_flag', 'keep_away','king_of_the_hill']
 
     @override
     @classmethod
@@ -907,3 +908,226 @@ class FlowerMan(bs.Map):
     @classmethod
     def get_music_type(cls) -> bs.MusicType:
         return bs.MusicType.FLOWER_MAN
+
+class TitanStage(bs.Map):
+    """we need to lock in"""
+
+    from delta.mapdata import titanstage_mapdefs as defs
+
+    name = 'Titan'
+
+    @override
+    @classmethod
+    def get_play_types(cls) -> list[str]:
+        """Return valid play types for this map."""
+        return ['melee','team_flag', 'king_of_the_hill', 'keep_away']
+
+    @override
+    @classmethod
+    def get_preview_texture_name(cls) -> str:
+        return 'titanPreview'
+
+    @override
+    @classmethod
+    def on_preload(cls) -> Any:
+        data: dict[str, Any] = {
+            'mesh': bs.getmesh('titanStageLevel'),
+            'collision_mesh': bs.getcollisionmesh('titanStageLevel'),
+            
+            'tex': bs.gettexture('sancuary'),
+            'black': bs.gettexture('black'),
+            'bgmesh': bs.getmesh('titanStageBG'),
+
+            'collision': bs.getcollisionmesh('titanStageBGCollision'),
+
+            'titan': bs.getmesh('titan'),
+            'titan_textures': [
+                bs.gettexture('titan/titan0'),
+                bs.gettexture('titan/titan1'),
+                bs.gettexture('titan/titan2'),
+                bs.gettexture('titan/titan4'),
+                bs.gettexture('titan/titan5'),
+                bs.gettexture('titan/titan6'),
+                bs.gettexture('titan/titan7'),
+            ],
+
+            
+
+            'foreground': bs.getmesh('titanForeground'),
+            'foreground_smoke': bs.getmesh('titanForegroundSmoke'),
+            'background_smoke': bs.getmesh('titanStageSmoke'),
+            'smoke_tex': bs.gettexture('titanSmoke'),
+
+            'glass': bs.gettexture('glass'),
+            
+        }
+        return data
+
+    def __init__(self) -> None:
+        super().__init__(vr_overlay_offset=(0, 0, 2))
+        shared = SharedObjects.get()
+        self.node = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['collision_mesh'],
+                'mesh': self.preloaddata['mesh'],
+                'color_texture': self.preloaddata['tex'],
+                'materials': [shared.footing_material],
+            },
+        )
+        self.background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['bgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': self.preloaddata['black'],
+            },
+        )
+
+        
+        bs.newnode(
+            'terrain',
+            attrs={
+                'collision_mesh': self.preloaddata['collision'],
+            },
+        )
+
+         
+        bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['foreground'],
+                'color_texture': self.preloaddata['black'],
+            },
+        )
+        bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['foreground_smoke'],
+                'color_texture': self.preloaddata['smoke_tex'],
+            },
+        )
+        bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['background_smoke'],
+                'color_texture': self.preloaddata['smoke_tex'],
+            },
+        )
+
+        self.titan =  bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['titan'],
+                'color_texture': self.preloaddata['titan_textures'][0],
+            },
+        )
+        self.anim_index = 0
+
+        self.plat1_occupants = 0    
+        self.plat2_occupants = 0
+        plat_detection_mat1 = bs.Material()
+        plat_detection_mat2 = bs.Material()
+        from bascenev1lib.actor.spazfactory import SpazFactory
+        from bascenev1lib.actor.flag import FlagFactory
+        # only flags and spazes can walk on these
+        plat_detection_mat1.add_actions(('modify_part_collision', 'collide', False))
+        plat_detection_mat2.add_actions(('modify_part_collision', 'collide', False))
+        plat_detection_mat1.add_actions(
+            conditions=(    
+                ('they_have_material', SpazFactory.get().roller_material),
+                'or',
+                ('they_have_material', FlagFactory.get().flagmaterial),
+                'or',
+                ('they_have_material', SpazFactory.get().spaz_material),
+            ),
+            actions=(
+                ('modify_part_collision', 'collide', True),
+                ('message', 'their_node', 'at_connect', 'footing', 1),
+                ('message', 'their_node', 'at_disconnect', 'footing', -1),
+                ('call', 'at_connect', bs.Call(self._handle_touch_plat, 1, True)),
+                ('call', 'at_disconnect', bs.Call(self._handle_touch_plat, 1, False))
+            ),
+        )
+        plat_detection_mat2.add_actions(
+            conditions=(    
+                ('they_have_material', SpazFactory.get().roller_material),
+                'or',
+                ('they_have_material', FlagFactory.get().flagmaterial),
+                'or',
+                ('they_have_material', SpazFactory.get().spaz_material),
+            ),
+            actions=(
+                ('modify_part_collision', 'collide', True),
+                ('message', 'their_node', 'at_connect', 'footing', 1),
+                ('message', 'their_node', 'at_disconnect', 'footing', -1),
+                ('call', 'at_connect', bs.Call(self._handle_touch_plat, 2, True)),
+                ('call', 'at_disconnect', bs.Call(self._handle_touch_plat, 2, False))
+            ),
+        )
+        self.glass1 = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': bs.getcollisionmesh('titanStageGlass1'),
+                'mesh': bs.getmesh('titanStageGlass1'),
+                'color_texture': self.preloaddata['glass'],
+                'materials': [plat_detection_mat1],
+                'opacity': 0.0
+            },
+        )
+
+        self.glass2 = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': bs.getcollisionmesh('titanStageGlass2'),
+                'mesh': bs.getmesh('titanStageGlass2'),
+                'color_texture': self.preloaddata['glass'],
+                'materials': [ plat_detection_mat2],
+                'opacity': 0.0
+            },
+        )
+
+
+
+        gnode = bs.getactivity().globalsnode
+        gnode.tint = (1.2, 1.1, 0.97)
+        gnode.ambient_color = (1.3, 1.2, 1.03)
+        gnode.vignette_outer = (0.62, 0.64, 0.69)
+        gnode.vignette_inner = (0.97, 0.95, 0.93)
+        bs.timer(0.175, self.animate_titan, repeat=True)
+    
+    def animate_titan(self):
+        if not self.titan:
+            return
+        self.titan.color_texture = self.preloaddata['titan_textures'][self.anim_index]
+        self.anim_index += 1
+        if self.anim_index == 6:
+            self.anim_index = 0
+    
+    def _handle_touch_plat(self, id: int, entering: bool):
+        if id == 1:
+            self.plat1_occupants += 1 if entering else -1
+            count = self.plat1_occupants
+            node = self.glass1
+        else:
+            self.plat2_occupants += 1 if entering else -1
+            count = self.plat2_occupants
+            node = self.glass2
+
+        # only animate if the first to enter, or leave
+        if (entering and count == 1) or (not entering and count == 0):
+            target_opacity = 1.0 if entering else 0.0
+            bs.animate(node, 'opacity', {0: node.opacity, 0.1: target_opacity})
+
+
+    
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        
+        
+        return bs.MusicType.TITAN

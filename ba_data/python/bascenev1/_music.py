@@ -37,6 +37,7 @@ class MusicType(Enum):
     DEATH_BY_GLAMOUR = 'gay robot'
     FLOWER_MAN = 'dude he can solo the knight'
     CH4_MENU = 'QUIET_CHURCH'
+    TITAN = 'holy shit we are SO DEAD'
 
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:
     """Set the app to play (or stop playing) a certain type of music.

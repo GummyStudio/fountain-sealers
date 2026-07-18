@@ -192,7 +192,6 @@ class CharacterPicker(PopupWindow):
             background=False,
         )
         
-        # Shrunk textwidget slightly to fit the Tags button next to it
         self._filter_text = bui.textwidget(
             parent=self.root_widget,
             position=(20, self._height - 45),
@@ -310,7 +309,6 @@ class CharacterPicker(PopupWindow):
             if name:
                 translations[spaz] = name
 
-        # Filter characters by both search phrase and active tag configurations
         characters = []
         for c in self._spazzes:
             if search not in translations.get(c, "").lower().strip():

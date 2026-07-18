@@ -618,7 +618,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             musics = [
                 bs.MusicType.MENU,
                 bs.MusicType.MENU2,
-                #bs.MusicType.CH4MENU,
+                bs.MusicType.CH4_MENU,
             ]
             bs.setmusic(random.choice(musics))
 
