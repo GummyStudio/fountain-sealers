@@ -135,7 +135,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 'position': (0, y),
                 'scale': (512 * scale, 256 * scale),
                 'texture': bs.gettexture('menu_fountain_main'),
-                'premultiplied': True,
+                'premultiplied': False,
             },
         )
         for i in range(2):
