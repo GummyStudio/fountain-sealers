@@ -704,6 +704,17 @@ class Spaz(bs.Actor):
         if not self.node:
             return
         self.node.jump_pressed = False
+    
+    def _wave_check(self):
+        if not self.node:
+            return
+        def tick():
+            duration = 0.2
+            if self.node.pickup_pressed:
+                self.node.handlemessage('celebrate_r', int(duration * 1000))
+            else:
+                self._wave_check_timer = None
+        self._wave_check_timer = bs.Timer(0.04, tick, repeat=True)
 
     def on_pickup_press(self) -> None:
         """
@@ -712,6 +723,7 @@ class Spaz(bs.Actor):
         """
         if not self.node:
             return
+        self._wave_check_timer = bs.Timer(0.5, self._wave_check)
         t_ms = int(bs.time() * 1000.0)
         assert isinstance(t_ms, int)
         if t_ms - self.last_pickup_time_ms >= self._pickup_cooldown:
