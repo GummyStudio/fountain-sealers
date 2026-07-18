@@ -486,8 +486,15 @@ class ShopActivity(bs.Activity[bs.Player, bs.Team]):
     def on_begin(self):
         super().on_begin()
         
-        bs.newnode('image', attrs={'texture': bs.gettexture('black'), 'fill_screen': True})
-        self.mnode =bs.newnode('sound', attrs={'sound': bs.getsound('music/lantern'), 'music': True})
+        bs.newnode(
+            'image', 
+            attrs={
+                'texture': bs.gettexture('black'), 
+                'fill_screen': True
+            }
+        )
+        bs.setmusic(bs.MusicType.SHOP)
+        
         with bui.ContextRef.empty():
             babase.app.ui_v1.set_main_window(
                 ShopUI(), from_window=None, is_top_level=True, suppress_warning=True)

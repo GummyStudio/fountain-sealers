@@ -37,6 +37,7 @@ class MusicType(Enum):
     DEATH_BY_GLAMOUR = 'gay robot'
     FLOWER_MAN = 'dude he can solo the knight'
     CH4_MENU = 'QUIET_CHURCH'
+    SHOP = 'LANTERN'
     TITAN = 'holy shit we are SO DEAD'
 
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:
