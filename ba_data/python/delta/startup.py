@@ -33,7 +33,12 @@ class Startup:
             'STATS_recruits': 0,
 
             # characters
-            'OWNED_roaringknight': False
+            'OWNED_roaringknight': False,
+            'OWNED_temmie': False,
+            'OWNED_togore': False,
+            'OWNED_floradinn': False,
+            'OWNED_mizzle': False,
+            'OWNED_noelle': False,
         }
 
         if 'delta' not in config or not isinstance(config['delta'], dict):
@@ -54,8 +59,48 @@ class Startup:
                         "* The Knight?{pause:0.4}\n* THAT Knight??{pause:0.6}\n* I'll sell it to you, but.{pause:0.1}.{pause:0.1}.{pause:0.7}don't expect any good to come\n     out of it.",
                         'annoyed'
                     ),
-                'cost': 5000
-            },      
+                'cost': 5000,
+            },
+            'Temmie': {
+                'config': 'OWNED_temmie',
+                'description':  (
+                    "* Hmm...{pause:0.5} you ever thought this kitty went to college?{pause:0.7}\n* I'm assuming not,{pause:0.3} since she's here.{pause:0.5} Haha...",
+                    'talk'
+                ),
+                'cost': 500,
+            },
+            'Togore': {
+                'config': 'OWNED_togore',
+                'description':  (
+                    "* ...{pause:0.5}Well, I don't know much about this one.{pause:0.5}\n* But I will say,{pause:0.3} he does look familiar.",
+                    'annoyed'
+                ),
+                'cost': 700,
+            },
+            'Floradinn': {
+                'config': 'OWNED_floradinn',
+                'description':  (
+                    "* Oh,{pause:0.2} these guys...{pause:0.5} They're all empty minded..{pause:0.4}\n    and they like flowers a whole lot.",
+                    'talk'
+                ),
+                'cost': 400,
+            },
+            'Mizzle': {
+                'config': 'OWNED_mizzle',
+                'description':  (
+                    "* Well,{pause:0.3} to you she might just seem like water,{pause:0.5}\n    but she's a wonderful woman...{pause:0.4}\n* So, maybe you should take good care of her.",
+                    'talk'
+                ),
+                'cost': 800,
+            },
+            'Noelle': {
+                'config': 'OWNED_noelle',
+                'description':  (
+                    "* I've heard she can do ice magic, but...{pause:0.7}\n    You might go too far if you use it too much.",
+                    'annoyed'
+                ),
+                'cost': 750,
+            },
         }
         self.stats = {
             'dd': 'dark_dollars',
