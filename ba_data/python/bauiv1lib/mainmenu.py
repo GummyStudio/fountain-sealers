@@ -35,7 +35,7 @@ class MainMenuWindow(bui.MainWindow):
         # refresh.
         super().__init__(
             root_widget=bui.containerwidget(
-                toolbar_visibility=('menu_minimal'),
+                toolbar_visibility=('menu_minimal_no_back'),
             ),
             transition=transition,
             origin_widget=origin_widget,
@@ -147,7 +147,7 @@ class MainMenuWindow(bui.MainWindow):
         app = bui.app
         assert app.classic is not None
         uiscale = app.ui_v1.uiscale
-        thistdelay = 0.001
+        thistdelay = 0
 
         self._have_quit_button = app.classic.platform in (
             'windows',
@@ -163,23 +163,8 @@ class MainMenuWindow(bui.MainWindow):
         self._width = 420
         self._height = 800.0
 
-        if uiscale is bui.UIScale.SMALL:
-            # We're a generally widescreen shaped window, so bump our
-            # overall scale up a bit when screen width is wider than safe
-            # bounds to take advantage of the extra space.
-            screensize = bui.get_virtual_screen_size()
-            safesize = bui.get_virtual_safe_area_size()
-            root_widget_scale = min(1.55, 1.3 * screensize[0] / safesize[0])
-            button_y_offs = -20.0
-            self._button_height *= 1.3
-        elif uiscale is bui.UIScale.MEDIUM:
-            root_widget_scale = 1.3
-            button_y_offs = -55.0
-            self._button_height *= 1.25
-        else:
-            root_widget_scale = 1.0
-            button_y_offs = -90.0
-            self._button_height *= 1.2
+        root_widget_scale = 1.0
+        self._button_height *= 1.2
 
         bui.containerwidget(
             edit=self._root_widget,
