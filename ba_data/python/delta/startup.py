@@ -51,7 +51,7 @@ class Startup:
             'Roaring Knight': {
                 'config': 'OWNED_roaringknight',
                 'description':  (
-                        "* The Knight?{pause:0.4}\n* THAT Knight??{pause:0.6}\n* I'll sell him to you, but.{pause:0.1}.{pause:0.1}.{pause:0.7}don't expect any good to come\n     out of it.",
+                        "* The Knight?{pause:0.4}\n* THAT Knight??{pause:0.6}\n* I'll sell it to you, but.{pause:0.1}.{pause:0.1}.{pause:0.7}don't expect any good to come\n     out of it.",
                         'annoyed'
                     ),
                 'cost': 5000
