@@ -717,6 +717,7 @@
     "willTimeOutText": "(will time out if idle)"
   },
   "inventoryText": "Inventory",
+  "yourCharactersText": "Your Characters:",
   "jumpBoldText": "JUMP",
   "jumpText": "Jump",
   "keepText": "Keep",
