@@ -40,6 +40,15 @@ class MusicType(Enum):
     SHOP = 'LANTERN'
     TITAN = 'holy shit we are SO DEAD'
 
+    # REMIXES / MIXES / NOT ORIGINAL TO UNDERTALE NOR DELTARUNE
+    MIX_CHAOS_KING = 'Remix Chaos King'
+    MIX_JAGGED_BLADE = 'Jagged Blacde'
+    MIX_MEW_MEW_KISSY_ROCK = 'jesus'
+    MIX_MEW_MEW_KISSY_JACKPOT = 'I HIT THE JACKPOT'
+    MIX_SOUL_BUSTER = 'Soul Buster'
+    MIX_SPADE = 'Spade'
+
+
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:
     """Set the app to play (or stop playing) a certain type of music.
 

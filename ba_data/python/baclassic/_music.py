@@ -61,7 +61,30 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
     MusicType.SHOP: AssetSoundtrackEntry('music/lantern', volume=0.8),
     MusicType.CH4_MENU: AssetSoundtrackEntry('music/ch4_menu', volume=1.0),
     MusicType.TITAN: AssetSoundtrackEntry('music/titan_battle', volume=1.0),
-
+    MusicType.MIX_CHAOS_KING: 
+        AssetSoundtrackEntry(
+            'music/remixAndAlts/chaosKing', 
+    volume=1.0),
+    MusicType.MIX_JAGGED_BLADE: 
+        AssetSoundtrackEntry(
+            'music/remixAndAlts/jaggedBlade', 
+    volume=1.0),
+    MusicType.MIX_MEW_MEW_KISSY_ROCK: 
+        AssetSoundtrackEntry(
+            'music/remixAndAlts/pinkRock', 
+    volume=1.0),
+    MusicType.MIX_MEW_MEW_KISSY_JACKPOT: 
+        AssetSoundtrackEntry(
+            'music/remixAndAlts/pinkJackPot', 
+    volume=1.0),
+    MusicType.MIX_SOUL_BUSTER: 
+        AssetSoundtrackEntry(
+            'music/remixAndAlts/soulBuster', 
+    volume=1.0),
+    MusicType.MIX_SPADE: 
+        AssetSoundtrackEntry(
+            'music/remixAndAlts/spade', 
+    volume=1.0),
 }
 
 class MusicSubsystem:
