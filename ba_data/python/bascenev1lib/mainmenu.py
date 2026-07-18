@@ -358,6 +358,8 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             sub_x = (base_x - 20) * sub_scale
             sub_y = (-80 + y)
             delay += 0.2
+            sub_bob_delay = 0
+            ymax = 8
             for tstr in ('fountainSub', 'sealersSub'):
                 sc = (512 * sub_scale, 128 * sub_scale)
                 actor = bs.NodeActor(
@@ -381,6 +383,27 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                         delay + 0.19: sc,
                     }
                 )
+                bs.animate_array(
+                    actor.node,
+                    'position', 2,
+                    {
+                        0.00: (sub_x, sub_y),
+                        0.35: (sub_x, sub_y + ymax * 0.60),
+                        0.55: (sub_x, sub_y + ymax * 0.90),
+                        0.70: (sub_x, sub_y + ymax),
+                        0.85: (sub_x, sub_y + ymax * 0.95),
+                        1.40: (sub_x, sub_y),
+
+                        1.95: (sub_x, sub_y - ymax * 0.95),
+                        2.10: (sub_x, sub_y - ymax),
+                        2.25: (sub_x, sub_y - ymax * 0.90),
+                        2.45: (sub_x, sub_y - ymax * 0.60),
+                        2.80: (sub_x, sub_y),
+                    },
+                    loop=True,
+                    offset=sub_bob_delay,
+                )
+                sub_bob_delay += 0.15
                 delay += 0.5
                 sub_x += sub_spacing
                 self._word_actors.append(actor)
