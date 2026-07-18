@@ -894,6 +894,8 @@ def _preload3() -> None:
     for sname in ['freeze', 'fuse01', 'activateBeep', 'warnBeep']:
         bs.getsound(sname)
     SpazFactory.get()
+    for appearance in bs.app.classic.spaz_appearances:
+        SpazFactory.get().get_media(appearance)
     bui.apptimer(0.2, _preload4)
 
 
