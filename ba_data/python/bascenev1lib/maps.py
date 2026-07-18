@@ -109,7 +109,8 @@ class Rudebuster(bs.Map):
             bs.MusicType.RUDE_BUSTER,
             bs.MusicType.RUDER_BUSTER,
             bs.MusicType.CH4_BUSTER,
-            bs.MusicType.RAKUICHI_BUSTER
+            bs.MusicType.RAKUICHI_BUSTER,
+            bs.MusicType.MIX_SOUL_BUSTER
         ])
 
 class MewersLive(bs.Map):
@@ -188,7 +189,12 @@ class MewersLive(bs.Map):
     @classmethod
     def get_music_type(cls) -> bs.MusicType:
         
-        return bs.MusicType.MEW_MEW_KISSY
+        return random.choice([
+            bs.MusicType.MEW_MEW_KISSY,
+            bs.MusicType.MIX_MEW_MEW_KISSY_JACKPOT,
+            bs.MusicType.MIX_MEW_MEW_KISSY_ROCK
+        ])
+
 
 class JevilStage(bs.Map):
     """Jevil's battle stage 
@@ -507,7 +513,10 @@ class CardCastle(bs.Map):
     @classmethod
     def get_music_type(cls) -> bs.MusicType:
         
-        return bs.MusicType.KING_BOSS
+        return random.choice([
+            bs.MusicType.KING_BOSS,
+            bs.MusicType.MIX_CHAOS_KING,
+        ])
     
 
 class MettatonStage(bs.Map):
@@ -1130,4 +1139,8 @@ class TitanStage(bs.Map):
     def get_music_type(cls) -> bs.MusicType:
         
         
-        return bs.MusicType.TITAN
+        return random.choice([
+            bs.MusicType.TITAN,
+            bs.MusicType.MIX_SPADE,
+            bs.MusicType.MIX_JAGGED_BLADE
+        ])
