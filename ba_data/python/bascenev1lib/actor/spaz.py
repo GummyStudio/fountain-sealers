@@ -233,6 +233,8 @@ class Spaz(bs.Actor):
         self.last_run_time_ms = -9999
         self._last_run_value = 0.0
         self.last_bomb_time_ms = -9999
+        self.max_move_speed = 1
+        self.max_run_speed = 1
         self._turbo_filter_times: dict[str, int] = {}
         self._turbo_filter_time_bucket = 0
         self._turbo_filter_counts: dict[str, int] = {}
@@ -830,7 +832,7 @@ class Spaz(bs.Actor):
         t_ms = int(bs.time() * 1000.0)
         assert isinstance(t_ms, int)
         self.last_run_time_ms = t_ms
-        self.node.run = value
+        self.node.run = value * self.max_run_speed
 
         # Filtering these events would be tough since its an analog
         # value, but lets still pass full 0-to-1 presses along to
@@ -881,7 +883,7 @@ class Spaz(bs.Actor):
         if not self.node:
             return
         self.input_y = value
-        self.node.move_up_down = value
+        self.node.move_up_down = value * self.max_move_speed
 
     def on_move_left_right(self, value: float) -> None:
         """
@@ -893,7 +895,7 @@ class Spaz(bs.Actor):
         if not self.node:
             return
         self.input_x = value
-        self.node.move_left_right = value
+        self.node.move_left_right = value * self.max_move_speed
 
     def on_punched(self, damage: int) -> None:
         """Called when this spaz gets punched."""

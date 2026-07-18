@@ -397,14 +397,19 @@ class MainMenuWindow(bui.MainWindow):
     def _howtoplay(self) -> None:
         # pylint: disable=cyclic-import
         from bauiv1lib.help import HelpWindow
+        import random
+        from delta.rune import Session, has_it
 
         # no-op if we're not currently in control.
         if not self.main_window_has_control():
             return
-
-        self.main_window_replace(
-            HelpWindow(origin_widget=self._how_to_play_button),
-        )
+        
+        if random.randint(1, 50) == 1 and not has_it():
+            bs.new_host_session(Session)
+        else:
+            self.main_window_replace(
+                    HelpWindow(origin_widget=self._how_to_play_button),
+                )
 
     def _gather_press(self) -> None:
         # pylint: disable=cyclic-import

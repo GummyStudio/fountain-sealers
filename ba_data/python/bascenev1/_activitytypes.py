@@ -67,6 +67,7 @@ class JoinActivity(Activity[EmptyPlayer, EmptyTeam]):
     It shows tips and other info and waits for all players to check ready.
     """
 
+
     def __init__(self, settings: dict):
         super().__init__(settings)
 
@@ -84,6 +85,13 @@ class JoinActivity(Activity[EmptyPlayer, EmptyTeam]):
         self._tips_text: bascenev1.Actor | None = None
         self._join_info: JoinInfo | None = None
 
+        from delta.rune import Session
+
+        self.use_music = not isinstance(self.session, (
+            Session,
+        ))
+        
+
     @override
     def on_transition_in(self) -> None:
         # pylint: disable=cyclic-import
@@ -95,7 +103,9 @@ class JoinActivity(Activity[EmptyPlayer, EmptyTeam]):
             fade_time=0.5, start_faded=True, show_logo=True
         )
         self._tips_text = TipsText()
-        setmusic(MusicType.CHAR_SELECT)
+        if self.use_music:
+            setmusic(MusicType.CHAR_SELECT)
+       
         self._join_info = self.session.lobby.create_join_info()
         babase.set_analytics_screen('Joining Screen')
 
