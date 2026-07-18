@@ -120,77 +120,110 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         gnode.ambient_color = (1.06, 1.04, 1.03)
         gnode.vignette_outer = (0.45, 0.55, 0.54)
         gnode.vignette_inner = (0.99, 0.98, 0.98)
-
-        # self.bottom = bs.NodeActor(
-            # bs.newnode(
-                # 'terrain',
-                # attrs={
-                    # 'mesh': bottom_mesh,
-                    # 'lighting': False,
-                    # 'reflection': 'soft',
-                    # 'reflection_scale': [0.45],
-                    # 'color_texture': color_texture,
-                # },
-            # )
-        # )
-        # self.vr_bottom_fill = bs.NodeActor(
-            # bs.newnode(
-                # 'terrain',
-                # attrs={
-                    # 'mesh': vr_bottom_fill_mesh,
-                    # 'lighting': False,
-                    # 'vr_only': True,
-                    # 'color_texture': color_texture,
-                # },
-            # )
-        # )
-        # self.vr_top_fill = bs.NodeActor(
-            # bs.newnode(
-                # 'terrain',
-                # attrs={
-                    # 'mesh': vr_top_fill_mesh,
-                    # 'vr_only': True,
-                    # 'lighting': False,
-                    # 'color_texture': bgtex,
-                # },
-            # )
-        # )
-        # self.terrain = bs.NodeActor(
-            # bs.newnode(
-                # 'terrain',
-                # attrs={
-                    # 'mesh': mesh,
-                    # 'color_texture': color_texture,
-                    # 'reflection': 'soft',
-                    # 'reflection_scale': [0.3],
-                # },
-            # )
-        # )
-        # self.trees = bs.NodeActor(
-            # bs.newnode(
-                # 'terrain',
-                # attrs={
-                    # 'mesh': trees_mesh,
-                    # 'lighting': False,
-                    # 'reflection': 'char',
-                    # 'reflection_scale': [0.1],
-                    # 'color_texture': trees_texture,
-                # },
-            # )
-        # )
-        self.bgterrain = bs.NodeActor(
-            bs.newnode(
-                'terrain',
+        scale = 3.0
+        y = 0 * scale
+        self._anti_hom_bg = bs.newnode(
+            'image',
+            attrs={
+                'fill_screen': True,
+                'texture': bs.gettexture('black'),
+            },
+        )
+        self._fountain_bg = bs.newnode(
+            'image',
+            attrs={
+                'position': (0, y),
+                'scale': (512 * scale, 256 * scale),
+                'texture': bs.gettexture('menu_fountain_main'),
+                'premultiplied': True,
+            },
+        )
+        for i in range(2):
+            # hardcoded for now
+            # (we only need 2 afterimages)
+            spread = 16
+            if i == 0:
+                xnum = spread
+            else:
+                xnum = -spread
+            node = bs.newnode(
+                'image',
                 attrs={
-                    'mesh': bgmesh,
-                    'color': (0.92, 0.91, 0.9),
-                    'lighting': False,
-                    'background': True,
-                    'color_texture': bgtex,
+                    'position': (xnum, y),
+                    'scale': (512 * scale, 256 * scale),
+                    'texture': bs.gettexture('menu_fountain_main'),
+                    'opacity': 0,
                 },
             )
+            bs.animate(
+                node,
+                'opacity',
+                {
+                    0: 0,
+                    2: 0.6,
+                    4.5: 0,
+                },
+                loop=True,
+            )
+            bs.animate_array(
+                node,
+                'position', 2,
+                {
+                    0: (0, y),
+                    2: (xnum, y),
+                    2.6: (xnum * 1.3, y),
+                    2.7: (xnum * 1.32, y),
+                    2.8: (xnum * 1.34, y),
+                    2.9: (xnum * 1.35, y),
+                    3.0: (xnum * 1.37, y),
+                    4.8: (0, y),
+                },
+                loop=True,
+            )
+                
+        # size of bottom image + empty space
+        # (and scale)
+        y -= (128 - 32) * scale
+        y2 = y
+        # idk amn
+        y -= (128 - 43.3) * scale
+        self._bottom_extended = bs.newnode(
+            'image',
+            attrs={
+                'position': (0, y),
+                'texture': bs.gettexture('white'),
+                'color': (0, 79 / 255, 223 / 255),
+                'scale': (1024 * scale, 128 * scale),
+                'premultiplied': False,
+            },
         )
-
+        self._fountain_fg = bs.newnode(
+            'image',
+            attrs={
+                'position': (0, y2),
+                'scale': (512 * scale, 128 * scale),
+                'texture': bs.gettexture('menu_fountain_anim1'),
+                'premultiplied': False,
+            },
+        )
+        name = 'menu_fountain_anim'
+        intex = list(
+            bs.gettexture(f'{name}{i + 1}')
+            for i in range(5)
+        )
+        anim = bs.newnode(
+            'texture_sequence',
+            attrs={
+                'input_textures': intex,
+                'rate': 250,
+            }
+        )
+        anim.connectattr(
+            'output_texture', 
+            self._fountain_fg, 
+            'texture'
+        )
+        
         self._update_timer = bs.Timer(0.1, self._update, repeat=True)
         self._update()
 
@@ -198,11 +231,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         bs.add_clean_frame_callback(bs.WeakCall(self._start_preloads))
 
         random.seed()
-
-        # Need to update this for toolbar mode; currenly doesn't fit.
-        # if bool(False):
-        #     if not (env.demo or env.arcade):
-        #         self._news = NewsDisplay(self)
+        # self._news = NewsDisplay(self)
 
         self._attract_mode_timer = bs.Timer(
             3.12, self._update_attract_mode, repeat=True
@@ -324,23 +353,37 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 delay=base_delay,
             )
             # Show modpack subtitel text.
-            pos = ((base_x - 20) + (spacing * 3.3), -230 + y)
-            actor = self.modpack_subtitle = bs.NodeActor(
-                bs.newnode(
-                    'text',
-                    attrs={
-                        'v_attach': 'center',
-                        'h_align': 'center',
-                        'scale': 0.6,
-                        'vr_depth': -60,
-                        'position': pos,
-                        'text': bs.Lstr(resource='menuSubtitleText'),
-                        'big': True,
-                    },
+            sub_scale = 0.5
+            sub_spacing = 512 * sub_scale
+            sub_x = (base_x - 20) * sub_scale
+            sub_y = (-80 + y)
+            delay += 0.2
+            for tstr in ('fountainSub', 'sealersSub'):
+                sc = (512 * sub_scale, 128 * sub_scale)
+                actor = bs.NodeActor(
+                    bs.newnode(
+                        'image',
+                        attrs={
+                            'texture': bs.gettexture(tstr),
+                            'scale': (0, 0),
+                            'position': (sub_x, sub_y),
+                        },
+                    )
                 )
-            )
-            bs.animate(actor.node, 'opacity', {delay: 0, delay + 0.6: 1.0})
-            self._word_actors.append(actor)
+                
+                bs.animate_array(
+                    actor.node,
+                    'scale', 2,
+                    {
+                        0: (0, 0),
+                        delay: (0, 0),
+                        delay + 0.15: (sc[0] * 1.1, sc[1] * 1.1),
+                        delay + 0.19: sc,
+                    }
+                )
+                delay += 0.5
+                sub_x += sub_spacing
+                self._word_actors.append(actor)
 
     def _make_word(
         self,
@@ -537,6 +580,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             musics = [
                 bs.MusicType.MENU,
                 bs.MusicType.MENU2,
+                #bs.MusicType.CH4MENU,
             ]
             bs.setmusic(random.choice(musics))
 

@@ -22,7 +22,6 @@ class MainMenuWindow(bui.MainWindow):
         transition: str | None = 'in_left',
         origin_widget: bui.Widget | None = None,
     ):
-
         # Preload some modules we use in a background thread so we won't
         # have a visual hitch when the user taps them.
         bui.app.threadpool.submit_no_wait(self._preload_modules)
