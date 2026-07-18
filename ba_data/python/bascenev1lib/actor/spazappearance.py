@@ -123,22 +123,6 @@ def register_appearances() -> None:
     t.upper_leg_mesh = 'vesselUpperLeg'
     t.lower_leg_mesh = 'vesselLowerLeg'
     t.toes_mesh = 'vesselToes' # vessel toes reveal
-    t.jump_sounds = ['spazJump01', 'spazJump02', 'spazJump03', 'spazJump04']
-    t.attack_sounds = [
-        'spazAttack01',
-        'spazAttack02',
-        'spazAttack03',
-        'spazAttack04',
-    ]
-    t.impact_sounds = [
-        'spazImpact01',
-        'spazImpact02',
-        'spazImpact03',
-        'spazImpact04',
-    ]
-    t.death_sounds = ['spazDeath01']
-    t.pickup_sounds = ['spazPickup01']
-    t.fall_sounds = ['spazFall01']
     t.style = 'bones'
     t.tags = [
         CharacterTag.DELTARUNE,
@@ -233,7 +217,7 @@ def register_appearances() -> None:
     t.toes_mesh = 'krisToes'
     t.jump_sounds = ['voicelines/kris/jump']
     t.attack_sounds = ['voicelines/kris/attack' + str(i + 1) + '' for i in range(4)]
-    t.impact_sounds = ['voicelines/kris/hurt' + str(i + 1) + '' for i in range(4)]
+    t.impact_sounds = ['voicelines/kris/hurt']
     t.death_sounds = ['voicelines/kris/death']
     t.pickup_sounds = ['voicelines/kris/pickup']
     t.fall_sounds = ['voicelines/kris/fall']
@@ -267,7 +251,7 @@ def register_appearances() -> None:
     t.attack_sounds = ['voicelines/susie/jump' + str(i + 1) + '' for i in range(4)]
     t.impact_sounds = ['voicelines/susie/hurt' + str(i + 1) + '' for i in range(2)]
     t.death_sounds = ['voicelines/susie/death']
-    t.pickup_sounds = ['voicelines/susie/attack' + str(i + 1) + '' for i in range(4)]
+    t.pickup_sounds = ['voicelines/susie/jump' + str(i + 1) + '' for i in range(4)]
     t.fall_sounds = ['voicelines/susie/fall']
     t.style = 'agent'
     t.default_color = (0.9725490196078431, 0.5137254901960784, 0.8431372549019608)
@@ -437,15 +421,19 @@ def register_appearances() -> None:
     t.icon_mask_texture = 'noelleIconMask'
     t.head_mesh = 'noelleHead'
     t.torso_mesh = 'noelleTorso'
-    t.upper_arm_mesh = 'noelleArm'
-    t.lower_leg_mesh = 'noelleFoot'
-    noellesounds = []
+    t.upper_arm_mesh = 'noelleUpperArm'
+    t.forearm_mesh = 'noelleForeArm'
+    t.hand_mesh = 'noelleHand'
+    t.lower_leg_mesh = 'noelleLowerLeg'
+    t.upper_leg_mesh = 'noelleUpperLeg'
+    t.toes_mesh = 'noelleToes'
+    noellesounds = ['voicelines/noelle/sound' + str(i + 1) + '' for i in range(4)]
     t.jump_sounds = noellesounds
     t.attack_sounds = noellesounds
-    t.impact_sounds = []
-    t.death_sounds = []
+    t.impact_sounds = ['voicelines/kris/hurt']
+    t.death_sounds = ['voicelines/kris/death']
     t.pickup_sounds = noellesounds
-    t.fall_sounds = []
+    t.fall_sounds = ['voicelines/noelle/fall']
     t.style = 'agent'
     t.default_color = (0.0, 0.0, 0.0)
     t.default_highlight = (1, 1, 1)
