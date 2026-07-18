@@ -141,7 +141,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
         for i in range(2):
             # hardcoded for now
             # (we only need 2 afterimages)
-            spread = 16
+            spread = 18
             if i == 0:
                 xnum = spread
             else:
@@ -160,22 +160,27 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 'opacity',
                 {
                     0: 0,
-                    2: 0.6,
-                    4.5: 0,
+                    3: 0.46,
+                    4.8: 0,
                 },
                 loop=True,
             )
             bs.animate_array(
                 node,
-                'position', 2,
+                'position',
+                2,
                 {
-                    0: (0, y),
-                    2: (xnum, y),
-                    2.6: (xnum * 1.3, y),
-                    2.7: (xnum * 1.32, y),
-                    2.8: (xnum * 1.34, y),
-                    2.9: (xnum * 1.35, y),
-                    3.0: (xnum * 1.37, y),
+                    0.0: (0, y),
+                    0.8: (xnum * 0.15, y),
+                    1.4: (xnum * 0.45, y),
+                    1.9: (xnum * 0.75, y),
+                    2.3: (xnum * 1.00, y),
+                    2.6: (xnum * 1.18, y),
+                    2.9: (xnum * 1.28, y),
+                    3.2: (xnum * 1.35, y),
+                    3.5: (xnum * 1.37, y),
+                    4.0: (xnum * 1.15, y),
+                    4.4: (xnum * 0.65, y),
                     4.8: (0, y),
                 },
                 loop=True,
@@ -215,7 +220,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             'texture_sequence',
             attrs={
                 'input_textures': intex,
-                'rate': 250,
+                'rate': 220,
             }
         )
         anim.connectattr(
