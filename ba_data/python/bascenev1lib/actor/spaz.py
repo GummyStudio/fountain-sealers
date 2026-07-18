@@ -2024,8 +2024,14 @@ class Spaz(bs.Actor):
             bomb.node.add_death_action(
                 bs.WeakCall(self.handlemessage, BombDiedMessage())
             )
+        fix_mewmews_funny_thing = True
+
         
-        if self.bomb_type == 'mewmew':
+        if bool(
+            bool(self.bomb_type == 'mewmew' and dropping_bomb) 
+            if fix_mewmews_funny_thing else
+            bool(self.bomb_type == 'mewmew')
+        ):
             def throw():
                 if not self.is_alive():
                     return
