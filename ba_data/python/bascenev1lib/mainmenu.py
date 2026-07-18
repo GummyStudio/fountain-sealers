@@ -220,7 +220,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
             'texture_sequence',
             attrs={
                 'input_textures': intex,
-                'rate': 220,
+                'rate': 190,
             }
         )
         anim.connectattr(
@@ -358,14 +358,24 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 delay=base_delay,
             )
             # Show modpack subtitel text.
+            # allowing multiple subs here
+            # (should allow for support of other
+            # languages allowing different subs if they want)
+            subs = ('fountainSub', 'sealersSub')
+
             sub_scale = 0.5
+            # FIXME: should allow per sub spacing
             sub_spacing = 512 * sub_scale
-            sub_x = (base_x - 20) * sub_scale
+
+            # we want center of screen,
+            # so let's do that
+            total_width = (len(subs) - 1) * sub_spacing
+            sub_x = -total_width * 0.5
             sub_y = (-80 + y)
             delay += 0.2
             sub_bob_delay = 0
             ymax = 8
-            for tstr in ('fountainSub', 'sealersSub'):
+            for tstr in subs:
                 sc = (512 * sub_scale, 128 * sub_scale)
                 actor = bs.NodeActor(
                     bs.newnode(
