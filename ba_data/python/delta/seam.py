@@ -98,7 +98,7 @@ class ShopUI(bui.MainWindow):
 
         
         else:
-            bui.textwidget(edit=self.dark_dollars, text=f'${babase.app.classic.startup.gameconfig.get('dark_dollars', 0)}')
+            bui.textwidget(edit=self.dark_dollars, text=f'D${babase.app.classic.startup.gameconfig.get('dark_dollars', 0)}')
             
         bs.apptimer(0.1, self._tick)
     
