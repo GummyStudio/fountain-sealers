@@ -137,7 +137,7 @@ class HelpWindow(bui.MainWindow):
         # self._sub_width = 810 if uiscale is bui.UIScale.SMALL else 660
         self._sub_width = 660
         self._sub_height = (
-            1590
+            1950
             + bui.app.lang.get_resource(f'{self._r}.someDaysExtraSpace')
             + bui.app.lang.get_resource(
                 f'{self._r}.orPunchingSomethingExtraSpace'
@@ -370,14 +370,6 @@ class HelpWindow(bui.MainWindow):
         )
         icon_size = 70
 
-        hval2 = h - (txt_width * 0.5 + icon_size * 0.5 * icon_buffer)
-        bui.imagewidget(
-            parent=self._subcontainer,
-            size=(icon_size, icon_size),
-            position=(hval2 - 0.5 * icon_size, v - 0.45 * icon_size),
-            texture=logo_tex,
-        )
-
         v -= spacing * 45.0
 
         txt_scale = 0.7
@@ -413,7 +405,7 @@ class HelpWindow(bui.MainWindow):
             color=(1, 0.7, 0.3),
             selectable=False,
             enable_sound=False,
-            on_activate_call=bui.WeakCall(self._play_sound, 'spazAttack0', 4),
+            on_activate_call=bui.getsound('punch01').play,
         )
 
         txt_scale = getres(f'{self._r}.punchInfoTextScale')
@@ -441,7 +433,7 @@ class HelpWindow(bui.MainWindow):
             color=(1, 0.3, 0.3),
             selectable=False,
             enable_sound=False,
-            on_activate_call=bui.WeakCall(self._play_sound, 'explosion0', 5),
+            on_activate_call=bui.WeakCall(self._play_sound, 'explosion0', 2),
         )
 
         txt = bui.Lstr(resource=f'{self._r}.bombInfoText').evaluate()
@@ -470,7 +462,7 @@ class HelpWindow(bui.MainWindow):
             color=(0.5, 0.5, 1),
             selectable=False,
             enable_sound=False,
-            on_activate_call=bui.WeakCall(self._play_sound, 'spazPickup0', 1),
+            on_activate_call=bui.getsound('voicelines/kris/pickup').play, # should change this
         )
 
         txtl = bui.Lstr(resource=f'{self._r}.pickUpInfoText')
@@ -498,7 +490,7 @@ class HelpWindow(bui.MainWindow):
             color=(0.4, 1, 0.4),
             selectable=False,
             enable_sound=False,
-            on_activate_call=bui.WeakCall(self._play_sound, 'spazJump0', 4),
+            on_activate_call=bui.getsound('voicelines/kris/jump').play,
         )
 
         txt = bui.Lstr(resource=f'{self._r}.jumpInfoText').evaluate()
@@ -552,13 +544,6 @@ class HelpWindow(bui.MainWindow):
             bui.get_string_width(txt, suppress_warning=True) * txt_scale,
         )
         icon_size = 70
-        hval2 = h - (txt_width * 0.5 + icon_size * 0.5 * icon_buffer)
-        bui.imagewidget(
-            parent=self._subcontainer,
-            size=(icon_size, icon_size),
-            position=(hval2 - 0.5 * icon_size, v - 0.45 * icon_size),
-            texture=logo_tex,
-        )
 
         v -= spacing * 50.0
         txt_scale = getres(f'{self._r}.powerupsSubtitleTextScale')
@@ -600,6 +585,12 @@ class HelpWindow(bui.MainWindow):
             'powerupStickyBombs',
             'powerupLandMines',
             'powerupCurse',
+            'powerupBuster',
+            'powerupSnowgrave',
+            'powerupToby',
+            'powerupSpades',
+            'powerupSlash',
+            'powerupMew',
         ]:
             name = bui.Lstr(resource=f'{self._r}.' + tex + 'NameText')
             desc = bui.Lstr(resource=f'{self._r}.' + tex + 'DescriptionText')
