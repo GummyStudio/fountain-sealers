@@ -273,7 +273,8 @@ class InventoryWindow(bui.MainWindow):
             spaz.fall_sounds,
         ]
         chosen = random.choice(voicelines)
-        bui.getsound(random.choice(chosen)).play()
+        if len(chosen) > 0:
+            bui.getsound(random.choice(chosen)).play()
 
     def _player_profiles_press(self) -> None:
         # pylint: disable=cyclic-import
