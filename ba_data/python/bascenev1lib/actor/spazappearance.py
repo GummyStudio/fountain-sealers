@@ -5,6 +5,33 @@ from __future__ import annotations
 
 import bascenev1 as bs
 from enum import Enum
+
+def hex_to_color(hex_color: str) -> tuple:
+    # Remove the '#' from the string if provided.
+    if hex_color.startswith('#'):
+        hex_color = hex_color.lstrip('#')
+    # Check if this has a valid length.
+    hexlength = len(hex_color)
+    if not hexlength in [6, 8]:
+        raise ValueError(f'Invalid HEX color provided: "{hex_color}"')
+
+    # Convert the hex bytes to their true byte form.
+    ar, ag, ab, aa = (
+        (int.from_bytes(bytes.fromhex(hex_color[0:2]))),
+        (int.from_bytes(bytes.fromhex(hex_color[2:4]))),
+        (int.from_bytes(bytes.fromhex(hex_color[4:6]))),
+        (
+            (int.from_bytes(bytes.fromhex(hex_color[6:8])))
+            if hexlength == 8
+            else None
+        ),
+    )
+    # Divide all numbers by 255 and return.
+    nr, ng, nb, na = (
+        x / 255 if x is not None else None for x in (ar, ag, ab, aa)
+    )
+    return (nr, ng, nb, na) if aa is not None else (nr, ng, nb)
+    
 class CharacterTag(Enum):
     """ 
         basically, the thing from bser idek
@@ -130,6 +157,8 @@ def register_appearances() -> None:
         CharacterTag.BYSTANDER,
         CharacterTag.NONBINARY,
     ]
+    t.default_highlight = hex_to_color('79251e')
+    t.default_color = hex_to_color('dfdfdf')
     
 
     # Prince of the Dark ###################################
@@ -319,8 +348,8 @@ def register_appearances() -> None:
     t.pickup_sounds = temmiesounds
     t.fall_sounds = []
     t.style = 'agent'
-    t.default_color = (0.0, 0.0, 0.0)
-    t.default_highlight = (1, 1, 1)
+    t.default_color = (0.2, 1, 1)
+    t.default_highlight = (1, 1, 0)
     t.tags = [
         CharacterTag.LIGHTER,
         CharacterTag.DELTARUNE,
@@ -348,8 +377,8 @@ def register_appearances() -> None:
     t.pickup_sounds = togoresounds
     t.fall_sounds = []
     t.style = 'agent'
-    t.default_color = (0.0, 0.0, 0.0)
-    t.default_highlight = (1, 1, 1)
+    t.default_color = (0.2, 1, 0.2)
+    t.default_highlight = (1, 1, 0)
     t.tags = [
         CharacterTag.UNDERTALE,
         CharacterTag.MONSTER,
@@ -366,7 +395,9 @@ def register_appearances() -> None:
     t.icon_mask_texture = 'floradinnIconMask'
     t.head_mesh = 'floradinnHead'
     t.torso_mesh = 'floradinnTorso'
-    t.upper_arm_mesh = 'floradinnArm'
+    t.upper_arm_mesh = 'floradinnUpperArm'
+    t.forearm_mesh = 'floradinnForeArm'
+    t.hand_mesh = 'floradinnHand'
     floradinnsounds = []
     t.jump_sounds = floradinnsounds
     t.attack_sounds = floradinnsounds
@@ -375,8 +406,8 @@ def register_appearances() -> None:
     t.pickup_sounds = floradinnsounds
     t.fall_sounds = []
     t.style = 'cyborg'
-    t.default_color = (0.0, 0.0, 0.0)
-    t.default_highlight = (1, 1, 1)
+    t.default_color = (0.2, 1, 0.2)
+    t.default_highlight = (1, 0.3, 0.5)
     t.tags = [
         CharacterTag.DARKNER,
         CharacterTag.DELTARUNE,
@@ -403,8 +434,8 @@ def register_appearances() -> None:
     t.pickup_sounds = mizzlesounds
     t.fall_sounds = []
     t.style = 'agent'
-    t.default_color = (0.0, 0.0, 0.0)
-    t.default_highlight = (1, 1, 1)
+    t.default_color = (0.1, 0.1, 1)
+    t.default_highlight = (0.2, 1, 1)
     t.tags = [
         CharacterTag.DARKNER,
         CharacterTag.DELTARUNE,
@@ -435,8 +466,8 @@ def register_appearances() -> None:
     t.pickup_sounds = noellesounds
     t.fall_sounds = ['voicelines/noelle/fall']
     t.style = 'agent'
-    t.default_color = (0.0, 0.0, 0.0)
-    t.default_highlight = (1, 1, 1)
+    t.default_color = (1, 1, 1)
+    t.default_highlight = (1, 0.8, 0.5)
     t.tags = [
         CharacterTag.LIGHTER,
         CharacterTag.DELTARUNE,
