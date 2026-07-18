@@ -275,7 +275,7 @@ class MainMenuActivity(bs.Activity[bs.Player, bs.Team]):
                 base_delay = 0.0
                 delay = base_delay
                 delay_inc = 0.02
-            base_x = -200
+            base_x = -205
             x = base_x - 20
             spacing = 50 * base_scale
             y_extra = 0
