@@ -465,7 +465,7 @@ def register_appearances() -> None:
     t.death_sounds = ['voicelines/kris/death']
     t.pickup_sounds = noellesounds
     t.fall_sounds = ['voicelines/noelle/fall']
-    t.style = 'agent'
+    t.style = 'bones'
     t.default_color = (1, 1, 1)
     t.default_highlight = (1, 0.8, 0.5)
     t.tags = [
@@ -476,5 +476,36 @@ def register_appearances() -> None:
         CharacterTag.FEMALE,
     ]
 
+
+    # bouny litle fuckin pumpkin #####################################
+    t = Appearance('Lancer')
+    t.color_texture = 'lancerColor'
+    t.color_mask_texture = 'lancerColorMask'
+    t.icon_texture = 'lancerIcon'
+    t.icon_mask_texture = 'lancerIconCM'
+    t.head_mesh = 'lancerHead'
+    t.torso_mesh = 'lancerTorso'
+    t.upper_arm_mesh = 'lancerUpperArm'
+    t.forearm_mesh = 'lancerForeArm'
+    t.hand_mesh = 'lancerHand'
+    t.lower_leg_mesh = 'lancerLowerLeg'
+    t.upper_leg_mesh = 'lancerUpperLeg'
+    sounds = ['voicelines/lancer/sound' + str(i + 1) + '' for i in range(4)]
+    t.jump_sounds = sounds
+    t.attack_sounds = sounds
+    t.impact_sounds = ['voicelines/kris/hurt']
+    t.death_sounds = ['voicelines/lancer/death']
+    t.pickup_sounds = sounds
+    t.fall_sounds = ['voicelines/lancer/fall']
+    t.style = 'bones'
+    t.default_color = hex_to_color('69a5ef')
+    t.default_highlight = (1, 1, 1)
+    t.tags = [
+        CharacterTag.DARKNER,
+        CharacterTag.DELTARUNE,
+        CharacterTag.MONSTER,
+        CharacterTag.ENEMY,
+        CharacterTag.MALE,
+    ]
 
 
