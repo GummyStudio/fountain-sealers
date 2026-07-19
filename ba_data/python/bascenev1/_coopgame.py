@@ -172,6 +172,8 @@ class CoopGameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
 
         classic = babase.app.classic
         plus = babase.app.plus
+        if bool(True):
+            return False
         if classic is None or plus is None:
             logging.warning(
                 '_award_achievement is a no-op without classic and plus.'

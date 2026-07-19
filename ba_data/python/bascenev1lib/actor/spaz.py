@@ -711,6 +711,7 @@ class Spaz(bs.Actor):
         def tick():
             duration = 0.2
             if self.node.pickup_pressed:
+                self.show_hands(hide_in=duration)
                 self.node.handlemessage('celebrate_r', int(duration * 1000))
             else:
                 self._wave_check_timer = None

@@ -80,7 +80,7 @@ class SpazBot(Spaz):
     to the current activity.
     """
 
-    character = 'Spaz'
+    character = 'Kris'
     punchiness = 0.5
     throwiness = 0.7
     static = False
@@ -580,7 +580,7 @@ class BomberBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Spaz'
+    character = 'Kris'
     punchiness = 0.3
 
 
@@ -672,7 +672,7 @@ class BrawlerBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Kronk'
+    character = 'Susie'
     punchiness = 0.9
     charge_dist_max = 9999.0
     charge_speed_min = 1.0
@@ -725,7 +725,7 @@ class ChargerBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Snake Shadow'
+    character = 'Roaring Knight'
     punchiness = 1.0
     run = True
     charge_dist_min = 10.0
@@ -745,7 +745,7 @@ class BouncyBot(SpazBot):
 
     color = (1, 1, 1)
     highlight = (1.0, 0.5, 0.5)
-    character = 'Easter Bunny'
+    character = 'Togore'
     punchiness = 1.0
     run = True
     bouncy = True
@@ -787,7 +787,7 @@ class TriggerBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Zoe'
+    character = 'Noelle'
     punchiness = 0.75
     throwiness = 0.7
     charge_dist_max = 1.0
@@ -844,7 +844,7 @@ class StickyBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Mel'
+    character = 'Temmie'
     punchiness = 0.9
     throwiness = 1.0
     run = True
@@ -875,7 +875,7 @@ class ExplodeyBot(SpazBot):
     category: Bot Classes
     """
 
-    character = 'Jack Morgan'
+    character = 'Floradinn'
     run = True
     charge_dist_min = 0.0
     charge_dist_max = 9999

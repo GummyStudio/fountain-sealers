@@ -33,7 +33,7 @@ class PlayWindow(bui.MainWindow):
         # pylint: disable=too-many-locals
 
         import bacommon.cloud
-        show_coop = False
+        show_coop = True
 
         # Preload some modules we use in a background thread so we won't
         # have a visual hitch when the user taps them.
