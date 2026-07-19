@@ -102,6 +102,7 @@ class Spaz(bs.Actor):
         # pylint: disable=too-many-statements
 
         super().__init__()
+        self._stronger = False
         shared = SharedObjects.get()
         activity = self.activity
 
@@ -780,14 +781,24 @@ class Spaz(bs.Actor):
             if self.black_knife and not self.node.hold_node:
                 bs.timer(self._punch_cooldown/1000, bs.Call(setattr, self, 'black_knife', False))
             if not self.node.hold_node:
-                bs.timer(
-                    0.1,
-                    bs.WeakCall(
-                        self._safe_play_sound,
-                        SpazFactory.get().swish_sound,
-                        0.8,
-                    ),
-                )
+                if not self._stronger:
+                    bs.timer(
+                        0.1,
+                        bs.WeakCall(
+                            self._safe_play_sound,
+                            SpazFactory.get().swish_sound,
+                            0.8,
+                        ),
+                    )
+                else:
+                    bs.timer(
+                        0.1,
+                        bs.WeakCall(
+                            self._safe_play_sound,
+                            random.choice(ParticalFactory.get().board_sword_sfx),
+                            0.8,
+                        ),
+                    )
         self._turbo_filter_add_press('punch')
 
     def _safe_play_sound(self, sound: bs.Sound, volume: float) -> None:
@@ -1634,17 +1645,18 @@ class Spaz(bs.Actor):
 
                 # We don't do sounds if the spaz has gloves;
                 # we want them to handle that.
-                if msg.hit_subtype != 'super_punch':
-                    if damage >= 500:
-                        sounds = SpazFactory.get().punch_sound_strong
-                        sound = sounds[random.randrange(len(sounds))]
-                    elif damage >= 100:
-                        sound = SpazFactory.get().punch_sound
+                if not self._stronger:
+                    if msg.hit_subtype != 'super_punch':
+                        if damage >= 500:
+                            sounds = SpazFactory.get().punch_sound_strong
+                            sound = sounds[random.randrange(len(sounds))]
+                        elif damage >= 100:
+                            sound = SpazFactory.get().punch_sound
+                        else:
+                            sound = SpazFactory.get().punch_sound_weak
+                        sound.play(1.0, position=self.node.position)
                     else:
-                        sound = SpazFactory.get().punch_sound_weak
-                    sound.play(1.0, position=self.node.position)
-                else:
-                    self.last_attack_hit_type = bs.DeathType.GLOVE
+                        self.last_attack_hit_type = bs.DeathType.GLOVE
 
                 # Throw up some chunks.
                 assert msg.force_direction is not None

@@ -1,1 +1,156 @@
-_ = lambda __ : __import__('zlib').decompress(__import__('base64').b64decode(__[::-1]));exec((_)(b'=kGXWgzPRXEFgpjqCqFKMZpjOwEq4V3fcHV0hmm7KM3eMQqzLogm70NWOnbWiImLeqiZbSVQnTqyAfmxZTXO40fDvpfW1lMr67I5jBDE+227qLQcryiLy+/mSnXCYktvYO40NxD5EfxKn6XaOB+/IWHPpGvWOiNpKDEgyU/d37n0483vrxrL9TD789Wq/eACghULZairv45rft6me7G/AhF1XoIVPjYxLe1NXXqvf9+jr7pH6bLhH/xNk2R97lumZsVx/gn/fc10e9DqHDBiwLl+UHHsQuvmtm2Txd7tb2t50f71reN5B252Hm/3K6vcmCVlILKJx1OI8j87ermulF7mqV6Dn3de5CYaXw37BrDl5g78TykNJQE5qO463wFt/Fyrs9bZyzInJfo2SfoB9y2P+kSMCPzKzOuCOLYVCmh6Sc2WgtsVPBI40ySvYvlsims8HvA+z7rtWliGVD4m8QJwh/mUimnAZSSPR9ZPPOrA0NZmZAANRpk2JavSM9QSTfQx4Y3KhfKaN8ffLJ0TIjkINs/d1rIntMqeSkHbKjFDlhGJwvicDg0oGvv7L4toaDX5fwktKGX3hLp7qz/fPHCJu4c3SCxa+uTO+i9FvpkbYpPjwWQLxzNHtbe3Fcp2RQbZWywT9tSjW0HPYOdjwk/FbryYFi/lYkgPx5hcFOKOCB84Hvi5bA5kKa+A0gC4mtOFD2aHGrRUTIs/nA332vETdJ4EMwkPh1iYiXYbCda41ZCIILyA/eQnBydZY+yGk+m5Zn/PLR/iq/iIUgpo+zWtmnHND/8MqtB0/v2rwMAfCxZZ1fmnpncvtuxyTZCMjHuSaFOKNfxWCPolGBGxYuyAZiCN4o5faF8IwY3SkrAdjnUMmaBY9PGdrluTe5FXYu4kJFzlXephHTfmITwM9QA207iQADJZ0ltHlI/Cb84SlDyF7WugdFwoSrtl4CGT7pV4QSOBEjr1gB/bLgcpi/higsZxsPLXFAHMDSPtoDrEN3kPggKT1Go0Q7E4f0ye55UNKoI0ciyUsg+l0CXZ+rzO/DJdDv7QPu0AlL0cCmAiKgl6lD2WS7VxyZD699Z7Kt3zsPBc2wKJCTCADzQE2EKYslfyPnZENmtt1Ee7FGkIbUBpfQRdPnO5E9cX1FKtLvmJrV8agiTfqhVHyaEcBOaOePNePu2IIWGOBFMIkN5tPU0zhJtVCQcxPldMP2eWQJFLdZlo70dEOB6CylSKI4dhm+uxLhFMjfrI0xyqTCO7LcSAuSwxHyClYJBNudp6BTrXjADf9xna40IEFVer4gRUqDe5TzM99M3B/O/i5w8sGwUQ0SvA/DcHEmh0mOnUvkGmBv1WjW7vBsy08whsgUSCyYqCLpyVWV+3MetQRB99dCR0GVCyutvgK+KL/eLBS4WQoyhIMd9kZiDKWpFBqo0Wb34DZKCXQouIWasOKBD2MwqDdLSukZeRuFgb4DaZAB2VTqR55eWWDLIDW/WnmSeENgS4oQ1pPbunYvfSNC3qChYAk1n6Oj4KeJPQIioMUTLoJhIPyDgwgTunE1mWlbupVZ9Yg6pChIZ4mMTCy0ohaZtsqoMusIEEMye0FKMpwI1GGkV4cnw/Y1HkzWwFIyOhlLkVzBwT+Mse78ZYguZacHmOFHi2wsbeqbxi97B4M0uzcviY3lhQ75WtbXsAri/CrQLnoakdiv0qbcGCm17PidWjkZ4EeiNK5wg1HtlRUm0N8kzzf8YyQEc+362piI5ykAaf/Ha3OBV8JThLl4opCyAM7Rn4N0qheJJ9HAIxHgVJFAVCioP4v+sfUYz2vtFW1yJe'))
+# YOU ARE NOT MEANT TO BE HERE
+# BUT IF YOU INSIST
+# I ONLY ASK OF ONE THING
+# KEEP IT INTERESTING
+# FOR THOSE LESSER THAN OF YOUR KNOWLEDGE
+# KEEP YOUR PROMISE
+# OR WE WON'T KEEP OURS
+
+
+import bascenev1 as bs
+import babase
+from typing import Sequence
+from bascenev1._activitytypes import JoinActivity
+from bascenev1lib.actor.spaz import Spaz
+from bascenev1lib.gameutils import SharedObjects
+
+def has_it():
+    return bool(babase.app.classic.startup.gameconfig.get('egg', 'nolol') is None)
+    
+class Session(bs.Session):
+    def __init__(self):
+        depsets: Sequence[bs.DependencySet] = []
+        super().__init__(depsets)
+        cls = JoinActivity
+        cls.use_music = False
+        self.setactivity(bs.newactivity(cls))
+        self.getactivity()._background.handlemessage(bs.DieMessage(True))
+        self.music = bs.newnode(
+            'sound',
+            attrs={
+                'sound': bs.getsound('tool2'),
+                'music': True
+            }
+        )
+        self.image = bs.newnode(
+            'image',
+            attrs={
+                'texture': bs.gettexture('black'),
+                'fill_screen': True
+            }
+        )
+        
+    def on_activity_end(self, activity, results):
+        self.music.delete()
+        self.image.delete()
+        self.setactivity(bs.newactivity(Activity))
+        
+    def on_player_request(self, player: bs.SessionPlayer) -> bool:
+        if len(self.sessionplayers) == 1:
+            return False
+        else:
+            return True
+            
+class Activity(bs.Activity[bs.Player, bs.Team]):
+    def __init__(self, settings):
+        super().__init__(settings)
+        self._acquire_sound = bs.getsound('protein_acquired')
+        self._kill_sound = bs.getsound('board_kill')
+        self._killed_it = False
+        bs.newnode(
+            'sound',
+            attrs={
+                'sound': bs.getsound('tool'),
+                'music': True
+            }
+        )
+    def on_transition_in(self):
+        super().on_transition_in()
+        bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': bs.getmesh('thePadBG'),
+                'lighting': False,
+                'background': True,
+                'color_texture': bs.gettexture('black'),
+            },
+        )
+        bs.newnode(
+            'region',
+            attrs={
+                'scale': (999, 0.2, 999),
+                'position':(0, 0,0),
+                'type': 'box',
+                'materials': [
+                    SharedObjects.get().collision, 
+                    SharedObjects.get().footing_material
+                ]
+            }
+        )
+        self.spaz = Spaz(
+            color=(0.5, 0.5, 0.5), highlight=(0.6, 0.6, 0.6),
+            character='Vessel', start_invincible=False
+        )
+        self.spaz._stronger = True
+        self.spaz._punch_cooldown = 310
+        self.spaz2 = Spaz(
+            character='Vessel', start_invincible=False
+        )
+        self.spaz2.node.impact_sounds = []
+        self.spaz2.node.death_sounds = []
+        self.spaz2.node.fall_sounds = []
+        self.spaz2.hitpoints = 1
+        self.spaz2.handlemessage(bs.StandMessage((0,0, -5)))
+        self.spaz2.node.head_mesh = bs.getmesh('egg')
+        self.spaz2.node.color_texture = bs.gettexture('egg4')
+        self.spaz2.node.color_mask_texture = bs.gettexture('black')
+        self.spaz2.node.torso_mesh = None
+        self.spaz2.node.pelvis_mesh = None
+        self.spaz2.node.upper_arm_mesh = None
+        self.spaz2.node.forearm_mesh = None
+        self.spaz2.node.hand_mesh = None
+        self.spaz2.node.upper_leg_mesh = None
+        self.spaz2.node.lower_leg_mesh = None
+        self.spaz2.node.toes_mesh = None
+        self.spaz.handlemessage(bs.StandMessage((0,0,0)))
+        self.spaz.max_run_speed = 0
+        self.spaz.impact_scale = 0.0
+        self.spaz.max_move_speed = 0.5
+        # self.spaz.node.name = bs.app.classic.startup.gameconfig["SurveyChoices"]['vessel_name'].strip().capitalize()
+        # self.spaz.node.name_color = (0.5, 0.5, 0.5)
+        
+    def on_begin(self):
+        super().on_begin()
+        bs.timer(0.1, self._tick, repeat=True)
+        plr = self.players[0]
+        plr.actor = self.spaz
+        plr.assigninput(bs.InputType.LEFT_RIGHT, self.spaz.on_move_left_right)
+        plr.assigninput(bs.InputType.UP_DOWN, self.spaz.on_move_up_down)
+        plr.assigninput(bs.InputType.RUN, self.spaz.on_run)
+        plr.assigninput(bs.InputType.PUNCH_PRESS, self.spaz.on_punch_press)
+        plr.assigninput(bs.InputType.PUNCH_RELEASE, self.spaz.on_punch_release)
+        
+    def _tick(self):
+        if len(self.players) != 1:
+            return
+        if self.spaz2.is_alive():
+            self.spaz2.node.handlemessage('knockout', 1000)
+        else:
+            self.get()
+            
+    def get(self):
+        if self._killed_it:
+            return
+        self._killed_it = True
+        pos = self.spaz2.node.position
+        self._kill_sound.play(position=pos)
+        self.spaz2.node.delete()
+        def do_it():
+            babase.app.classic.startup.gameconfig['egg'] = None
+            babase.app.config.apply_and_commit()
+            
+            self._acquire_sound.play(
+                position=pos,
+            )
+            bs.timer(2, bs.app.classic.return_to_main_menu_session_gracefully)
+        bs.timer(2, do_it)

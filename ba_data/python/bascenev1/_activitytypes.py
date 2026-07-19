@@ -102,11 +102,10 @@ class JoinActivity(Activity[EmptyPlayer, EmptyTeam]):
         self._background = Background(
             fade_time=0.5, start_faded=True, show_logo=True
         )
-        self._tips_text = TipsText()
         if self.use_music:
+            self._tips_text = TipsText()
             setmusic(MusicType.CHAR_SELECT)
-       
-        self._join_info = self.session.lobby.create_join_info()
+            self._join_info = self.session.lobby.create_join_info()
         babase.set_analytics_screen('Joining Screen')
 
 
