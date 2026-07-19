@@ -47,13 +47,6 @@ class ParticalFactory:
         
         self.slash_start_sfx = bs.getsound('slash_start')
         self.slash_hit_sfx = bs.getsound('slash_hit')
-        
-        self.board_kill_sfx = bs.getsound('board_kill')
-        self.board_sword_sfx = (
-            bs.getsound('board_sword1'),
-            bs.getsound('board_sword2'),
-            bs.getsound('board_sword3'),
-        )
 
         self._tough_glove_weak_sfx = bs.getsound('tough_glove_weak')
         self._tough_glove_strong_sfx = bs.getsound('tough_glove_strong')
