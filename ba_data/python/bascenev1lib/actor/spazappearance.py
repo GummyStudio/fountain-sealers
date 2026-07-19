@@ -434,8 +434,8 @@ def register_appearances() -> None:
     t.pickup_sounds = mizzlesounds
     t.fall_sounds = []
     t.style = 'agent'
-    t.default_color = (0.1, 0.1, 1)
-    t.default_highlight = (0.2, 1, 1)
+    t.default_color = (0, 1, 1)
+    t.default_highlight = (0, 0.75, 0.775)
     t.tags = [
         CharacterTag.DARKNER,
         CharacterTag.DELTARUNE,

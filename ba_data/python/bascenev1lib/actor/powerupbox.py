@@ -42,6 +42,9 @@ class PowerupBoxFactory:
         self._lastpoweruptype: str | None = None
         self.mesh = bs.getmesh('powerup')
         self.mesh_simple = bs.getmesh('powerupSimple')
+        self.mesh_temflakes = bs.getmesh('temflakes')
+        self.color_temflakes = bs.gettexture('temflakes')
+        self.tex_temflakes = bs.gettexture('white')
         self.tex_bomb = bs.gettexture('powerupBomb')
         self.tex_punch = bs.gettexture('powerupPunch')
         self.tex_ice_bombs = bs.gettexture('powerupIceBombs')
@@ -175,6 +178,7 @@ class PowerupBox(bs.Actor):
         factory = PowerupBoxFactory.get()
         self.poweruptype = poweruptype
         self._powersgiven = False
+        mesh = factory.mesh
 
         if poweruptype == 'triple_bombs':
             tex = factory.tex_bomb
@@ -214,6 +218,9 @@ class PowerupBox(bs.Actor):
             tex = factory.tex_sticky_bombs
         elif poweruptype == 'bell':
             tex = factory.tex_curse
+        elif poweruptype == 'flakes':
+            tex = factory.color_temflakes
+            mesh = factory.mesh_temflakes
         else:
             raise ValueError('invalid poweruptype: ' + str(poweruptype))
 
@@ -226,7 +233,7 @@ class PowerupBox(bs.Actor):
             attrs={
                 'body': 'box',
                 'position': position,
-                'mesh': factory.mesh,
+                'mesh': mesh,
                 'light_mesh': factory.mesh_simple,
                 'shadow_size': 0.5,
                 'color_texture': tex,
