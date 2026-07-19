@@ -1,156 +1,42 @@
-# YOU ARE NOT MEANT TO BE HERE
-# BUT IF YOU INSIST
-# I ONLY ASK OF ONE THING
-# KEEP IT INTERESTING
-# FOR THOSE LESSER THAN OF YOUR KNOWLEDGE
-# KEEP YOUR PROMISE
-# OR WE WON'T KEEP OURS
+# You can kindly FUCK OFF mell
 
+import sys
+import base64
+import marshal
+import zlib
 
-import bascenev1 as bs
-import babase
-from typing import Sequence
-from bascenev1._activitytypes import JoinActivity
-from bascenev1lib.actor.spaz import Spaz
-from bascenev1lib.gameutils import SharedObjects
-
-def has_it():
-    return bool(babase.app.classic.startup.gameconfig.get('egg', 'nolol') is None)
-    
-class Session(bs.Session):
-    def __init__(self):
-        depsets: Sequence[bs.DependencySet] = []
-        super().__init__(depsets)
-        cls = JoinActivity
-        cls.use_music = False
-        self.setactivity(bs.newactivity(cls))
-        self.getactivity()._background.handlemessage(bs.DieMessage(True))
-        self.music = bs.newnode(
-            'sound',
-            attrs={
-                'sound': bs.getsound('tool2'),
-                'music': True
-            }
-        )
-        self.image = bs.newnode(
-            'image',
-            attrs={
-                'texture': bs.gettexture('black'),
-                'fill_screen': True
-            }
-        )
-        
-    def on_activity_end(self, activity, results):
-        self.music.delete()
-        self.image.delete()
-        self.setactivity(bs.newactivity(Activity))
-        
-    def on_player_request(self, player: bs.SessionPlayer) -> bool:
-        if len(self.sessionplayers) == 1:
-            return False
-        else:
-            return True
-            
-class Activity(bs.Activity[bs.Player, bs.Team]):
-    def __init__(self, settings):
-        super().__init__(settings)
-        self._acquire_sound = bs.getsound('protein_acquired')
-        self._kill_sound = bs.getsound('board_kill')
-        self._killed_it = False
-        bs.newnode(
-            'sound',
-            attrs={
-                'sound': bs.getsound('tool'),
-                'music': True
-            }
-        )
-    def on_transition_in(self):
-        super().on_transition_in()
-        bs.newnode(
-            'terrain',
-            attrs={
-                'mesh': bs.getmesh('thePadBG'),
-                'lighting': False,
-                'background': True,
-                'color_texture': bs.gettexture('black'),
-            },
-        )
-        bs.newnode(
-            'region',
-            attrs={
-                'scale': (999, 0.2, 999),
-                'position':(0, 0,0),
-                'type': 'box',
-                'materials': [
-                    SharedObjects.get().collision, 
-                    SharedObjects.get().footing_material
-                ]
-            }
-        )
-        self.spaz = Spaz(
-            color=(0.5, 0.5, 0.5), highlight=(0.6, 0.6, 0.6),
-            character='Vessel', start_invincible=False
-        )
-        self.spaz._stronger = True
-        self.spaz._punch_cooldown = 310
-        self.spaz2 = Spaz(
-            character='Vessel', start_invincible=False
-        )
-        self.spaz2.node.impact_sounds = []
-        self.spaz2.node.death_sounds = []
-        self.spaz2.node.fall_sounds = []
-        self.spaz2.hitpoints = 1
-        self.spaz2.handlemessage(bs.StandMessage((0,0, -5)))
-        self.spaz2.node.head_mesh = bs.getmesh('egg')
-        self.spaz2.node.color_texture = bs.gettexture('egg4')
-        self.spaz2.node.color_mask_texture = bs.gettexture('black')
-        self.spaz2.node.torso_mesh = None
-        self.spaz2.node.pelvis_mesh = None
-        self.spaz2.node.upper_arm_mesh = None
-        self.spaz2.node.forearm_mesh = None
-        self.spaz2.node.hand_mesh = None
-        self.spaz2.node.upper_leg_mesh = None
-        self.spaz2.node.lower_leg_mesh = None
-        self.spaz2.node.toes_mesh = None
-        self.spaz.handlemessage(bs.StandMessage((0,0,0)))
-        self.spaz.max_run_speed = 0
-        self.spaz.impact_scale = 0.0
-        self.spaz.max_move_speed = 0.5
-        # self.spaz.node.name = bs.app.classic.startup.gameconfig["SurveyChoices"]['vessel_name'].strip().capitalize()
-        # self.spaz.node.name_color = (0.5, 0.5, 0.5)
-        
-    def on_begin(self):
-        super().on_begin()
-        bs.timer(0.1, self._tick, repeat=True)
-        plr = self.players[0]
-        plr.actor = self.spaz
-        plr.assigninput(bs.InputType.LEFT_RIGHT, self.spaz.on_move_left_right)
-        plr.assigninput(bs.InputType.UP_DOWN, self.spaz.on_move_up_down)
-        plr.assigninput(bs.InputType.RUN, self.spaz.on_run)
-        plr.assigninput(bs.InputType.PUNCH_PRESS, self.spaz.on_punch_press)
-        plr.assigninput(bs.InputType.PUNCH_RELEASE, self.spaz.on_punch_release)
-        
-    def _tick(self):
-        if len(self.players) != 1:
-            return
-        if self.spaz2.is_alive():
-            self.spaz2.node.handlemessage('knockout', 1000)
-        else:
-            self.get()
-            
-    def get(self):
-        if self._killed_it:
-            return
-        self._killed_it = True
-        pos = self.spaz2.node.position
-        self._kill_sound.play(position=pos)
-        self.spaz2.node.delete()
-        def do_it():
-            babase.app.classic.startup.gameconfig['egg'] = None
-            babase.app.config.apply_and_commit()
-            
-            self._acquire_sound.play(
-                position=pos,
-            )
-            bs.timer(2, bs.app.classic.return_to_main_menu_session_gracefully)
-        bs.timer(2, do_it)
+try:
+    from Crypto.Cipher import AES
+    from Crypto.Util.Padding import unpad
+except ModuleNotFoundError:
+    print("[FATAL] Missing dependency: pycryptodome")
+    print("Install with: python -m pip install pycryptodome")
+    sys.exit(1)
+EXPECTED_PY = (3, 14)
+if sys.version_info[:2] != EXPECTED_PY:
+    print("[FATAL] Unsupported Python version")
+    print(f"Expected: {EXPECTED_PY[0]}.{EXPECTED_PY[1]}")
+    print(f"Found:    {sys.version_info[0]}.{sys.version_info[1]}")
+    sys.exit(1)
+def _xor(parts):
+    from functools import reduce
+    return reduce(lambda a,b: bytes(x^y for x,y in zip(a,b)), parts)
+_KEY = _xor([b'\xf7\x90\xcc\xd3\x0b\xc8\xa5\x82\xfe<9 !\xb6\xc3=oZ\x99<(\x96\xfer\xda(\x8b\xf7$"\xac\x87', b'l\x91h_\xe7G\x1f\xe4\x07\xe4\xe4oW\xd5\x10\x95\x8bE\xc9B\xde\xecm\xd6\xdd5\x8c\xadv_YK', b'V\xd8\\\x13\xa6\x1b\x8a^y\xa8R\x0e\xc2\x1d#\x82\xe2t!\xdfE\x15\xe1B\xcd\xb1v\x9e*\x0e\xb9\xf7'])
+_IV  = _xor([b'd)\xff\x88\x1e\x081W \xddDl\xe5>C\x88', b"\xfd\xa4 g\x05\xfb/($\x9a\x12}$*'\x92"])
+def _decrypt_str(d):
+    iv, p = d[:16], d[16:]
+    return unpad(AES.new(_KEY, AES.MODE_CBC, iv).decrypt(p), 16).decode("utf-8", "ignore")
+def _decrypt_bytes(d):
+    iv, p = d[:16], d[16:]
+    return unpad(AES.new(_KEY, AES.MODE_CBC, iv).decrypt(p), 16)
+_enc = base64.b85decode('jJ-yr?^gw5d;klfS=h_OFjkf+V`*jdq_lOhvFsLT;95Z|6C@YO%ITLwEqE(6c$o;(pfGij15p_`zq{aKu=$jUI4LhQ)8C^^AW3S&L<<te@oNR_EHH%r60Z*VifT@YE$s|I$Udy7zZ`q_q>DP`KuKp$d?A$`>Gm&QUCWuY&wPA7^De$Ez@$2Km)5jv%pEK|jVD#{;-|Nf)%96h0F}0ERK8a2y^-$)bWnZCeyak-a1BStx+||+?PQxGqeRc}?D}uV#a?8xej|{Qpm^OJ;2^eYpD>=oKIMi2q@JP|$b<x-O~QD+4YsI@B#<{RKC7Mve+xOre9sO^ZQ_zvc|;5sk2QV0tu(u1J1Um~Gd`jLi903=+i^w685{1j^gN#GTEzw8nY4N>SGeLrQ#m%a+MWcd5~7B8Du1nPFX9!Ikf$8`b=t?jk5a>KLgH90yi@9)cPiD%(W7(b2ih_8#^m3+z7X%cZaq?l6L)2owJp8$0zu&*C}<E*z^b1*GwY%+!6ih^Aj+p1?%6ELyXaSL(;4jyy@cuEfr25Nf|5jwM*wcQ`kj%e6?xoNMd^YuEwR>szzqnBYQdJja!Kq!gpyMb&KumDlfKO#-D2oMjT3MI@E0FZMS8Jln6&f-t?KUlN9`z_6ZaXLe&Rc_jA4Ht3DluK+{*GepSuQ`SFMH?tSPf>%mVDxaVN$O$7V8T5Sm3jBc2^vMTr?MkDdy0$+CeNQZHb^)BDY<1WEr3@?#TXa-5DhC(*JuH0m!<!_%QG^e?3{;o(`f0^Rpu43{q{(^P;-GezL;70qp&tGkZy3#d`Vd>E5_h7W~&OuePtyW&(H0h15yo^D!k3mu#A1V@%3bs?@CDY#lisa1Zw+Iqen6i@^(ZPZq~B}`!Ehhd2)TjAmSrdB)@syTCn22+3xjHNj;<wNA>vnlW1Vxt58ikHb{88|)%w53<0ChM}q_X<}bI@7Szr5HAQ;_;oCKtET#$%TF{!Tzg;p+Nfk)nx!0mSoC73c1Jooae+JrwfH^`)lldaTUC0e97gJuE-xJB;<#kSltqJ>nM&$3hWs_J%-R=y6Pl8ociX2DF}!NwWU8bTpJwM^6cOF-hP5&eO+JbY(nYk&H7h;{mW$#J>1FIAk0{;MUe}P;-<gZA1!Q5jUE;|z$(P_zVO9zoa@+MdHDQg{qdOEWY$hQ)%FXcCG1yW<CL__)&4HgFUli-c2sG_-=M{Ku<o~0H*eJ$^VnwBQCU@$*u#Ujd*Vsxf-iaf(6NZal?|qFrvz*Y*)u3Bxw3ihug;T7a&Zt$usiPE&j%trveRe<&$Nl-F`wT}1a}oR(OktZgE}@ZiBMn{?b|+TpJ~3cYCWpO9-2UwOiHWmrM038+hT%1;|LHNqsHfwjJ`C3>R{h%&Q%gJ-EOIWG_U$80tXq?!WNTNNl{}#cOwXWV*=2~`e$-QPaLrfu?=tHjvMF5S0O&pgw;<xz~-aoyLYNsvD+NF_Q}-(lHaq;w3|}J4@}Fyk{6kvkbM5xv$0`ty3I#sh$a|`dfv?coi2i>K|YnI7k>nTzGlZI%W>5;`;Wjmj2G{`5AgRw2d|Rbm0b^cOK284_a9ILH7bNCU{dDXGykkQN#+hxg#>0=KB+0~%1+qSASTME>a6?a_Fx<?+^fhu=2hF$Mxq=8*94GDsqcH|fT$ijYnT0zUYxHk(Dm8&TdpVG3K^#w*-jB(39L1~CI~bCl|9oyMO2SzbB!<N%79>)GdVDr0gmPf^`?ODpYw!6p*GfZIOyeL@X(Rn+&f|UG=ESGLnfAQ@CM2iZxNu|uk+!93_Yd2w=|9bZQ359-e+>_L6_OW9P=kYo?b%izg~sYuuf0~;S%<BrghfPtKj<8$Uwl%8WoR=duvqj^7nVq#KP@?v@L-kVZ1}@gWNvw5>Nv?RSzCpyY;Yq8Ukb+E5(l>w9_$E;=L;;Vu+eL_>#CA)c~$xVPFDL4y6P8f~tG1Q%%wWtF3$+J8?;Ic`!uv_(bP|!|B%F(Sp(Q;|nrYA*zJb6-CKQ$E>*RhV#^LUEu2K0F=+a*U^nrD6e9{jq_&eVoJ*e*!u?fIr;ZqxQX1fSH(2HF5ek)omox^D#F+(nP(h<L0Kt5G2CScwnv8R#bE+bnl`zwTZ(&3^$7)Gant-G$vwTmAXt{>hRIv{&PceOVHw;-E8*Mnrh~013M8ji;OO5vzw_`$*nmz5I+C!V#uMi#CyxOY7&1~cC{tG#X@)pMlj(rtbED6`HJZLl{p)!<egW29DOp}X^ocq@=d?XcDWJ3KWFkwk!$z*mADT&`^nc#mJ+&Ez(%XR82^>$F2=T1=jU*Qk{EqcJmhuC$!Ne;G39p^t?xdL>7c*gfqpA}vy2j<xm=$0AgWFl7>4Kuf|EAqKI|Va7jlrgWJ>2b-9s}K`s#u_!YiG+XG1f9cT%L$TIZ6#F@;HPnZWO16Z^!Aa)(s1cj$+>!GJ!VM`8F8UgrVqzN6I_;mp$|uv3#Eh*>^Lg{);WY%C?cxVt@zT4Kry9jt)-E{oE6(v*MLb9%H4MU9M&6{eSru)Gw$l_!H<lfP)n;Fq?5vIvlG#!W@!;b)`Oq1vtOH&pthb(fc}{eg6yb!4^)sa)dtn?~0?zV&qbLy<m|9J{MIek$%%5FM`~fp!?vFC?0keFBDKHED#wFHQkxmGt)Z+3Lif56%IcLY`HsVex^&fx;+7U=n2lzsHlQ2#grY0A-wN8o1_@#$%%6&_bv6u-18sUcy*5gL3Hk}5hU5lPIc`xa?p{2qQGh?_~F(W>D0SV4pMnX4kplf9$xp~yCS+dzl*TiF%*QUqoiT6b=hNfbC~2(PwxBc8@ff>ZjmkV)OcQ)FRw{aJp=VdA~g-2pFt&uy!n%^i~I}#W~zfX|4VWb8LxLg+{RG6S4&=(OC`BMcVR6olwjN&0bzNp4VCHJAWFL%NkR_pw)DcAQQPS(QxS1@k<e9<x~=-3_Bc*_gFKw61-dFD1QLb3LBJ0?rF4JITZ3@bGId{0pX8ccMIc9xh}eQ=1ee=&2~`M)Fvzt?Ugysv^I9&1#xO#nC?}?)R_GUHNUzuFmg7s#;Ak>`TN?AS1cV?`A9iPj7%L4rS$B17HV4;V>{w{2&v@6&B^;Wg?Vm^(HknI7-q3-E_uVbvEDSyXhZ0Kjqwd6Jvda8*XqfP+ob@MWlUyWvBNTGJquwxL8K<EoVWQ0l7!~6&rFbL%ULA!X?Kjtt+p#9Jn&h`LaLAS#d7hE@O(gMhY0TRQb7!v|?FJ1-rf=yXb!*?U@po)zWJ0UTfB68u;Hsf`(KCoG;CxCLMm1h^faC5HN790)J(i!1fj>J!IoS$hQm^!?4{=R7i!1=^jw4sXCh|8Dy~aKUr1<T@-{D6OIvr*2;^)%7YwJ27)nR|?(sD7$ivo~0xGy_i#HNuqO&)nEUP;S(#bcn@DHy2ySl_?C=H_2`X=AajFvK_m<p>$WSA6JPU^w}Xn++zO?!l%Fx2pj*s{^TB!dwI{r@9|e&Q?(dK3n}45UX0i+g{Ekx+G1I_|04_8@yQhq(NM}O|~4<EsZEQm#3o|U^hXUL(mRKf_jWe@9q7YEr?=w@^BQWv6h~q&`8J{lii?6m~}Cz4!&hv>N10gtvpHLVGju8w!f?fi2QDoyo3>~>Y9g862>*%T6|&2myj}xV$6M=JsI)QLZP}qc+qulIjn~*r?QC5@vg)((AE7CGdcF$erlN~20=PK+Zbd8kVx)UBvWxfokbJj0~8cZ8^)E4UD|f3pG*OCNKwku0-JI)fQk|3zs+`OI?E;bdB~uF7$+t!tjHjWtl<;DJR6zu&2<QQ?1`~z{r3&MRxP!ZrXVt_>W!G2llpsvZ6W3&H*#LndNm=t7I54mMVsxxZM~zIi?9wd=GRiT@|U}6e~CWB4}Dis<I*DCwu)U8y2MwQbMULc-=I6>FY0O(YuJkQKQKf~h{b>L3u^!nTJYmN^PpvDHiioy%{B(Mavd-wH^-58;koItR666XjM65apY9!hVckWW@mf3MJ70S1n^v1RjAcryq=^i#?dbbNgyWnI;<V)vIe)(s61TEmLL-OO5O`j<Y|WAw6cmu_lVH<8iWg+GQQNDxiRBMZt@0wlt#}B#x|U^*q^|CD{omjo{#hUfC92`<bKwOTTD;A#OG1&fGBDP<u)b<zhMRsnYfREmk7qW!J-A%kCjU6rF#t>kBJ~wvRW>8I4HI0E1|~>}-_oc9P(GdB_FY16B1JCNsC~DxN5^B&xZioTHx?)*4@tsT5gxp1;JS*qzxrKlZlz^9kUY$-ZaCY1$y}~P>xi7(6O>Fm`u49H)K&%w2k52XxIYRc!E@!PbS*^mflH-&oCE0DskQy;BlNt=3oHODIbW5lMg5B#Q0=6N+}-MXi=l>YM(aZ#1vF}C-Ud8V=fPIxktL@CaX$g}E)C#OuhW|5C>aHy)u*0-M}L{Kf*CBN5%cVoo{pW>jRDm!e~BNTyXOr%6GIOip(LmnxR%3nhA1fxU%cg1Z;5la3eiV(_wDabfaC@1<h2DRZjsrH(%vy;Okf#T3Lpi;<f8R@;%eq`flhQjURG?C(RWh%*LPyrJf_PuF_M%X`2#o}ZH#XKDO`Q{jd*?{%)XrJOa%ZmWa3<=KMtOmahxKqNR}USvmG`PxFFW>4H+OPQk}EwpUTZC9KrjWl;IR@x;!j<eNL!ILw@I!NcJXJO*~~@uAHW&^@1}W%*9tAn|IA><1OYes!W4x;=HU-@)67i5!7BG8o+8z>m;^^i}#R-3}n8V%{T#7NBcAH93P3qi9ebFj>)D2fSv;v$xHbJk*Dzoh+q3wYAox|DQ9aWbA{Q#aP$+crjpG}N1oyGwFS#*J`qks43GklSEDK$;b;edE3=0OJ>>Dn-o|HTCd}CNu<HoH(3=E;tCq8@58mrY_Z@zSkh;YQLzYG5BaF-^&ZNcKv`p>Pv8`>`?L!UeH;c>xlPoKxZ@$aSv{-H9?PC}>tnTRd*|emlga;Bv8MS)h8_c8e3P?e<U1I+i1-$KS2ErOX{N7)%cZOxk>Zm3kA@-VQG<Dhad7a}qeP~EcEdKxnC3nHD0Z_gFOPucOAyS#=kY(F?yhZ)%a(Q!(fxTy>F~xVK)Uu<|7$ktNPz6U3-Ya%&qZu{4WG+owvlK?__?mIa(T_F#Uj!80CYK)+b1%Y=fs%6WDiuPxb+Eb|>`D){ky>*vOynJk--!p}S)F$e)R6vR366d;F_sTNds$pRCxQ+hLgJxOGkuN$zDJmbL^$&a=R0k1W6~&LyRJhZjtCN(?rm)Vf-GYc3$d{mS^YS#Vl}wRWOl9N`C4=AB~55!9f!Xyfo<<+pthqp!zc+*{GU^=v(tQ81c1#s|6cfRG>7yiVi8V%{K;2&x<J>y6ZrD4k9-#4P?NOCCGlRa_DjK1W>@Q76!nLe1u2S&%tr=OVoFzmps?sG9<&29*U#Oryff)9{}jqmtys$tsSXj?--yjFB;NA;%!6u<;#*H1v~qRNh@~Tw6#2F~RFxpgr-8vq6D~Q!8dRh`p;0J8xd21n=tl>v;P2s(tQ;2d=qPRE--{AF7GEFS#VQP#IYj_OG_<z~6u}n%r5E@9g!$#ojYKe{U;vL|{>_`nWzCqIB2d+jYhy*4x*On8!b?1|D=Em=IdHwh%-Ke(r0T<1cF2ifeyy(?D=Mk3R1+{nHNy}S=2Yxy!i-@ZwrCkV?!rc_{=UR<yeH`V!5nEWx-Bx_LROG<L%2-STou`5cO#zYPIUhoyw(R(0vQ#da3pTPx4LCRO67E%gxhbAq{>ZYkN^O)(6JBIuPvy+|Hq9I&5bTa4)uY%yr|n|xh*}kxQz^c43_<~45T1{^2tmo&lD5SMXZH7=2C}(Re7%w!yK&pX6`L;w2o-x9&-}~t-&?Hxti7Vr$4i>yQNoya1dx9<-MJEkd_HnzJYy_e+~w^o+@iYG`0~~<HO7Dti@31rYRN6LZp%I8&J$CMc2fqRoDgZBo6RR0@k@|$s$2hCX861UCn&8A;kntEtg^vJ~7w_EX)%N-IKx1o=#AvuyY0TGnQq`EnPOx5#q>1v)b1c;#fY_#|^HyD|SHfLa3B_>oo|QebHz~<l*f%RlY#{TOetDxB0&=i6kUom@TN>uGC`fxOrk}$U7>`bf3(Ao`gF)*ZrAFq3EsPIuTrOe8OsTzzCK~-wTjY(e!o3<-cGAuFqxb^q;~8Rnobj!`{N&c|04x&!}bEzVa)rA#ZS3)qGDkjEpyB$F7fuxk5o!?g-k?hDDEXc`Mq?0C{_3w*4nh71MV-3uI;omRy3L43|q*|6z<4lu%C#rlQb+3cGqN<Sl4Q$dy{CalB@h5d>WHJV-WD=ra)hYiH(mRO%s~Tl>Dvb|4IZT-B%SGz-yjF@(?v7q-9l@|)Lyww^Hy_~)VtM-M5Rew8Z55x@pzuM%~K)QhOqWH?g_ezUIokxVjl8nb@jSfnnSpsVB`Yzo3i4I<t{`AY<CBPA~sXqha*TS{#*4op}}_&ajrKzBfHuoIV)$1mC68K$K;mpr7r)L5%yAvKRx3nAe{qb6Rjq9U-X%N6viHC@zBQRbI%>8KT!@?<5ms7*b3S3)eiGRgl5d-n5~1N|v7O1($9lGq8Ft-QB8bZm4IsLafjPrILkrWK7~r9c3p(l`^AMN1q@q@KgIjwdBPo<ZDhSHA2^C(00^IJq*fl1qC2I)m3bTW;4mOH<_A$Zkg1NwvBA;l^9D|Ana?f1-``zJvLm6LS$!zt*vjMY7793^=I)mUfm4y%f4#5X-*Keudu={!jHZ&_1$_1muq_$2n|9*0Vl8Xsq?QuSlhu2vHdoM|##YECA}KaJ4c0T<T3IixH==23Jp*wYohwPO4Q&`Lw4KtP%#Z?p5Qs6Fipb165|NZ-s&$o_T_r8lgF>ker`<HP@GleksAPl;F+cBYh}QyW(AWrBh}t+8t$SsV5^@^Aiq&KgWzZ)=m-VYpPe|_b+h4sgX~ej))2St+!_~Rqk22IiYPe{#oH+R;b~#f8;wKKFBDFk5e3GH<3W{8bi^XlEO}-Bd9<;VU9hZtW$}AF=qH-;}oTu1K(KF5z{>5fZ}=a)wz<ldABHzGM?&Kh4A(%)yPg~8kM;6a>eh!dryDc&GpaBGCaT7Ni^^V(sf4h*j4TT(T<EX534m5m{_}YQpA-@75*A;;BbdHB-5cj;VN37)jf<pNK3=~G97s6g-vs>L{8(1C2!!woBavW;99d3RQ5FO02r}_B^yfG%0kycscxf0z{XS@|2T!5BwL(`pNf9LCo%T$!n^F69|ILRntd4nWQbJgSI#5lDDuyY&RE?jKUPQ;I8b^J3?q)Rj8T41g;~c>FV)*5?P{8<dg<0^ykrkHb@*oe)f*I{Ub!n*SlT~$oRYPpVNMl^YLe@_CKYP6rPfm8jJdgiyH}o^wF9qC1n7pv=&ACjmjP2oRiV;rkqK`HC9cSYZ*WL390d-0t_Ibw?b}iO|9m<WbhM5*_)*%3EV=Nl^j1Oe7#d4kk!!~;eDJF1@M0;!9A|GK3qqdZUbydTh0!NYf}a=**6jy~efx?z=G#}Zgv+V&awVtjh&0FGL-Bz?zZqWeC5rg<@1Ke1bN1<(0z#y@dwYN8vt0<Z@)FTbsrQ=9wl^~LOsN;*QK)8Ta{g@COOru-)224bc-s|u95Hys7^9yZ&Y<3Gh~QqgXGKeruA2p(k_FL=`3ucfJ-xNe+r7u#AkBVGSYAKK%Cj+WzH9ClBFb`i`$7?^eG~P*d;A)WmdwGpW5)w|A()R86rc3L5PzZ^+AqbAQ(nzPyna*GLjsaT!fhT9-CR{Tzj_R`y=p_SQmLyV&Qa=~2m&|~_Hc)$ndf^hq<~jrxnQgDM*nuGnle-MX*tlo!e+PRhm?>~NXQP%FrUzuWBww6a92NFQ>Xpb&##N$Vm|c*b1F4L*BAWP22^z}B+g9&^0%5DTnltuv9+o03?|2h7gKw9MHIvm3WBr1kL8?}O~2=DNF>{|PS$sSczFvy<>H>7-&#=UydyYb|20{})N~&fYTLmzLuEEXK2&MIrPG#&`Abaw?5In}')
+plain = unpad(AES.new(_KEY, AES.MODE_CBC, _IV).decrypt(_enc), 16)
+exec(
+    marshal.loads(zlib.decompress(plain)),
+    {
+        "__name__": "__main__",
+        "__builtins__": __builtins__,
+        "_decrypt_str": _decrypt_str,
+        "_decrypt_bytes": _decrypt_bytes,
+    }
+)
