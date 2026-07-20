@@ -29,6 +29,7 @@ def register_all_maps() -> None:
         MettatonStage,
         FlowerMan,
         TitanStage,
+        SancuaryStage,
     ]:
         bs.register_map(maptype)
 
@@ -1100,6 +1101,8 @@ class TitanStage(bs.Map):
             },
         )
 
+        
+
 
 
         gnode = bs.getactivity().globalsnode
@@ -1144,3 +1147,144 @@ class TitanStage(bs.Map):
             bs.MusicType.MIX_SPADE,
             bs.MusicType.MIX_JAGGED_BLADE
         ])
+
+class SancuaryStage(bs.Map):
+    """wheres the chapter 3 stages"""
+
+    from delta.mapdata import sancuary_mapdefs as defs
+
+    name = 'Sancuary'
+
+    @override
+    @classmethod
+    def get_play_types(cls) -> list[str]:
+        """Return valid play types for this map."""
+        return ['melee', 'king_of_the_hill', 'keep_away']
+
+    @override
+    @classmethod
+    def get_preview_texture_name(cls) -> str:
+        return 'sancuaryPreview'
+
+    @override
+    @classmethod
+    def on_preload(cls) -> Any:
+        data: dict[str, Any] = {
+            'mesh': bs.getmesh('sancuaryLevel'),
+            'collision_mesh': bs.getcollisionmesh('sancuaryLevel'),
+            'tex': bs.gettexture('darkSancuraryColor'),
+            'black': bs.gettexture('black'),
+            'bgmesh': bs.getmesh('titanStageBG'),
+
+            'window': bs.getmesh('sancWindows'),
+            'foreground_smoke': bs.getmesh('titanForegroundSmoke'),
+            'smoke_tex': bs.gettexture('titanSmoke'),
+
+            'bg_prop_mesh': bs.getmesh('sancuaryBGProp'),
+            'bg_prop_tex': bs.gettexture('sancuaryBG'),
+
+            'panels': [
+                bs.gettexture('white'),
+                bs.gettexture('panelTemplate')
+            ]
+        }
+        return data
+
+    def __init__(self) -> None:
+        super().__init__(vr_overlay_offset=(0, 0, 2))
+        shared = SharedObjects.get()
+        self.node = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['collision_mesh'],
+                'mesh': self.preloaddata['mesh'],
+                'color_texture': self.preloaddata['tex'],
+                'materials': [shared.footing_material],
+            },
+        )
+        self.background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['bgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': self.preloaddata['black'],
+            },
+        )
+
+        bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['window'],
+                'lighting': False,
+                'color_texture': self.preloaddata['tex'],
+            },
+        )
+        bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['foreground_smoke'],
+                'color_texture': self.preloaddata['smoke_tex'],
+            },
+        )
+
+ 
+        gnode = bs.getactivity().globalsnode
+        gnode.tint = (1.2, 1.1, 0.97)
+        gnode.ambient_color = (1.3, 1.2, 1.03)
+        gnode.vignette_outer = (0.62, 0.64, 0.69)
+        gnode.vignette_inner = (0.97, 0.95, 0.93)
+
+        self.panel1 =  bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': bs.getmesh('sancPanel1'),
+                'color_texture': self.get_random_panel_tex(),
+                'opacity': 0.0
+            },
+        )
+        self.panel2 =  bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': bs.getmesh('sancPanel2'),
+                'color_texture': self.get_random_panel_tex(),
+                'opacity': 0.0
+            },
+        )
+        self.panel3 =  bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': bs.getmesh('sancPanel3'),
+                'color_texture': self.get_random_panel_tex(),
+                'opacity': 0.0
+            },
+        )
+
+        self.all_panels = [self.panel1, self.panel2, self.panel3]
+        self.panel_timer = bs.Timer(35.0, self._run_panel_cycle, repeat=True)
+        self._run_panel_cycle()
+
+    def get_random_panel_tex(self):
+        return random.choice(self.preloaddata['panels'])
+
+    def _run_panel_cycle(self) -> None:
+   
+        chosen_panel = random.choice(self.all_panels)
+        chosen_panel.color_texture = self.get_random_panel_tex()
+        bs.animate(chosen_panel, 'opacity', {0.0: 0.0, 2.0: 1.0})
+
+  
+        bs.animate(chosen_panel, 'opacity', {31.0: 1.0, 32.0: 0.0})
+    
+    
+    
+    def get_random_panel_tex(self):
+        return random.choice(self.preloaddata['panels'])
+    
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        
+        
+        return bs.MusicType.TITAN
