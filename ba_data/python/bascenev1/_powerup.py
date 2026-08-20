@@ -1,0 +1,99 @@
+# Released under the MIT License. See LICENSE for details.
+#
+"""Powerup related functionality."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+from dataclasses import dataclass
+
+if TYPE_CHECKING:
+    from typing import Sequence
+
+    import bascenev1
+
+
+@dataclass
+class PowerupMessage:
+    """A message telling an object to accept a powerup.
+
+    This message is normally received by touching a
+    bascenev1.PowerupBox.
+    """
+
+    poweruptype: str
+    """The type of powerup to be granted (a string).
+       See bascenev1.Powerup.poweruptype for available type values."""
+
+    sourcenode: bascenev1.Node | None = None
+    """The node the powerup game from, or None otherwise.
+       If a powerup is accepted, a bascenev1.PowerupAcceptMessage should be
+       sent back to the sourcenode to inform it of the fact. This will
+       generally cause the powerup box to make a sound and disappear or
+       whatnot."""
+
+
+@dataclass
+class PowerupAcceptMessage:
+    """A message informing a bascenev1.Powerup that it was accepted.
+
+    This is generally sent in response to a bascenev1.PowerupMessage to
+    inform the box (or whoever granted it) that it can go away.
+    """
+
+
+def get_default_powerup_distribution() -> Sequence[tuple[str, int]]:
+    """Standard set of powerups."""
+    # test
+    if bool(False):
+        return (
+            ('flakes', 2),
+        )
+    # modded only
+    if bool(True):
+        return (
+
+            ('triple_bombs', 3),
+            ('ice_bombs', 3),
+            ('punch', 3),
+            ('shield', 2),
+            ('health', 1),
+            ('rudebuster', 2),
+            ('mewmew', 3),
+            ('snowgrave', 2),
+            ('gigabomb', 2),
+            ('spades', 3),
+            ('annoyingdog', 2),
+            ('slashbomb', 3),
+            ('banana', 3),
+            ('black_knife', 1),
+            ('land_mines', 2),
+            ('flakes', 2),
+            ('bell', 2),('pacify', 2),
+            
+        )
+
+    # normal
+    return (
+        ('triple_bombs', 3),
+        ('ice_bombs', 3),
+        ('punch', 3),
+        ('impact_bombs', 3),
+        ('land_mines', 2),
+        ('sticky_bombs', 3),
+        ('shield', 2),
+        ('health', 1),
+        ('curse', 1),
+        ('rudebuster', 2),
+        ('mewmew', 3),
+        ('snowgrave', 2),
+        ('gigabomb', 1),
+        ('spades', 3),
+        ('annoyingdog', 2),
+        ('black_knife', 1),
+        ('banana', 3),
+        ('slashbomb', 3), 
+        ('flakes', 3),
+        ('bell', 2),
+        ('pacify', 2),
+    )
