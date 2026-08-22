@@ -581,8 +581,8 @@ class HelpWindow(bui.MainWindow):
             'powerupBomb',
             'powerupHealth',
             'powerupIceBombs',
-            'powerupImpactBombs',
-            'powerupStickyBombs',
+            #'powerupImpactBombs',
+            #'powerupStickyBombs',
             'powerupLandMines',
             'powerupCurse',
             'powerupBuster',
@@ -591,6 +591,8 @@ class HelpWindow(bui.MainWindow):
             'powerupSpades',
             'powerupSlash',
             'powerupMew',
+            'powerupBKnife',
+            'powerupPacify',
         ]:
             name = bui.Lstr(resource=f'{self._r}.' + tex + 'NameText')
             desc = bui.Lstr(resource=f'{self._r}.' + tex + 'DescriptionText')

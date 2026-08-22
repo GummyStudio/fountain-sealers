@@ -1831,6 +1831,12 @@
 			"betrayal": "${NAME} accidentally spared ${VICTIM}",
 			"diedtobot": "${NAME} was spared."
 		},
+    "swoon": {
+			"kill": "${NAME} swooned ${VICTIM}.",
+			"suicide": "${NAME} was hurt and beaten.",
+			"betrayal": "${NAME} betrayed ${VICTIM}.",
+			"diedtobot": "${NAME} was hurt and beaten."
+		},
 		"punch_hit_fall": {
 			"kill": "${NAME} punched ${VICTIM} off the map.",
 			"suicide": "${NAME} punched themselves off the map.",
