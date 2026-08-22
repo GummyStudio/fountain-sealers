@@ -108,8 +108,13 @@ class Spaz(bs.Actor):
 
         factory = SpazFactory.get()
         self.character = character
-        self.color = color
-        self.highlight = highlight
+        if character != 'Vessel':
+            self.color = color
+            self.highlight = highlight
+        # TRY to force the vessel to be gray (doesn't work???)
+        else:
+            self.color = (0.4, 0.4, 0.4)
+            self.highlight = (0.4, 0.4, 0.4)
 
         # We need to behave slightly different in the tutorial.
         self._demo_mode = demo_mode
