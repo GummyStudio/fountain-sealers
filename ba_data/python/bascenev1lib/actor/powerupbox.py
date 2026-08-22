@@ -40,11 +40,12 @@ class PowerupBoxFactory:
 
         shared = SharedObjects.get()
         self._lastpoweruptype: str | None = None
+        #meshes
         self.mesh = bs.getmesh('powerup')
         self.mesh_simple = bs.getmesh('powerupSimple')
         self.mesh_temflakes = bs.getmesh('temflakes')
-        self.color_temflakes = bs.gettexture('temflakes')
-        self.tex_temflakes = bs.gettexture('white')
+
+        #vanilla textures
         self.tex_bomb = bs.gettexture('powerupBomb')
         self.tex_punch = bs.gettexture('powerupPunch')
         self.tex_ice_bombs = bs.gettexture('powerupIceBombs')
@@ -54,6 +55,8 @@ class PowerupBoxFactory:
         self.tex_health = bs.gettexture('powerupHealth')
         self.tex_land_mines = bs.gettexture('powerupLandMines')
         self.tex_curse = bs.gettexture('powerupCurse')
+
+        #textures
         self.tex_rudebuster = bs.gettexture('powerupBuster')
         self.tex_realknife = bs.gettexture('powerupRKnife')
         self.tex_mewbombs = bs.gettexture('powerupMew')
@@ -61,7 +64,13 @@ class PowerupBoxFactory:
         self.tex_spades = bs.gettexture('powerupSpades')
         self.tex_slash = bs.gettexture('powerupSlash')
         self.tex_dog = bs.gettexture('powerupToby')
-        self.tex_pacify = bs.gettexture('white')
+        self.tex_pacify = bs.gettexture('powerupPacify')
+        self.color_temflakes = bs.gettexture('temflakes')
+        self.tex_temflakes = bs.gettexture('white')
+        self.tex_pacibell = bs.gettexture('powerupBell')
+        self.tex_bknife = bs.gettexture('powerupBKnife')
+
+        #sounds
         self.health_powerup_sound = bs.getsound('healthPowerup')
         self.powerup_sound = bs.getsound('powerup01')
         self.powerdown_sound = bs.getsound('powerdown01')
@@ -212,13 +221,13 @@ class PowerupBox(bs.Actor):
         elif poweruptype == 'annoyingdog':
             tex = factory.tex_dog
         elif poweruptype == 'black_knife':
-            tex = factory.tex_shield
+            tex = factory.tex_bknife
         elif poweruptype == 'slashbomb':
             tex = factory.tex_slash
         elif poweruptype == 'banana':
             tex = factory.tex_sticky_bombs
         elif poweruptype == 'bell':
-            tex = factory.tex_curse
+            tex = factory.tex_pacibell
         elif poweruptype == 'flakes':
             tex = factory.color_temflakes
             mesh = factory.mesh_temflakes
