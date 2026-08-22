@@ -1517,13 +1517,13 @@ class Spaz(bs.Actor):
                 self.node.connectattr('position_center', icon, 'position')
                 bs.animate(icon, 'opacity', {
                     0: 1,
-                    0.3: 0
+                    0.455: 0
                 })
                 bs.animate(icon, 'scale', {
                     0: 0.02,
-                    0.1: 0.01
+                    0.12: 0.01
                 })
-                bs.timer(0.3, icon.delete)
+                bs.timer(0.5, icon.delete)
 
 
 

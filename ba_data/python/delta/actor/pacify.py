@@ -51,7 +51,8 @@ class PacifySpell(bs.Actor):
         self.z_timer = bs.Timer(0.15, self.create_z, repeat=True)
         bs.timer(5, bs.Call(self.handlemessage, bs.DieMessage(True)))
     def create_z(self):
-        for _ in range(random.randint(3, 5)):
+        # i got lazy
+        if True: #for _ in range(random.randint(3, 5)):
             rand_x = random.uniform(-0.5, 0.5)
             rand_y = random.uniform(-0.5, 0.5)
             rand_z = random.uniform(-0.5, 0.5)
