@@ -253,13 +253,13 @@
   "createEditPlayerText": "<Create/Edit Player>",
   "createText": "Create",
   "creditsWindow": {
-    "creatorsText": "BombSquad: Fountain Sealers is a modpack founded\nby GummyBoiYT, and developed by Buddie and Mell",
-	"modelsText": "GREiy45 for Ralsei and Kris' models,\nDAR 88 for hatless Ralsei and Susie's models,\nNotCleanAgain for the Roaring Knight's model",
-	"deltaruneText": "DELTARUNE, UNDERTALE, and all of its' related\ncharacters or contents used in this\nmodpack, are made by Toby Fox.",
-	"specialThanksBombSquadText": "Special thanks to Eric Froemling and all\nrelated creators of BombSquad for their creation\nof this very wonderful game",
-	"noProfitText": "No profit or comercial use is to be made of\nthis modpack. Any relation to such (trailers? :eyes:)\nin no way gain any profit.",
-	"waitingText": "Fountain Sealers\nis waiting.",
-    "titleText": "${APP_NAME} Credits"
+    "creatorsText": "BombSquad: Fountain Sealers es un modpack fundado\npor GummyBoiYT, y siendo creado por Buddie y Mell",
+	"modelsText": "GREiy45 por los modelos de Ralsei y Kris,\nDAR 88 por los modelos de Ralsei sin gorra y Susie,\nNotCleanAgain por el modelo del Caballero Rugiente,",
+	"deltaruneText": "DELTARUNE, UNDERTALE, y todos sus personajes\nrelacionados o contenidos usados en este\nmodpack, están hechos por Toby Fox.",
+	"specialThanksBombSquadText": "Saludos especiales a Eric Froemling y todos los\ncreadores relacionados con BombSquad por la creación\nde este juego maravilloso.",
+	"noProfitText": "No se hace ningún uso comercial o venta con\neste modpack. Cualquier relación con ello (¿trailers? :eyes:)\nno ganan dínero de ninguna manera.",
+	"waitingText": "Fountain Sealers\nte espera.",
+    "titleText": "Créditos de ${APP_NAME}"
   },
   "currentStandingText": "Your current standing is #${RANK}",
   "customizeText": "Customize...",
@@ -585,19 +585,19 @@
   "helpWindow": {
     "bombInfoText": "- Bomb -\nStronger than punches, but\ncan result in grave self-injury.\nFor best results, throw towards\nenemy before fuse runs out.",
     "bombInfoTextScale": 0.6,
-    "canHelpText": "${APP_NAME}\nwill certainly help with that.",
+    "canHelpText": "${APP_NAME}\nva a ayudar con eso.",
     "controllersInfoText": "You can play ${APP_NAME}\nwith friends over a network, or you\ncan all play on the same device if you have enough controllers.\n${APP_NAME} supports a variety of them;\nyou can even use phones as controllers\nvia the free '${REMOTE_APP_NAME}' app.\nSee Settings->Controllers for more info.",
     "controllersInfoTextRemoteOnly": "You can play ${APP_NAME} with friends over a network, or you\ncan all play on the same device by using phones as\ncontrollers via the free '${REMOTE_APP_NAME}' app.",
     "controllersText": "Controllers",
-    "controlsSubtitleText": "Your friendly character has a few basic actions:",
-    "controlsText": "Controls",
+    "controlsSubtitleText": "Tu personaje amable tiene algunos movimientos básicos:",
+    "controlsText": "Controles",
     "devicesInfoText": "The VR version of ${APP_NAME} can be played over the network with\nthe regular version, so whip out your extra phones, tablets,\nand computers and get your game on.  It can even be useful to\nconnect a regular version of the game to the VR version just to\nallow people outside to watch the action.",
     "devicesText": "Devices",
-    "friendsGoodText": "These are good to have.  ${APP_NAME} is most fun\nwith several players and can support up to 8 at a time, which leads us to:",
-    "friendsText": "Friends",
+    "friendsGoodText": "Estos son buenos para tener.  ${APP_NAME} es muy divertido\ncon muchos jugadores, y podés jugar con hasta 4, lo que nos deja con:",
+    "friendsText": "Amigos",
     "jumpInfoText": "- Jump -\nJump to cross small gaps,\nto throw things higher, and\nto express feelings of joy.",
     "jumpInfoTextScale": 0.6,
-    "pickUpInfoText": "- Pick Up -\nGrab flags, enemies,\nor anything\nelse not bolted\nto the ground.\n                  Press again to throw.",
+    "pickUpInfoText": "- Agarrar -\nAgarra banderas, enemigos,\no cualquier cosa que\nno esté pegado\nal suelo.\n                  Presiona otra vez para tirar.",
     "pickUpInfoTextScale": 0.6,
     "powerupBombDescriptionText": "Lets you whip out three bombs\nin a row instead of just one.",
     "powerupBombNameText": "Triple-Bombs",
@@ -605,11 +605,11 @@
     "powerupCurseNameText": "Curse",
     "powerupHealthDescriptionText": "A prayer that heals you and restores\nyou to your full health.",
     "powerupHealthNameText": "Heal Prayer",
-    "powerupIceBombsDescriptionText": "Weaker than normal bombs\nbut leave your enemies frozen\nand particularly brittle.",
-    "powerupIceBombsNameText": "Ice Shock Bombs",
+    "powerupIceBombsDescriptionText": "Mas débil que las demas bombas,\npero deja a tus amigos congelados\ny particularmente frágiles.",
+    "powerupIceBombsNameText": "Bombas de Ice Shock",
     "powerupImpactBombsDescriptionText": "Slightly weaker than regular\nbombs, but they explode on impact.",
     "powerupImpactBombsNameText": "Trigger-Bombs",
-    "powerupLandMinesDescriptionText": "Eggs that explode on contact;\nUseful against base-defense or fast enemies.",
+    "powerupLandMinesDescriptionText": "Huevos que explotan en contacto;\nÚtil para defensa de base, o contra enemigos rápidos.",
     "powerupLandMinesNameText": "Pipis",
     "powerupPunchDescriptionText": "For every punch done up to 4,\ngoes up from weak to strong.",
     "powerupPunchNameText": "Tough Gloves",
@@ -639,11 +639,11 @@
     "runInfoText": "- Run -\nHold ANY button to run. Triggers or shoulder buttons work well if you have them.\nRunning gets you places faster but makes it hard to turn, so watch out for cliffs.",
     "runInfoTextScale": 0.6,
     "someDaysExtraSpace": 2,
-    "someDaysText": "Sometimes, you feel like FIGHTING or SPARING some things;",
+    "someDaysText": "Algunas veces, querés PELEAR o PERDONAR cosas;",
 	"orPunchingSomethingExtraSpace": 15,
     "orPunchingSomethingText": "or throwing them around, tripping them and splitting them into pieces...",
-    "titleText": "${APP_NAME} Help",
-    "toGetTheMostText": "To get the most out of this game, you'll need:",
+    "titleText": "Ayuda de ${APP_NAME}",
+    "toGetTheMostText": "Para conseguir todo del juego, necesitarás:",
     "welcomeText": "${APP_NAME}"
   },
   "holdAnyButtonText": "<hold any button>",
@@ -1209,11 +1209,11 @@
   "tournamentsText": "Tournaments",
   "translations": {
     "seam": {
-      "* Hee hee... Welcome, travellers.": null
+      "* Hee hee... Welcome, travellers.": "* Jee jee... Bienvenidos, viajeros."
     },
     "characterNames": {
       "Ralsei": null,
-      "NoHatRalsei": "Ralsei (hatless)",
+      "NoHatRalsei": "Ralsei (sin gorra)",
       "Kris": null,
       "Susie": null,
       "Temmie": null,
@@ -1340,7 +1340,7 @@
       "Czech": null,
       "Danish": null,
       "Dutch": null,
-      "English": null,
+      "English": "Inglés",
       "Esperanto": null,
       "Filipino": null,
       "Finnish": null,
@@ -1358,14 +1358,14 @@
       "Persian": null,
       "PirateSpeak": "Pirate Speak",
       "Polish": null,
-      "PortugueseBrazil": "Portuguese - Brazil",
-      "PortuguesePortugal": "Portuguese - Portugal",
+      "PortugueseBrazil": "Portugués Brazilero",
+      "PortuguesePortugal": "Portugués",
       "Romanian": null,
       "Russian": null,
       "Serbian": null,
       "Slovak": null,
-      "SpanishLatinAmerica": "Spanish - Latin America",
-      "SpanishSpain": "Spanish - Spain",
+      "SpanishLatinAmerica": "Español Latino",
+      "SpanishSpain": "Español de España",
       "Swedish": null,
       "Tamil": null,
       "Thai": null,
@@ -1698,144 +1698,145 @@
   "yourPrizeText": "Your prize:",
   "delta": {
     "tagFilter": {
-      "titleText": "Filter",
+      "titleText": "Filtro",
       "tags": {
           "Neutral": "Neutral",
           "Darkner": "Darkner",
-          "Enemy": "Enemy",
-          "Female": "Female",
-          "Monster": "Monster",
-          "Male": "Male",
+          "Enemy": "Enemigo",
+          "Female": "Mujer",
+          "Monster": "Monstruo",
+          "Male": "Hombre",
           "Meme": "Meme",
           "Lighter": "Lighter",
-          "Hero": "Hero",
-          "Gender Unknown": "Unknown Gender",
+          "Hero": "Héroe",
+          "Gender Unknown": "Género Desconocido",
           "Deltarune": "Deltarune",
-          "Human": "Human",
-          "Non Binary": "Non-Binary",
+          "Human": "Humano",
+          "Non Binary": "No-Binario",
           "Undertale": "Undertale"
       }
     },
-    "useVanillaText": "Go to Seams seap.",
-    "frozenText": "Frozen",
+    "useVanillaText": "Ve a la tienda de Seam.",
+    "frozenText": "Congelado",
     "swoonText": "SWOON",
     "fatalText": "Fatal",
-    "recruitText": "+Recruit",
-    "missText": "Miss",
+    "recruitText": "+Recruta",
+    "missText": "Fallo",
     "deathmessages": {
 		"template": {
-			"kill": "${NAME} killed ${VICTIM}.",
-			"suicide": "${NAME} killed themselves.",
-			"betrayal": "${NAME} betrayed ${VICTIM}.",
-			"diedtobot": "${NAME} died."
+			"kill": "${NAME} mató a ${VICTIM}.",
+			"suicide": "${NAME} se mató a sí mismo.",
+			"betrayal": "${NAME} traicionó a ${VICTIM}.",
+			"diedtobot": "${NAME} murió."
 		},
 		"generic": {
-			"kill": "${NAME} killed ${VICTIM}.",
-			"suicide": "${NAME} commited suicide.",
-			"betrayal": "${NAME} betrayed ${VICTIM}.",
-			"diedtobot": "${NAME} died."
+			"kill": "${NAME} mató a ${VICTIM}.",
+			"suicide": "${NAME} se suicidó.",
+			"betrayal": "${NAME} traicionó a ${VICTIM}.",
+			"diedtobot": "${NAME} murió."
 		},
 		"out_of_bounds": {
-			"kill": "${VICTIM} didn't want to live in\nthe same world as ${NAME}.",
-			"suicide": "${NAME} fell out the world.",
-			"betrayal": "${NAME} threw ${VICTIM}.",
-			"diedtobot": "${NAME} fell out the world."
+			"kill": "${VICTIM} no quiso vivir en\nel mismo mundo que ${NAME}.",
+			"suicide": "${NAME} se cayó del mundo.",
+			"betrayal": "${NAME} tiró a ${VICTIM}.",
+			"diedtobot": "${NAME} se cayó del mundo."
 		},
 		"impact": {
-			"kill": "${NAME} threw ${VICTIM} on the floor.",
-			"suicide": "${NAME} hit the ground too hard.",
-			"betrayal": "${NAME} pushed ${VICTIM}.",
-			"diedtobot": "${NAME} hit the ground too hard."
+			"kill": "${NAME} tiró a ${VICTIM} al suelo.",
+			"suicide": "${NAME} se cayó demasiado fuerte.",
+			"betrayal": "${NAME} empujó a ${VICTIM}.",
+			"diedtobot": "${NAME} se cayó demasiado fuerte."
 		},
 		"fall":{
-			"kill": "${NAME} threw and killed ${VICTIM} ",
-			"suicide": "${NAME} tripped and died.",
+			"kill": "${NAME} tiró y mató a ${VICTIM} ",
+			"suicide": "${NAME} se cayó y murió.",
 			"betrayal": "${NAME} tripped ${VICTIM}.",
-			"diedtobot": "${NAME} fell."
+			"diedtobot": "${NAME} se cayó."
 		},
 		"reached_goal": {
-			"kill": "${NAME} pushed ${VICTIM} to the finish.",
-			"suicide": "${NAME} disappeared in the finish line.",
-			"betrayal": "${NAME} pushed ${VICTIM} to the finish.",
-			"diedtobot": "${NAME} got pushed into the finish."
+			"kill": "${NAME} empujó a ${VICTIM} hacia la meta.",
+			"suicide": "${NAME} desapareció en la meta.",
+			"betrayal": "${NAME} empujó a ${VICTIM} hacia la meta.",
+			"diedtobot": "${NAME} fue empujado/a hacia la meta."
 		},
 		"left_game": {
-			"kill": "${NAME} made ${VICTIM} leave.",
-			"suicide": "${NAME} left.",
-			"betrayal": "${NAME} had ${VICTIM} leave.",
-			"diedtobot": "${NAME} left."
+			"kill": "${NAME} hizo que ${VICTIM} se vaya.",
+			"suicide": "${NAME} se salió.",
+			"betrayal": "${NAME} hizo que ${VICTIM} se vaya.",
+			"diedtobot": "${NAME} se salió."
 		},
 		"ice_shock": {
-			"kill": "${NAME} froze ${VICTIM}.",
-			"suicide": "${NAME} froze themselves.",
-			"betrayal": "${VICTIM} got frozen by\ntheir teammate ${NAME}.",
-			"diedtobot": "${NAME} was frozen."
+			"kill": "${NAME} congeló a ${VICTIM}.",
+			"suicide": "${NAME} se congeló.",
+			"betrayal": "${VICTIM} fue congelado/a por\nsu buen amigo ${NAME}.",
+			"diedtobot": "${NAME} fué congelado/a."
 		},
 		"glove": {
-			"kill": "${NAME} stabbed ${VICTIM}.",
-			"suicide": "${NAME} stabbed themselves.",
-			"betrayal": "${NAME} played with knives around ${VICTIM}.",
-			"diedtobot": "${NAME} was stabbed."
+			"kill": "${NAME} puñaló a ${VICTIM}.",
+			"suicide": "${NAME} se apuñaló.",
+			"betrayal": "${NAME} jugó con cuchillos cerca de ${VICTIM}.",
+			"diedtobot": "${NAME} fué apuñalado/a."
 		},
 		"punch": {
-			"kill": "${NAME} punched ${VICTIM} to death.",
-			"suicide": "${NAME} punched themselves.",
-			"betrayal": "${NAME} accidentally punched ${VICTIM}.",
-			"diedtobot": "${NAME} died to a punch."
+			"kill": "${NAME} golpeó ${VICTIM} hasta la muerte.",
+			"suicide": "${NAME} se golpeó a sí mismo/a.",
+			"betrayal": "${NAME} accidentalmente golpeó a ${VICTIM}.",
+			"diedtobot": "${NAME} murió por un golpe."
 		},
 		"explosion": {
-			"kill": "${NAME} blew up ${VICTIM}.",
-			"suicide": "${NAME} blew themselves up.",
-			"betrayal": "${VICTIM} ran into ${NAME}'s bomb.",
-			"diedtobot": "${NAME} blew up."
+			"kill": "${NAME} explotó a ${VICTIM}.",
+			"suicide": "${NAME} se explotó a sí mismo/a.",
+			"betrayal": "${VICTIM} corrió hacia la bomba de  ${NAME}.",
+			"diedtobot": "${NAME} explotó."
 		},
 		"rude_buster": {
-			"kill": "${NAME} was too rude for ${VICTIM}.",
-			"suicide": "${NAME} casted rude buster!\nAnd.. died.",
+			"kill": "${NAME} fué demasiado rudo para ${VICTIM}.",
+			"suicide": "${NAME} usó Rude Buster!\nY... murió.",
 			"betrayal": "${NAME} rudely busted on ${VICTIM}.",
 			"diedtobot": "${NAME} was rude busted."
 		},
 		"mewmewbomb": {
-			"kill": "${VICTIM} couldn't take the cuteness.",
-			"suicide": "${NAME} got too mad.",
-			"betrayal": "${NAME} betrayed ${VICTIM} with cuteness.",
-			"diedtobot": "${NAME} died to cuteness."
+			"kill": "${VICTIM} no pudo contener su cariñosidad.",
+			"suicide": "${NAME} se puso demasiado/a enojado/a.",
+			"betrayal": "${NAME} traicionó a ${VICTIM} con cariñosidad.",
+			"diedtobot": "${NAME} murió por cariñosidad."
 		},
 		"snowgrave": {
 			"kill": "${NAME} snowgraved ${VICTIM}",
-			"suicide": "${NAME} built their own icy grave.",
+			"suicide": "${NAME} creó su propio/a tumba de hielo.",
 			"betrayal": "${NAME} betrayal snowgraved ${VICTIM}.",
-			"diedtobot": "${NAME} was snowgraved."
+			"diedtobot": "${NAME} fué snowgraved."
+			"comment_by_buddie": "line above is placeholder cuz idk how to translate that to español"
 		},
 		"spades": {
-			"kill": "${NAME} killed ${VICTIM} with spades.",
-			"suicide": "${NAME} was hit by their spades.",
-			"betrayal": "${NAME} betrayed ${VICTIM}.",
-			"diedtobot": "${NAME} died."
+			"kill": "${NAME} mató a ${VICTIM} con picas.",
+			"suicide": "${NAME} fué atacado por sus picas.",
+			"betrayal": "${NAME} traicionó a ${VICTIM}.",
+			"diedtobot": "${NAME} murió."
 		},
 		"annoying_dog": {
-			"kill": "${NAME} somehow killed\n${VICTIM} with Annoying Dog.",
-			"suicide": "${NAME} was killed by Annoying Dog.",
-			"betrayal": "${VICTIM} was killed by Annoying Dog.",
-			"diedtobot": "${NAME} was killed by Annoying Dog."
+			"kill": "${NAME} de alguna manera\nmató a ${VICTIM} con Perro Molesto.",
+			"suicide": "${NAME} fué asesinado/a por Perro Molesto.",
+			"betrayal": "${VICTIM} fué asesinado/a por Perro Molesto.",
+			"diedtobot": "${NAME} fué asesinado/a por Perro Molesto."
 		},
 		"dog_exploded": {
-			"kill": "${NAME} used Annoying Dog to blow up ${VICTIM}.",
-			"suicide": "${NAME} was blown up by Annoying Dog.",
-			"betrayal": "${VICTIM} was blown up by Annoying Dog.",
-			"diedtobot": "${NAME} was blown up by Annoying Dog."
+			"kill": "${NAME} usó al Perro Molesto para explotar a ${VICTIM}.",
+			"suicide": "${NAME} fué explotado/a por Perro Molesto.",
+			"betrayal": "${VICTIM} fué explotado/a por Perro Molesto.",
+			"diedtobot": "${NAME} fué explotado/a por Perro Molesto.",
 		},
 		"spared": {
-			"kill": "${NAME} spared ${VICTIM}.",
-			"suicide": "${NAME} spared... themselves?",
-			"betrayal": "${NAME} accidentally spared ${VICTIM}",
-			"diedtobot": "${NAME} was spared."
+			"kill": "${NAME} perdonó a ${VICTIM}.",
+			"suicide": "${NAME} se perdonó... a sí mismo/a?",
+			"betrayal": "${NAME} accidentalmente perdonó a ${VICTIM}",
+			"diedtobot": "${NAME} fue perdonado/a."
 		},
 		"punch_hit_fall": {
-			"kill": "${NAME} punched ${VICTIM} off the map.",
-			"suicide": "${NAME} punched themselves off the map.",
-			"betrayal": "${NAME} punched their teammate\noff the map.",
-			"diedtobot": "${NAME} was punched off the map."
+			"kill": "${NAME} golpeó a ${VICTIM} fuera del mapa.",
+			"suicide": "${NAME} se golpeó fuera del mapa.",
+			"betrayal": "${NAME} golpeó a su compañero/a\nfuera del mapa.",
+			"diedtobot": "${NAME} fue golpeado fuera del mapa."
 		},
 		"rude_buster_fall": {
 			"kill": "${NAME} rude buster'd ${VICTIM}\noff the map.",
@@ -1844,22 +1845,22 @@
 			"diedtobot": "${NAME} was rude buster'd off the map."
 		},
 		"annoying_dog_fall": {
-			"kill": "${NAME} used Annoying Dog to push ${VICTIM}.",
-			"suicide": "${NAME} was pushed by Annoying Dog.",
-			"betrayal": "${NAME} was pushed by Annoying Dog.",
-			"diedtobot": "${NAME} was pushed by Annoying Dog."
+			"kill": "${NAME} usó al Perro Molesto\npara empujar a ${VICTIM}.",
+			"suicide": "${NAME} fué empujado/a por Perro Molesto.",
+			"betrayal": "${NAME} fué empujado/a por Perro Molesto."
+			"diedtobot": "${NAME} fué empujado/a por Perro Molesto."
 		},
 		"banana": {
-		  "kill": "${NAME} made ${VICTIM} slipped and died.",
-		  "suicide": "${NAME} slipped on their own banana.",
-		  "betrayal": "${VICTIM} slipped and died.",
-		  "diedtobot": "${NAME} slipped and died."
+		  "kill": "${NAME} hizo que ${VICTIM} se cayera y muriera.",
+		  "suicide": "${NAME} se cayó por su propia banana.",
+		  "betrayal": "${VICTIM} se cayó y murió.",
+		  "diedtobot": "${NAME} se cayó y murió.",
 		},
 		"banana_fall": {
-		  "kill": "${NAME} accidentally made ${VICTIM} trip and fall.",
-		  "suicide": "${NAME} tripped and fall.",
-		  "betrayal": "${NAME} made ${VICTIM} trip and fall.",
-		  "diedtobot": "${NAME} tripped and fall."
+		  "kill": "${NAME} accidentalmente hizo que\n${VICTIM} se cayera y muera.",
+		  "suicide": "${NAME} se cayó por una banana.",
+		  "betrayal": "${NAME} hizo que ${VICTIM} se cayera y muera.",
+		  "diedtobot": "${NAME} se cayó por una banana.",
 		}
 	}
   }
