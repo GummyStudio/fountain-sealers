@@ -1857,9 +1857,9 @@
 		},
 		"banana_fall": {
 		  "kill": "${NAME} accidentally made ${VICTIM} trip and fall.",
-		  "suicide": "${NAME} tripped and fall.",
+		  "suicide": "${NAME} tripped and fell.",
 		  "betrayal": "${NAME} made ${VICTIM} trip and fall.",
-		  "diedtobot": "${NAME} tripped and fall."
+		  "diedtobot": "${NAME} tripped and fell."
 		}
 	}
   }
