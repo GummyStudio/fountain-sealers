@@ -1,6 +1,9 @@
 import bascenev1 as bs
 
 class DamageText(bs.Actor):
+    """
+     a thing that shows up somewhere in the world. acting like a deltarune damage text
+    """
     def __init__(self, position: tuple, text: str, color: tuple = (1, 1, 1), scl=1.0):
         super().__init__()
         self.node = bs.newnode(

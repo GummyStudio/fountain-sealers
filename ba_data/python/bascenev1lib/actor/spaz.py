@@ -1187,7 +1187,7 @@ class Spaz(bs.Actor):
                         bs.WeakCall(self._multi_bomb_wear_off),
                     )
             elif msg.poweruptype == 'land_mines':
-                self.set_land_mine_count(min(5, self.land_mine_count+2))
+                self.set_land_mine_count(min(5, self.land_mine_count+3))
             elif msg.poweruptype == 'rudebuster':
                 self.set_rude_busters_count(min(3, self.rudebusters+2))
             elif msg.poweruptype == 'snowgrave':
