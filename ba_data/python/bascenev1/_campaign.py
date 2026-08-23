@@ -266,18 +266,10 @@ def init_campaigns() -> None:
                     preview_texture_name='towerDPreview',
                 ),
                 Level(
-                    'Race',
-                    displayname='${GAME}',
-                    gametype=RaceGame,
-                    settings={'map': 'Big G', 'Laps': 3, 'Bomb Spawning': 0},
-                    preview_texture_name='bigGPreview',
-                ),
-                Level(
-                    'Pro Race',
-                    displayname='Pro ${GAME}',
-                    gametype=RaceGame,
-                    settings={'map': 'Big G', 'Laps': 3, 'Bomb Spawning': 1000},
-                    preview_texture_name='bigGPreview',
+                    'Snowdin Mountain',
+                    gametype=RunaroundGame,
+                    settings={'preset': 'endless', 'map': 'Snowdin Mountain'},
+                    preview_texture_name='towerDPreview',
                 ),
                 Level(
                     'Lake Frigid Race',

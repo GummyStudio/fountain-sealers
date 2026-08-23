@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 def register_all_maps() -> None:
     """Registering all maps."""
     for maptype in [
+        # GAMEMODE
         Rudebuster,
         MewersLive,
         CardCastle,
@@ -30,6 +31,10 @@ def register_all_maps() -> None:
         FlowerMan,
         TitanStage,
         SancuaryStage,
+
+
+        # COOP
+        SnowdinMountain,
 
         # vanilla
         DoomShroom,
@@ -1741,4 +1746,61 @@ class TowerD(bs.Map):
                 'color_texture': self.preloaddata['tex'],
             },
         )
-        
+
+
+
+class SnowdinMountain(bs.Map):
+    """Map used for runaround mini-game."""
+
+    from delta.mapdata import snowdin_mountain_mapdefs as defs
+
+    name = 'Snowdin Mountain'
+
+    @override
+    @classmethod
+    def get_play_types(cls) -> list[str]:
+        """Return valid play types for this map."""
+        return []
+
+    @override
+    @classmethod
+    def get_preview_texture_name(cls) -> str:
+        return 'towerDPreview'
+
+    @override
+    @classmethod
+    def on_preload(cls) -> Any:
+        data: dict[str, Any] = {
+            'mesh': bs.getmesh('snowdin_mountain'),
+            'collision_mesh': bs.getcollisionmesh('snowdin_mountain'),
+            'tex': bs.gettexture('towerDLevelColor'),
+            'bgtex': bs.gettexture('menuBG'),
+            'bgmesh': bs.getmesh('thePadBG'),
+        }
+       
+        data['vr_fill_mound_mesh'] = bs.getmesh('stepRightUpVRFillMound')
+        data['vr_fill_mound_tex'] = bs.gettexture('vrFillMound')
+        return data
+
+    def __init__(self) -> None:
+        super().__init__(vr_overlay_offset=(0, 1, 1))
+        shared = SharedObjects.get()
+        self.node = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['collision_mesh'],
+                'mesh': self.preloaddata['mesh'],
+                'color_texture': self.preloaddata['tex'],
+                'materials': [shared.footing_material],
+            },
+        )
+        self.background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['bgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': self.preloaddata['bgtex'],
+            },
+        )

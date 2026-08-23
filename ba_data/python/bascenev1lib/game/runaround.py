@@ -16,7 +16,7 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, cast, Sequence, override
 
-import bascenev1 as bs
+import bascenev1 as bs, math
 
 from bascenev1lib.actor.popuptext import PopupText
 from bascenev1lib.actor.bomb import TNTSpawner
@@ -133,8 +133,26 @@ class RunaroundGame(bs.CoopGameActivity[Player, Team]):
         StickyBot: 0.5,
     }
 
+    # How for away players need to be for our various bot types to deaggro them.
+    _bot_deaggro_map: dict[type[SpazBot], float] = {
+        BomberBot: 6,
+        BomberBotPro: 5,
+        BomberBotProShielded: 5,
+        BrawlerBot: 3,
+        BrawlerBotPro: 3,
+        BrawlerBotProShielded: 3,
+        TriggerBot: 7.5,
+        TriggerBotPro: 5,
+        TriggerBotProShielded: 5,
+        ChargerBot: 8,
+        ChargerBotProShielded: 6,
+        ExplodeyBot: 8.5,
+        StickyBot: 6.5,
+    }
+
     def __init__(self, settings: dict):
-        settings['map'] = 'Tower D'
+        if 'map' not in settings:
+            settings['map'] = 'Tower D'
         super().__init__(settings)
         shared = SharedObjects.get()
         self._preset = Preset(settings.get('preset', 'pro'))
@@ -1202,6 +1220,8 @@ class RunaroundGame(bs.CoopGameActivity[Player, Team]):
         # Tack some custom attrs onto the spaz.
         setattr(spaz, 'r_walk_row', path)
         setattr(spaz, 'r_walk_speed', self._get_bot_speed(spaz_type))
+        setattr(spaz, 'aggro', False)
+        setattr(spaz, 'aggro_time', 0.0)
 
     def add_bot_at_point(
         self,
@@ -1269,62 +1289,155 @@ class RunaroundGame(bs.CoopGameActivity[Player, Team]):
         # FIXME: Do this in a type safe way.
         r_walk_speed: float = getattr(bot, 'r_walk_speed')
         r_walk_row: int = getattr(bot, 'r_walk_row')
+        is_aggro: bool = getattr(bot, 'aggro')
+        aggro_time: float = getattr(bot, 'aggro_time')
+        aggro_range = 2
+        deaggro_range: int = ( self._bot_deaggro_map[bot.__class__] )
+        
 
         speed = r_walk_speed
         pos = bot.node.position
         boxes = self.map.defs.boxes
 
-        # Bots in row 1 attempt the high road..
-        if r_walk_row == 1:
-            if bs.is_point_in_box(pos, boxes['b4']):
+        if self.map.name in ['Tower D']:
+
+            # Bots in row 1 attempt the high road..
+            if r_walk_row == 1:
+                if bs.is_point_in_box(pos, boxes['b4']):
+                    bot.node.move_up_down = speed
+                    bot.node.move_left_right = 0
+                    bot.node.run = 0.0
+                    return True
+
+            # Row 1 and 2 bots attempt the middle road..
+            if r_walk_row in [1, 2]:
+                if bs.is_point_in_box(pos, boxes['b1']):
+                    bot.node.move_up_down = speed
+                    bot.node.move_left_right = 0
+                    bot.node.run = 0.0
+                    return True
+
+            # All bots settle for the third row.
+            if bs.is_point_in_box(pos, boxes['b7']):
                 bot.node.move_up_down = speed
                 bot.node.move_left_right = 0
                 bot.node.run = 0.0
                 return True
-
-        # Row 1 and 2 bots attempt the middle road..
-        if r_walk_row in [1, 2]:
-            if bs.is_point_in_box(pos, boxes['b1']):
+            if bs.is_point_in_box(pos, boxes['b2']):
+                bot.node.move_up_down = -speed
+                bot.node.move_left_right = 0
+                bot.node.run = 0.0
+                return True
+            if bs.is_point_in_box(pos, boxes['b3']):
+                bot.node.move_up_down = -speed
+                bot.node.move_left_right = 0
+                bot.node.run = 0.0
+                return True
+            if bs.is_point_in_box(pos, boxes['b5']):
+                bot.node.move_up_down = -speed
+                bot.node.move_left_right = 0
+                bot.node.run = 0.0
+                return True
+            if bs.is_point_in_box(pos, boxes['b6']):
                 bot.node.move_up_down = speed
                 bot.node.move_left_right = 0
                 bot.node.run = 0.0
                 return True
+            if (
+                bs.is_point_in_box(pos, boxes['b8'])
+                and not bs.is_point_in_box(pos, boxes['b9'])
+            ) or pos == (0.0, 0.0, 0.0):
+                # Default to walking right if we're still in the walking area.
+                bot.node.move_left_right = speed
+                bot.node.move_up_down = 0
+                bot.node.run = 0.0
+                return True
+        elif self.map.name in ['Snowdin Mountain']:
+            import math
 
-        # All bots settle for the third row.
-        if bs.is_point_in_box(pos, boxes['b7']):
-            bot.node.move_up_down = speed
-            bot.node.move_left_right = 0
-            bot.node.run = 0.0
-            return True
-        if bs.is_point_in_box(pos, boxes['b2']):
+            
+          
+
+            {}.items()
+            # Recent.. just move left
+            #if bs.time()-create_time<2:
+            #    bot.node.move_up_down = 0
+            #    bot.node.move_left_right = -speed
+            #    bot.node.run = 0.0
+            #    return True
+
+            
+
+            # are we not in aggro rn?  look for players otherwise follow movement
+            if not is_aggro:
+                for player in self.players:
+                    if not player.actor.is_alive():
+                        continue
+                    # player nearby? attaaaack!
+                    if math.dist(bot.node.position, player.actor.node.position) < aggro_range:
+                        setattr(bot, 'aggro', True)
+                        return False
+            else:
+                setattr(bot, 'aggro_time', aggro_time+0.05)
+
+                for player in self.players:
+                    if not player.actor.is_alive():
+                        continue
+                    # Y sucks, and bots follow you down cliff which hurts the objective. 
+                    # Y dist is going to be stuck at 2 so if you fall then you're good
+                    bot_pos = bot.node.position
+                    target_pos = player.actor.node.position
+
+                
+                    y_distance = abs(bot_pos[1] - target_pos[1])
+                    total_distance = math.dist(bot_pos, target_pos)
+                    if y_distance > 2.0 or total_distance > deaggro_range:
+                        setattr(bot, 'aggro', False)
+                        setattr(bot, 'aggro_time', 0.0)
+
+                    # check if our aggro time is 30 seconds or higher and deaggro automatically
+                    # ( dont't reset the time, as we may still be in the aggro range)
+                    elif aggro_time > 30:
+                        setattr(bot, 'aggro', False)
+                        #setattr(bot, 'aggro_time', 0.0)
+
+                    # otherwise keep attacking
+                    else:
+                        return False
+                
+                # Uhh.... no players so just dont
+                setattr(bot, 'aggro', False)
+                setattr(bot, 'aggro_time', 0.0)
+            
+            
+            left_boxes = [ box for box_name, box in boxes.items() if "left" in box_name.lower() ]
+            right_boxes = [ box for box_name, box in boxes.items() if "right" in box_name.lower() ]
+            
+            for box in left_boxes:
+                # We are in a left box? move left!
+                if bs.is_point_in_box(pos, box):
+                    bot.node.move_up_down = 0
+                    bot.node.move_left_right = -speed
+                    bot.node.run = 0.0
+                    return True
+            for box in right_boxes:
+                # We are in a right box? move right!
+                if bs.is_point_in_box(pos, box):
+                    bot.node.move_up_down = 0
+                    bot.node.move_left_right = speed
+                    bot.node.run = 0.0
+                    return True
+            
+            # Other wise... move down.
             bot.node.move_up_down = -speed
             bot.node.move_left_right = 0
             bot.node.run = 0.0
             return True
-        if bs.is_point_in_box(pos, boxes['b3']):
-            bot.node.move_up_down = -speed
-            bot.node.move_left_right = 0
-            bot.node.run = 0.0
+           
+        else:
+            # Err not defined
             return True
-        if bs.is_point_in_box(pos, boxes['b5']):
-            bot.node.move_up_down = -speed
-            bot.node.move_left_right = 0
-            bot.node.run = 0.0
-            return True
-        if bs.is_point_in_box(pos, boxes['b6']):
-            bot.node.move_up_down = speed
-            bot.node.move_left_right = 0
-            bot.node.run = 0.0
-            return True
-        if (
-            bs.is_point_in_box(pos, boxes['b8'])
-            and not bs.is_point_in_box(pos, boxes['b9'])
-        ) or pos == (0.0, 0.0, 0.0):
-            # Default to walking right if we're still in the walking area.
-            bot.node.move_left_right = speed
-            bot.node.move_up_down = 0
-            bot.node.run = 0.0
-            return True
+    
 
         # Revert to normal bot behavior otherwise..
         return False
