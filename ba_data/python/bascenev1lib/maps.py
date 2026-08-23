@@ -1785,6 +1785,8 @@ class SnowdinMountain(bs.Map):
     def __init__(self) -> None:
         super().__init__(vr_overlay_offset=(0, 1, 1))
         shared = SharedObjects.get()
+        self.snowmesh = bs.getmesh('shield')
+        self.snowtex = bs.gettexture('white')
         self.node = bs.newnode(
             'terrain',
             delegate=self,
@@ -1804,3 +1806,33 @@ class SnowdinMountain(bs.Map):
                 'color_texture': self.preloaddata['bgtex'],
             },
         )
+        gnode = bs.getactivity().globalsnode
+        gnode.tint = (1, 1.23, 1.9)#(1.5, 1.5, 1.5)
+        gnode.ambient_color = (0, 0.12, 2)
+        #gnode.vignette_outer = (0.62, 0.64, 0.69)
+        #gnode.vignette_inner = (0.97, 0.95, 0.93)
+        bs.timer(0.085, self.spawn_snow, repeat=True)
+    def spawn_snow(self):
+        Partical(
+            position=(
+                random.uniform(-0.5, 0.5), 15, random.uniform(-3, 3)
+            ),
+            mesh=self.snowmesh,
+            texture=self.snowtex,
+            velocity=(
+                random.uniform(-6, 6),
+                -1,
+                 random.uniform(-2, 2)
+            ),
+            gravity_scale=0.2,
+            collide_with=None,
+            mesh_scale=0.1
+
+        ).autoretain()
+
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        
+        
+        return bs.MusicType.MIX_SNOWDIN
