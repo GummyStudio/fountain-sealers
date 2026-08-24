@@ -85,9 +85,9 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
         AssetSoundtrackEntry(
             'music/remixAndAlts/spade', 
     volume=1.0),
-    MusicType.MIX_SNOWDIN:
+    MusicType.MIX_ENEMY_APPROACH:
         AssetSoundtrackEntry(
-            'music/remixAndAlts/remixSnowDin', 
+            'music/remixAndAlts/remixEnemyApproach', 
     volume=0.5),
         
 }

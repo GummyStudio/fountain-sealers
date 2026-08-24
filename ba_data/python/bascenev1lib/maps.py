@@ -1882,4 +1882,4 @@ class SnowdinMountain(bs.Map):
     def get_music_type(cls) -> bs.MusicType:
         
         
-        return bs.MusicType.MIX_SNOWDIN
+        return bs.MusicType.MIX_ENEMY_APPROACH

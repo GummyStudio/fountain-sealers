@@ -60,7 +60,7 @@ class CoopBrowserWindow(bui.MainWindow):
 
         # Try to recreate the same number of buttons we had last time so our
         # re-selection code works.
-        self._tournament_button_count = app.config.get('Tournament Rows', 0)
+        self._tournament_button_count = 0
         assert isinstance(self._tournament_button_count, int)
 
         self.star_tex = bui.gettexture('star')
@@ -375,32 +375,7 @@ class CoopBrowserWindow(bui.MainWindow):
 
         # Decrement time on our tournament buttons.
         ads_enabled = plus.ads.have_incentivized_ad()
-        for tbtn in self._tournament_buttons:
-            tbtn.time_remaining = max(0, tbtn.time_remaining - 1)
-            if tbtn.time_remaining_value_text is not None:
-                bui.textwidget(
-                    edit=tbtn.time_remaining_value_text,
-                    text=(
-                        bui.timestring(tbtn.time_remaining, centi=False)
-                        if (
-                            tbtn.has_time_remaining
-                            and self._tourney_data_up_to_date
-                        )
-                        else '-'
-                    ),
-                )
-
-            # Also adjust the ad icon visibility.
-            if tbtn.allow_ads and plus.ads.has_video_ads():
-                bui.imagewidget(
-                    edit=tbtn.entry_fee_ad_image,
-                    opacity=1.0 if ads_enabled else 0.25,
-                )
-                bui.textwidget(
-                    edit=tbtn.entry_fee_text_remaining,
-                    color=(0.6, 0.6, 0.6, 1 if ads_enabled else 0.2),
-                )
-
+        
         self._update_hard_mode_lock_image()
 
     def _update_hard_mode_lock_image(self) -> None:
@@ -421,20 +396,8 @@ class CoopBrowserWindow(bui.MainWindow):
             logging.exception('Error updating campaign lock.')
 
     def _update_for_data(self, data: list[dict[str, Any]] | None) -> None:
+        pass
 
-        # If the number of tournaments or challenges in the data differs
-        # from our current arrangement, refresh with the new number.
-        if (data is None and self._tournament_button_count != 0) or (
-            data is not None and (len(data) != self._tournament_button_count)
-        ):
-            self._tournament_button_count = len(data) if data is not None else 0
-            bui.app.config['Tournament Rows'] = self._tournament_button_count
-            self._refresh()
-
-        # Update all of our tourney buttons based on whats in data.
-        for i, tbtn in enumerate(self._tournament_buttons):
-            assert data is not None
-            tbtn.update_for_data(data[i])
 
     def _on_tournament_query_response(
         self, data: dict[str, Any] | None
@@ -745,115 +708,8 @@ class CoopBrowserWindow(bui.MainWindow):
         )
 
         # Tournaments
-
-        self._tournament_buttons: list[TournamentButton] = []
-
-        v -= 53
-        # FIXME shouldn't use hard-coded strings here.
-        txt = bui.Lstr(
-            resource='tournamentsText', fallback_resource='tournamentText'
-        ).evaluate()
-        t_width = bui.get_string_width(txt, suppress_warning=True)
-        bui.textwidget(
-            parent=w_parent,
-            position=(h_base + 27, v + 30),
-            size=(0, 0),
-            text=txt,
-            h_align='left',
-            v_align='center',
-            color=bui.app.ui_v1.title_color,
-            scale=1.1,
-        )
-        self._tournament_info_button = bui.buttonwidget(
-            parent=w_parent,
-            label='?',
-            size=(20, 20),
-            text_scale=0.6,
-            position=(h_base + 27 + t_width * 1.1 + 15, v + 18),
-            button_type='square',
-            color=(0.6, 0.5, 0.65),
-            textcolor=(0.7, 0.6, 0.75),
-            autoselect=True,
-            up_widget=self._campaign_h_scroll,
-            left_widget=self._back_button,
-            on_activate_call=self._on_tournament_info_press,
-        )
-        bui.widget(
-            edit=self._tournament_info_button,
-            right_widget=self._tournament_info_button,
-        )
-
-        # Say 'unavailable' if there are zero tournaments, and if we're
-        # not signed in add that as well (that's probably why we see no
-        # tournaments).
-        if self._tournament_button_count == 0:
-            unavailable_text = bui.Lstr(resource='unavailableText')
-            if plus.get_v1_account_state() != 'signed_in':
-                unavailable_text = bui.Lstr(
-                    value='${A} (${B})',
-                    subs=[
-                        ('${A}', unavailable_text),
-                        ('${B}', bui.Lstr(resource='notSignedInText')),
-                    ],
-                )
-            bui.textwidget(
-                parent=w_parent,
-                position=(h_base + 47, v),
-                size=(0, 0),
-                text=unavailable_text,
-                h_align='left',
-                v_align='center',
-                color=bui.app.ui_v1.title_color,
-                scale=0.9,
-            )
-            v -= 40
-        v -= 198
-
-        tournament_h_scroll = None
-        if self._tournament_button_count > 0:
-            for i in range(self._tournament_button_count):
-                tournament_h_scroll = h_scroll = bui.hscrollwidget(
-                    parent=w_parent,
-                    size=(self._scroll_width, 205),
-                    position=(-5, v),
-                    highlight=False,
-                    border_opacity=0.0,
-                    color=(0.45, 0.4, 0.5),
-                    on_select_call=bui.Call(
-                        self._on_row_selected, 'tournament' + str(i + 1)
-                    ),
-                )
-                bui.widget(
-                    edit=h_scroll,
-                    show_buffer_top=row_v_show_buffer,
-                    show_buffer_bottom=row_v_show_buffer,
-                    autoselect=True,
-                )
-                if self._selected_row == 'tournament' + str(i + 1):
-                    bui.containerwidget(
-                        edit=w_parent,
-                        selected_child=h_scroll,
-                        visible_child=h_scroll,
-                    )
-                bui.containerwidget(edit=h_scroll, claims_left_right=True)
-                sc2 = bui.containerwidget(
-                    parent=h_scroll,
-                    size=(self._scroll_width - 24, 200),
-                    background=False,
-                )
-                h = 0
-                v2 = -2
-                is_last_sel = True
-                self._tournament_buttons.append(
-                    TournamentButton(
-                        sc2,
-                        h,
-                        v2,
-                        is_last_sel,
-                        on_pressed=bui.WeakCall(self.run_tournament),
-                    )
-                )
-                v -= 200
+        # GONE
+        v -= 230
 
         # Custom Games. (called 'Practice' in UI these days).
         v -= 50
@@ -933,58 +789,7 @@ class CoopBrowserWindow(bui.MainWindow):
         # (for wiring up)
         self._refresh_campaign_row()
 
-        for i, tbutton in enumerate(self._tournament_buttons):
-            bui.widget(
-                edit=tbutton.button,
-                up_widget=(
-                    self._tournament_info_button
-                    if i == 0
-                    else self._tournament_buttons[i - 1].button
-                ),
-                down_widget=(
-                    self._tournament_buttons[(i + 1)].button
-                    if i + 1 < len(self._tournament_buttons)
-                    else custom_h_scroll
-                ),
-                left_widget=self._back_button,
-            )
-            bui.widget(
-                edit=tbutton.more_scores_button,
-                down_widget=(
-                    self._tournament_buttons[(i + 1)].current_leader_name_text
-                    if i + 1 < len(self._tournament_buttons)
-                    else custom_h_scroll
-                ),
-            )
-            bui.widget(
-                edit=tbutton.current_leader_name_text,
-                up_widget=(
-                    self._tournament_info_button
-                    if i == 0
-                    else self._tournament_buttons[i - 1].more_scores_button
-                ),
-            )
-
-        for i, btn in enumerate(self._custom_buttons):
-            try:
-                bui.widget(
-                    edit=btn.get_button(),
-                    up_widget=(
-                        tournament_h_scroll
-                        if self._tournament_buttons
-                        else self._tournament_info_button
-                    ),
-                )
-                if i == 0:
-                    bui.widget(
-                        edit=btn.get_button(), left_widget=self._back_button
-                    )
-
-            except Exception:
-                logging.exception('Error wiring up custom buttons.')
-
-        # There's probably several 'onSelected' callbacks pushed onto the
-        # event queue.. we need to push ours too so we're enabled *after* them.
+        
         bui.pushcall(self._enable_selectable_callback)
 
     def _on_row_selected(self, row: str) -> None:
