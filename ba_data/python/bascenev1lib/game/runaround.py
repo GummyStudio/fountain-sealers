@@ -1292,7 +1292,7 @@ class RunaroundGame(bs.CoopGameActivity[Player, Team]):
         is_aggro: bool = getattr(bot, 'aggro')
         aggro_time: float = getattr(bot, 'aggro_time')
         aggro_range = 2
-        deaggro_range: int = ( self._bot_deaggro_map[bot.__class__] )
+        deaggro_range: int = 2 + ( 1.5 * self._bot_deaggro_map[bot.__class__] )
         
 
         speed = r_walk_speed

@@ -1765,7 +1765,7 @@ class SnowdinMountain(bs.Map):
     @override
     @classmethod
     def get_preview_texture_name(cls) -> str:
-        return 'towerDPreview'
+        return 'snowdinmountainPreview'
 
     @override
     @classmethod
@@ -1773,20 +1773,41 @@ class SnowdinMountain(bs.Map):
         data: dict[str, Any] = {
             'mesh': bs.getmesh('snowdin_mountain'),
             'collision_mesh': bs.getcollisionmesh('snowdin_mountain'),
-            'tex': bs.gettexture('towerDLevelColor'),
-            'bgtex': bs.gettexture('menuBG'),
-            'bgmesh': bs.getmesh('thePadBG'),
+            'tex': bs.gettexture('snowdinColor'),
+            'bgtex': bs.gettexture('snowdinbg'),
+            'bgmesh': bs.getmesh('snowdinbg'),
+            'blackbgtex': bs.gettexture('black'),
+            'blackbgmesh': bs.getmesh('thePadBG'),
+            'player_wall_mesh': bs.getmesh('snowdinPlayerwall'),
+            'player_wall_collision_mesh': bs.getcollisionmesh(
+                'snowdinPlayerwall'
+            ),
+            'player_wall_material': bs.Material(),
+            'props_mesh': bs.getmesh('snowdinprops'),
+            'props_collide_mesh': bs.getcollisionmesh('snowdinprops'),
+            'props_tex': bs.gettexture('snowdinPropColors'),
+            'snowmesh': bs.getmesh('shield'),
+            'snowtex': bs.gettexture('white')
         }
-       
-        data['vr_fill_mound_mesh'] = bs.getmesh('stepRightUpVRFillMound')
-        data['vr_fill_mound_tex'] = bs.gettexture('vrFillMound')
+        data['player_wall_material'].add_actions(
+            actions=('modify_part_collision', 'friction', 0.0)
+        )
+        # anything that needs to hit the wall can apply this material
+        data['collide_with_wall_material'] = bs.Material()
+        data['player_wall_material'].add_actions(
+            conditions=(
+                'they_dont_have_material',
+                data['collide_with_wall_material'],
+            ),
+            actions=('modify_part_collision', 'collide', False),
+        )
+ 
         return data
 
     def __init__(self) -> None:
         super().__init__(vr_overlay_offset=(0, 1, 1))
         shared = SharedObjects.get()
-        self.snowmesh = bs.getmesh('shield')
-        self.snowtex = bs.gettexture('white')
+       
         self.node = bs.newnode(
             'terrain',
             delegate=self,
@@ -1806,8 +1827,34 @@ class SnowdinMountain(bs.Map):
                 'color_texture': self.preloaddata['bgtex'],
             },
         )
+        self.black_background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['blackbgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': self.preloaddata['blackbgtex'],
+            },
+        )
+        self.player_wall = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['player_wall_mesh'],
+                'collision_mesh': self.preloaddata['player_wall_collision_mesh'],
+                'materials': [self.preloaddata['player_wall_material'], shared.footing_material],
+            },
+        )
+        self.props = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['props_mesh'],
+                'collision_mesh': self.preloaddata['props_collide_mesh'],
+                'color_texture': self.preloaddata['props_tex'],
+                'materials': [shared.footing_material],
+            },
+        )
         gnode = bs.getactivity().globalsnode
-        gnode.tint = (1, 1.23, 1.9)#(1.5, 1.5, 1.5)
+        gnode.tint = (0.8, 1, 1.5)#(1.5, 1.5, 1.5)
         gnode.ambient_color = (0, 0.12, 2)
         #gnode.vignette_outer = (0.62, 0.64, 0.69)
         #gnode.vignette_inner = (0.97, 0.95, 0.93)
@@ -1817,8 +1864,8 @@ class SnowdinMountain(bs.Map):
             position=(
                 random.uniform(-0.5, 0.5), 15, random.uniform(-3, 3)
             ),
-            mesh=self.snowmesh,
-            texture=self.snowtex,
+            mesh=self.preloaddata['snowmesh'],
+            texture=self.preloaddata['snowtex'],
             velocity=(
                 random.uniform(-6, 6),
                 -1,

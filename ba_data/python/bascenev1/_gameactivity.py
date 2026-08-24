@@ -941,10 +941,14 @@ class GameActivity[PlayerT: bascenev1.Player, TeamT: bascenev1.Team](
         # If this is co-op and we're on Courtyard or Runaround, add the
         # material that allows us to collide with the player-walls.
         # FIXME: Need to generalize this.
-        if isinstance(self.session, CoopSession) and self.map.getname() in [
+        if ( isinstance(self.session, CoopSession) and self.map.getname() in [
             'Courtyard',
             'Tower D',
-        ]:
+
+            # If a map should always have this, put it here.
+        ] ) or ( self.map.getname() in [
+            'Snowdin Mountain',
+            ]):
             mat = self.map.preloaddata['collide_with_wall_material']
             assert isinstance(spaz.node.materials, tuple)
             assert isinstance(spaz.node.roller_materials, tuple)

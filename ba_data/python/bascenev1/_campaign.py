@@ -269,7 +269,7 @@ def init_campaigns() -> None:
                     'Snowdin Mountain',
                     gametype=RunaroundGame,
                     settings={'preset': 'endless', 'map': 'Snowdin Mountain'},
-                    preview_texture_name='towerDPreview',
+                    preview_texture_name='snowdinmountainPreview',
                 ),
                 Level(
                     'Lake Frigid Race',
