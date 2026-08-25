@@ -1918,7 +1918,7 @@ class TVTimeStage(bs.Map):
             'tv_screen_collide': bs.getcollisionmesh('tvworldScreen'),
             'tv_textures': [
                 bs.gettexture(screen_dir+'TVScreen'),
-                bs.gettexture('black')
+                bs.gettexture(screen_dir+'tvTime')
             ],
             'swap_animation': [
                 bs.gettexture('white'),
