@@ -61,6 +61,9 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
     MusicType.SHOP: AssetSoundtrackEntry('music/lantern', volume=0.8),
     MusicType.CH4_MENU: AssetSoundtrackEntry('music/ch4_menu', volume=1.0),
     MusicType.TITAN: AssetSoundtrackEntry('music/titan_battle', volume=1.0),
+    MusicType.TV_TIME: AssetSoundtrackEntry('music/tvtime', volume=1.0),
+    MusicType.TV_WORLD: AssetSoundtrackEntry('music/tvworld', volume=1.0),
+    MusicType.VAPOR_BUSTER: AssetSoundtrackEntry('music/battle_vapor', volume=1.0),
     MusicType.MIX_CHAOS_KING: 
         AssetSoundtrackEntry(
             'music/remixAndAlts/chaosKing', 

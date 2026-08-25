@@ -31,6 +31,7 @@ def register_all_maps() -> None:
         FlowerMan,
         TitanStage,
         SancuaryStage,
+        TVTimeStage,
 
 
         # COOP
@@ -123,7 +124,8 @@ class Rudebuster(bs.Map):
             bs.MusicType.RUDER_BUSTER,
             bs.MusicType.CH4_BUSTER,
             bs.MusicType.RAKUICHI_BUSTER,
-            bs.MusicType.MIX_SOUL_BUSTER
+            bs.MusicType.MIX_SOUL_BUSTER,
+            bs.MusicType.VAPOR_BUSTER
         ])
 
 class MewersLive(bs.Map):
@@ -1883,3 +1885,136 @@ class SnowdinMountain(bs.Map):
         
         
         return bs.MusicType.MIX_ENEMY_APPROACH
+
+class TVTimeStage(bs.Map):
+    """Iiiiiitss tee-vee TIME!!!"""
+
+    from delta.mapdata import tv_world_mapdefs as defs
+
+    name = 'TV Time!'
+
+    @override
+    @classmethod
+    def get_play_types(cls) -> list[str]:
+        """Return valid play types for this map."""
+        return ['melee', 'king_of_the_hill', 'keep_away']
+
+    @override
+    @classmethod
+    def get_preview_texture_name(cls) -> str:
+        return 'tvtimePreview'
+
+    @override
+    @classmethod
+    def on_preload(cls) -> Any:
+        screen_dir = 'tv_time_screens/'
+        data: dict[str, Any] = {
+            'mesh': bs.getmesh('tvworldLevel'),
+            'collision_mesh': bs.getcollisionmesh('tvworldLevel'),
+            'tex': bs.gettexture('tvWorldColor'),
+            'bgtex': bs.gettexture('black'),
+            'bgmesh': bs.getmesh('thePadBG'),
+            'tv_screen': bs.getmesh('tvworldScreen'),
+            'tv_screen_collide': bs.getcollisionmesh('tvworldScreen'),
+            'tv_textures': [
+                bs.gettexture(screen_dir+'TVScreen'),
+                bs.gettexture('black')
+            ],
+            'swap_animation': [
+                bs.gettexture('white'),
+                bs.gettexture('white'),
+                bs.gettexture('white'),
+            ],
+            'swap_sfx':  bs.getsound('jumboSwapSfx')
+        }
+        return data
+
+    def __init__(self) -> None:
+        super().__init__(vr_overlay_offset=(0, 0, 2))
+        shared = SharedObjects.get()
+        self.node = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['collision_mesh'],
+                'mesh': self.preloaddata['mesh'],
+                'color_texture': self.preloaddata['tex'],
+                'materials': [shared.footing_material],
+            },
+        )
+        self.background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['bgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': self.preloaddata['bgtex'],
+            },
+        )
+        self.current_index = random.randint(0, len(self.preloaddata['tv_textures'])-1)
+
+        self.screen = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['tv_screen_collide'],
+                'mesh': self.preloaddata['tv_screen'],
+                'color_texture': self.preloaddata['tv_textures'][self.current_index],
+                'materials': [shared.footing_material],
+            },
+        )
+        gnode = bs.getactivity().globalsnode
+        gnode.tint = (0.6, 0.6, 0.6)
+        gnode.ambient_color = (0.2, 1.63, 0.2)
+        gnode.vignette_outer = (0.62, 0.64, 0.69)
+        gnode.vignette_inner = (0.97, 0.95, 0.93)
+        self.next_timer: bs.Timer = None
+
+        self.swap_and_start_next()
+
+    def swap_and_start_next(self):
+        self.swap_screen()
+        self.start_random_swapping()
+    
+    def start_random_swapping(self):
+        self.next_timer = bs.Timer(random.uniform(3, 7), self.swap_and_start_next)
+
+    def swap_screen(self, texture: str | bs.Texture = 'random') -> None:
+    
+        
+        frames = self.preloaddata['swap_animation']
+        
+        for i, frame_tex in enumerate(frames):
+            bs.timer(0.1 * i, bs.Call(self._set_screen_tex, frame_tex))
+            
+        reveal_time = 0.1 * len(frames)
+
+        while True:
+            rand = random.randint(0, len(self.preloaddata['tv_textures'])-1)
+
+            if rand != self.current_index:
+                self.current_index = rand
+                break
+        
+        if texture == 'random':
+
+            final_tex = self.preloaddata['tv_textures'][rand]
+        else:
+            final_tex = texture
+        self.preloaddata['swap_sfx'].play()
+        
+        bs.timer(reveal_time, bs.Call(self._set_screen_tex, final_tex))
+
+    def _set_screen_tex(self, tex: bs.Texture) -> None:
+        if self.screen:
+            self.screen.color_texture = tex
+    
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        
+        
+        return random.choice([
+            bs.MusicType.TV_WORLD,
+            bs.MusicType.TV_TIME,
+        ])

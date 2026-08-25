@@ -39,6 +39,10 @@ class MusicType(Enum):
     CH4_MENU = 'QUIET_CHURCH'
     SHOP = 'LANTERN'
     TITAN = 'holy shit we are SO DEAD'
+    TV_WORLD = 'What a TV World'
+    TV_TIME = 'Iiits T-V Time!'
+    VAPOR_BUSTER = 'Watercooler'
+
 
     # REMIXES / MIXES / NOT ORIGINAL TO UNDERTALE NOR DELTARUNE
     MIX_CHAOS_KING = 'Remix Chaos King'
