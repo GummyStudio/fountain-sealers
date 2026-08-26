@@ -32,6 +32,7 @@ def register_all_maps() -> None:
         TitanStage,
         SancuaryStage,
         TVTimeStage,
+        CyberField,
 
 
         # COOP
@@ -2018,3 +2019,68 @@ class TVTimeStage(bs.Map):
             bs.MusicType.TV_WORLD,
             bs.MusicType.TV_TIME,
         ])
+
+class CyberField(bs.Map):
+    """rude."""
+
+    from delta.mapdata import cyberfield_mapdefs as defs
+
+    name = 'CyberField'
+
+    @override
+    @classmethod
+    def get_play_types(cls) -> list[str]:
+        """Return valid play types for this map."""
+        return ['melee', 'team_flag', 'keep_away', 'king_of_the_hill']
+
+    @override
+    @classmethod
+    def get_preview_texture_name(cls) -> str:
+        return 'cyberfieldPreview'
+
+    @override
+    @classmethod
+    def on_preload(cls) -> Any:
+        data: dict[str, Any] = {
+            'mesh': bs.getmesh('cyberfield'),
+            'collision_mesh': bs.getcollisionmesh('cyberfield'),
+            'tex': bs.gettexture('cyberFieldColor'),
+            'bgtex': bs.gettexture('cyberfieldBG'),
+            'bgmesh': bs.getmesh('thePadBGSmall'),
+        }
+        return data
+
+    def __init__(self) -> None:
+        super().__init__(vr_overlay_offset=(0, 0, 2))
+        shared = SharedObjects.get()
+        self.node = bs.newnode(
+            'terrain',
+            delegate=self,
+            attrs={
+                'collision_mesh': self.preloaddata['collision_mesh'],
+                'mesh': self.preloaddata['mesh'],
+                'color_texture': self.preloaddata['tex'],
+                'materials': [shared.footing_material],
+            },
+        )
+        self.background = bs.newnode(
+            'terrain',
+            attrs={
+                'mesh': self.preloaddata['bgmesh'],
+                'lighting': False,
+                'background': True,
+                'color_texture': self.preloaddata['bgtex'],
+            },
+        )
+
+        gnode = bs.getactivity().globalsnode
+        gnode.tint = (0.85, 0.85, 0.85)
+
+    
+    @override
+    @classmethod
+    def get_music_type(cls) -> bs.MusicType:
+        
+        
+        return None
+
