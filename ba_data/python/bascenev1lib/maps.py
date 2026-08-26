@@ -1763,7 +1763,7 @@ class SnowdinMountain(bs.Map):
     @classmethod
     def get_play_types(cls) -> list[str]:
         """Return valid play types for this map."""
-        return []
+        return ['race']
 
     @override
     @classmethod

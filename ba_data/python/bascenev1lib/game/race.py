@@ -265,6 +265,14 @@ class RaceGame(bs.TeamGameActivity[Player, Team]):
         last_region = player.last_region
         this_region = region.index
 
+        print(last_region, this_region)
+        
+        if last_region == 7 and this_region == 7 and self.map.getname() == 'Snowdin Mountain':
+            # TP them over here, then do a funny impulse
+            spaz.node.handlemessage('knockout', 1000)
+            spaz.handlemessage(bs.StandMessage((5, 4.5, 4)))
+            bs.timer(0.1, lambda: spaz.impulse(x=60, y=32, direction=(-2,2,0)))
+
         if last_region != this_region:
             # If a player tries to skip regions, smite them.
             # Allow a one region leeway though (its plausible players can get
@@ -700,6 +708,7 @@ class RaceGame(bs.TeamGameActivity[Player, Team]):
             #   Perhaps we need something like can_spawn_player()...
             # noinspection PyTypeChecker
             return None  # type: ignore
+        
         pos = self._regions[player.last_region].pos
 
         # Don't use the full region so we're less likely to spawn off a cliff.
