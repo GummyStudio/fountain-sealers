@@ -92,6 +92,10 @@ ASSET_SOUNDTRACK_ENTRIES: dict[MusicType, AssetSoundtrackEntry] = {
         AssetSoundtrackEntry(
             'music/remixAndAlts/remixEnemyApproach', 
     volume=0.5),
+    MusicType.MIX_A_CYBERS_WORLD:
+        AssetSoundtrackEntry(
+            'music/remixAndAlts/mixACybersWorld', 
+    volume=0.5),
         
 }
 

@@ -51,7 +51,8 @@ class MusicType(Enum):
     MIX_MEW_MEW_KISSY_JACKPOT = 'I HIT THE JACKPOT'
     MIX_SOUL_BUSTER = 'Soul Buster'
     MIX_SPADE = 'Spade'
-    MIX_ENEMY_APPROACH = 'String Player Gamer'
+    MIX_ENEMY_APPROACH = 'so scari'
+    MIX_A_CYBERS_WORLD = 'yell0'
 
 
 def setmusic(musictype: MusicType | None, continuous: bool = False) -> None:

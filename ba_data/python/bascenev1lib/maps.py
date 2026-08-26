@@ -2047,12 +2047,28 @@ class CyberField(bs.Map):
             'tex': bs.gettexture('cyberFieldColor'),
             'bgtex': bs.gettexture('cyberfieldBG'),
             'bgmesh': bs.getmesh('thePadBGSmall'),
+            'train_sfx': bs.getsound('snd_cardrive_bc'),
+            'train_head_mesh': bs.getmesh('trainHead'),
+            'train_body_mesh': bs.getmesh('trainBody'),
+            'train_tex': bs.gettexture('trainColor')
         }
         return data
 
     def __init__(self) -> None:
         super().__init__(vr_overlay_offset=(0, 0, 2))
         shared = SharedObjects.get()
+        self.train_detect_mat = bs.Material()
+        self.train_detect_mat.add_actions(
+            conditions=(    
+                ('they_have_material', shared.object_material)
+
+            ),
+            actions=(
+                ('modify_part_collision', 'collide', True),
+                ('modify_part_collision', 'physical', False),
+                ('call', 'at_connect', self.handle_hit_train),
+            ),
+        )
         self.node = bs.newnode(
             'terrain',
             delegate=self,
@@ -2075,12 +2091,160 @@ class CyberField(bs.Map):
 
         gnode = bs.getactivity().globalsnode
         gnode.tint = (0.85, 0.85, 0.85)
+        self.train_settings = {
+            'count': 37,
+            'sound': self.preloaddata['train_sfx'], 
+            'x_vel': 10,
+            'material': self.train_detect_mat
+        }
 
+        self.trains = {
+            1: {
+                'light_pos': (0, 2.42, -8),
+                'train_start_pos': (30.13, 2.42, -8.47),
+                'x_mult': -1
+            },
+            2: {
+                'light_pos': (0, 2.4, 5),
+                'train_start_pos': (30.13, 2.42, 5.47),
+                'x_mult': -1
+            },
+        }
+
+        self.next_train1_timer = bs.Timer(10+random.uniform(10, 18), self.spawn_train1)
+        self.next_train2_timer = bs.Timer(10+random.uniform(10, 18), self.spawn_train2)
+
+    def spawn_train1(self):
+        self.next_train1_timer = bs.Timer(10+random.uniform(5, 30), self.spawn_train1)
+        self.spawn_train(1)
+
+    def spawn_train2(self):
+        self.next_train2_timer = bs.Timer(10+random.uniform(5, 30), self.spawn_train2)
+        self.spawn_train(2)
     
+    def handle_hit_train(self):
+        collision = bs.getcollision()
+        node = collision.opposingnode
+        actor = node.getdelegate(bs.Actor)
+        assert isinstance(actor, bs.Actor)
+
+        if not actor:
+            return
+
+        #actor.impulse(x=55, y=45, direction=(1, 0, 0))
+        actor.handlemessage(bs.HitMessage(
+            pos=node.position,
+            magnitude=12,
+            velocity_magnitude=20.5,
+            velocity=(-65, 12, 0),
+            radius=0,
+            force_direction=(-10, 1, 0),
+            hit_type=bs.DeathType.TRAIN
+        ))
+
+    class TrainPart:
+        def __init__(self, is_body, settings, train_setting, preload_data):
+            self.settings = settings
+            self.train_setting = train_setting
+            self.preloaddata = preload_data
+
+
+            self.partical = Partical(
+                position=(
+                    self.train_setting['train_start_pos']
+                ),
+                velocity=(
+                    self.settings['x_vel']*self.train_setting['x_mult'], 0, 0
+                ),
+                mesh=preload_data['train_body_mesh' if is_body else 'train_head_mesh'],
+                texture=preload_data['train_tex'],
+                body='puck',
+                mesh_scale=0.6,
+                alive_for=10,
+                gravity_scale=0.0,
+                collide_with=None
+            ).autoretain()
+            hitbox_size = (2, 2.5, 2)
+            
+            self.hitbox = bs.newnode('region',delegate=self,
+                    attrs={'scale': hitbox_size,
+                           'type': 'box',
+                           'materials': [self.settings['material']]})
+            debug = False
+            self.partical.node.connectattr('position', self.hitbox, 'position') 
+            
+            
+            if debug:
+                self.loc=bs.newnode('locator',
+                            attrs={'shape': 'box',
+                                'color': (1,0,0),
+                                'opacity': 0.02,
+                                'draw_beauty': True,
+                                'size': hitbox_size,
+                                'additive': False})
+                self.hitbox.connectattr('position', self.loc, 'position')
+                
+            else:
+                self.loc = bs.Node(None)             
+                
+            
+            self.tick_timer = bs.Timer(0.1, self.tick, repeat=True)
+            self.die_timer = bs.Timer(102, self.die)
+
+        def die(self):
+            self.tick_timer = None
+            self.die_timer = None
+            self.loc.delete()
+            self.hitbox.delete()
+            self.partical.handlemessage(bs.DieMessage(True))
+        
+        def tick(self):
+            if not self.partical.exists():
+                self.die()
+                return
+            
+            
+    
+    def spawn_train(self, index):
+        train_setting = self.trains[index]
+
+        light = bs.newnode(
+            'light',
+            attrs={
+                'position': train_setting['train_start_pos'],
+                'radius': 10.0,
+                'color': (1, 1, 0),
+            },
+        )
+        bs.animate(
+            light, 'radius', {
+                0: 10,
+                0.5: 5
+            }, loop=True
+        )
+        self.train_settings['sound'].play()
+
+        def spawn_train_part(is_body=True):
+            self.TrainPart(
+                is_body=is_body,
+                settings=self.train_settings,
+                train_setting=train_setting,
+                preload_data=self.preloaddata
+            )
+
+        def spawn_train():
+            light.delete()
+            first = True
+            for _ in range(self.train_settings['count']):
+                bs.timer(0.25*_, bs.Call(spawn_train_part, not first))
+                first = False
+
+        bs.timer(6, spawn_train)
+        
     @override
     @classmethod
     def get_music_type(cls) -> bs.MusicType:
         
         
-        return None
+        return bs.MusicType.MIX_A_CYBERS_WORLD
 

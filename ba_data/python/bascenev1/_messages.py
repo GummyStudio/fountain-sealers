@@ -59,6 +59,7 @@ class DeathType(Enum):
     SPARED = 'spared'
     SWOON = 'swoon'
     BANANA = 'banana'
+    TRAIN = 'train'
    
     
     # Unique interactions
