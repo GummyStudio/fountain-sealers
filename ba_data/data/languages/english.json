@@ -1866,6 +1866,12 @@
 		  "suicide": "${NAME} tripped and fell.",
 		  "betrayal": "${NAME} made ${VICTIM} trip and fall.",
 		  "diedtobot": "${NAME} tripped and fell."
+		},
+    "train": {
+		  "kill": "${NAME} threw {VICTIM} into a train.",
+		  "suicide": "${NAME} jumped into a train.",
+		  "betrayal": "${NAME} accidentaly threw ${VICTIM}\ninto a train.",
+		  "diedtobot": "${NAME} was hit by a train."
 		}
 	}
   }
